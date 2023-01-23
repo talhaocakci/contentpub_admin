@@ -131,6 +131,12 @@ class _CreateProductWidgetState extends State<CreateProductWidget> {
                               height: 300,
                               child: FileUploadWithDrop(
                                 fileType: FileType.OTHER,
+                                onComplete: (uploadedFile, sourceObject) {
+                                  print(uploadedFile.remoteUrl);
+                                },
+                                onClear: () {
+                                  print('Clear the object here as well');
+                                },
                               ))
                       ],
                     ),

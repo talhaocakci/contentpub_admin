@@ -1,7 +1,12 @@
+import 'package:amplify_api/amplify_api.dart';
+import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:contentpub_admin/course/create_curriculum.dart';
 import 'package:contentpub_admin/create_product.dart';
 import 'package:contentpub_admin/file_upload.dart';
 import 'package:contentpub_admin/models/ContentType.dart';
+import 'package:contentpub_admin/models/Course.dart';
+import 'package:contentpub_admin/models/Lesson.dart';
+import 'package:contentpub_admin/models/Section.dart';
 
 import '../flutter_flow/flutter_flow_icon_button.dart';
 import '../flutter_flow/flutter_flow_theme.dart';
@@ -9,6 +14,8 @@ import '../flutter_flow/flutter_flow_util.dart';
 import '../flutter_flow/flutter_flow_widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+
+import 'package:uuid/uuid.dart';
 
 class CreateCourseWidget extends StatefulWidget {
   const CreateCourseWidget({Key? key}) : super(key: key);
@@ -18,25 +25,27 @@ class CreateCourseWidget extends StatefulWidget {
 }
 
 class _CreateCourseWidgetState extends State<CreateCourseWidget> {
-  TextEditingController? textController1;
-  TextEditingController? textController2;
-  TextEditingController? textController3;
+  String? coverPhotoUrl;
+  String? promoVideoUrl;
+  TextEditingController? titleTextController;
+  TextEditingController? subtitleTextController;
+  TextEditingController? descriptionTextController;
   bool? switchListTileValue;
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   void initState() {
     super.initState();
-    textController1 = TextEditingController();
-    textController2 = TextEditingController();
-    textController3 = TextEditingController();
+    titleTextController = TextEditingController();
+    subtitleTextController = TextEditingController();
+    descriptionTextController = TextEditingController();
   }
 
   @override
   void dispose() {
-    textController1?.dispose();
-    textController2?.dispose();
-    textController3?.dispose();
+    titleTextController?.dispose();
+    subtitleTextController?.dispose();
+    descriptionTextController?.dispose();
     super.dispose();
   }
 
@@ -169,8 +178,31 @@ class _CreateCourseWidgetState extends State<CreateCourseWidget> {
                         mainAxisSize: MainAxisSize.max,
                         children: [
                           Expanded(
-                              child: FileUploadWithDrop(
-                                  fileType: FileType.PICTURE)),
+                            child: FileUploadWithDrop(
+                                fileType: FileType.PICTURE,
+                                onComplete: (uploadedFile, sourceObject) {
+                                  coverPhotoUrl = uploadedFile.remoteUrl;
+                                },
+                                onClear: () {
+                                  print('Clear the object here as well');
+                                }),
+                          ),
+                        ],
+                      ),
+                      Row(
+                        mainAxisSize: MainAxisSize.max,
+                        children: [
+                          Expanded(
+                            child: FileUploadWithDrop(
+                                fileType: FileType.VIDEO,
+                                onComplete: (uploadedFile, sourceObject) {
+                                  promoVideoUrl = uploadedFile.remoteUrl;
+                                  print(uploadedFile.remoteUrl);
+                                },
+                                onClear: () {
+                                  print('Clear the object here as well');
+                                }),
+                          ),
                         ],
                       ),
                       Padding(
@@ -180,7 +212,7 @@ class _CreateCourseWidgetState extends State<CreateCourseWidget> {
                           children: [
                             Expanded(
                               child: TextFormField(
-                                controller: textController1,
+                                controller: titleTextController,
                                 obscureText: false,
                                 decoration: InputDecoration(
                                   labelText: 'Title',
@@ -231,7 +263,7 @@ class _CreateCourseWidgetState extends State<CreateCourseWidget> {
                           children: [
                             Expanded(
                               child: TextFormField(
-                                controller: textController2,
+                                controller: subtitleTextController,
                                 obscureText: false,
                                 decoration: InputDecoration(
                                   labelText: 'Subtitle',
@@ -278,7 +310,7 @@ class _CreateCourseWidgetState extends State<CreateCourseWidget> {
                       Container(
                         height: 200,
                         child: TextFormField(
-                          controller: textController3,
+                          controller: descriptionTextController,
                           obscureText: false,
                           decoration: InputDecoration(
                             labelText: 'Description',
@@ -345,12 +377,9 @@ class _CreateCourseWidgetState extends State<CreateCourseWidget> {
                         padding: EdgeInsetsDirectional.fromSTEB(0, 12, 0, 12),
                         child: FFButtonWidget(
                           onPressed: () {
+                            saveCourseAndNavigate();
                             // save course here
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) =>
-                                        CurriculumCreateWidget()));
+                            ;
 
                             print('Button_Secondary pressed ...');
                           },
@@ -383,5 +412,58 @@ class _CreateCourseWidgetState extends State<CreateCourseWidget> {
         ),
       ),
     );
+  }
+
+  Future<void> saveCourseAndNavigate() async {
+    /*var uuid = Uuid();
+
+    String courseId = uuid.v4();
+    String sectionId = uuid.v4();
+    String lessonId = uuid.v4();
+
+    Course course = Course(
+        id: courseId,
+        title: titleTextController!.text,
+        subtitle: subtitleTextController!.text,
+        description: descriptionTextController!.text);
+
+    Section section =
+        Section(id: sectionId, courseID: courseId, name: 'Section 1');
+
+    final sectionSaveRequest = ModelMutations.create(section);
+
+    Amplify.API.mutate(request: sectionSaveRequest);
+
+    print('Section id: ${section.id}');
+
+    Lesson lesson =
+        Lesson(id: lessonId, sectionID: sectionId, name: 'Lesson 1');
+
+    final lessonSaveRequest = ModelMutations.create(lesson);
+
+    Amplify.API.mutate(request: lessonSaveRequest);
+
+    print('Lesson id: ${lesson.id}');
+
+    section = section.copyWith([lesson]);
+
+    course = course.copyWith(Sections: [section]);
+
+    final courseSaveRequest = ModelMutations.create(course);
+
+    Amplify.API.mutate(request: courseSaveRequest);
+
+    print('Course id: ${course.id}');
+
+    setState(() {
+      course = course;
+    });
+*/
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => CurriculumCreateWidget(
+                  courseId: '8b98f378-c251-48a3-baa1-c39cbc836b35',
+                )));
   }
 }

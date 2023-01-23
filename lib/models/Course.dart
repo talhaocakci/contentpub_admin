@@ -36,6 +36,9 @@ class Course extends Model {
   final String? _stripeProduct;
   final List<Section>? _Sections;
   final Content? _content;
+  final String? _coverPhotoUrl;
+  final String? _promoVideoUrl;
+  final String? _subtitle;
   final TemporalDateTime? _createdAt;
   final TemporalDateTime? _updatedAt;
   final String? _courseContentId;
@@ -77,6 +80,18 @@ class Course extends Model {
     return _content;
   }
   
+  String? get coverPhotoUrl {
+    return _coverPhotoUrl;
+  }
+  
+  String? get promoVideoUrl {
+    return _promoVideoUrl;
+  }
+  
+  String? get subtitle {
+    return _subtitle;
+  }
+  
   TemporalDateTime? get createdAt {
     return _createdAt;
   }
@@ -89,9 +104,9 @@ class Course extends Model {
     return _courseContentId;
   }
   
-  const Course._internal({required this.id, title, description, thumbnail, stripeProduct, Sections, content, createdAt, updatedAt, courseContentId}): _title = title, _description = description, _thumbnail = thumbnail, _stripeProduct = stripeProduct, _Sections = Sections, _content = content, _createdAt = createdAt, _updatedAt = updatedAt, _courseContentId = courseContentId;
+  const Course._internal({required this.id, title, description, thumbnail, stripeProduct, Sections, content, coverPhotoUrl, promoVideoUrl, subtitle, createdAt, updatedAt, courseContentId}): _title = title, _description = description, _thumbnail = thumbnail, _stripeProduct = stripeProduct, _Sections = Sections, _content = content, _coverPhotoUrl = coverPhotoUrl, _promoVideoUrl = promoVideoUrl, _subtitle = subtitle, _createdAt = createdAt, _updatedAt = updatedAt, _courseContentId = courseContentId;
   
-  factory Course({String? id, String? title, String? description, String? thumbnail, String? stripeProduct, List<Section>? Sections, Content? content, String? courseContentId}) {
+  factory Course({String? id, String? title, String? description, String? thumbnail, String? stripeProduct, List<Section>? Sections, Content? content, String? coverPhotoUrl, String? promoVideoUrl, String? subtitle, String? courseContentId}) {
     return Course._internal(
       id: id == null ? UUID.getUUID() : id,
       title: title,
@@ -100,6 +115,9 @@ class Course extends Model {
       stripeProduct: stripeProduct,
       Sections: Sections != null ? List<Section>.unmodifiable(Sections) : Sections,
       content: content,
+      coverPhotoUrl: coverPhotoUrl,
+      promoVideoUrl: promoVideoUrl,
+      subtitle: subtitle,
       courseContentId: courseContentId);
   }
   
@@ -118,6 +136,9 @@ class Course extends Model {
       _stripeProduct == other._stripeProduct &&
       DeepCollectionEquality().equals(_Sections, other._Sections) &&
       _content == other._content &&
+      _coverPhotoUrl == other._coverPhotoUrl &&
+      _promoVideoUrl == other._promoVideoUrl &&
+      _subtitle == other._subtitle &&
       _courseContentId == other._courseContentId;
   }
   
@@ -134,6 +155,9 @@ class Course extends Model {
     buffer.write("description=" + "$_description" + ", ");
     buffer.write("thumbnail=" + "$_thumbnail" + ", ");
     buffer.write("stripeProduct=" + "$_stripeProduct" + ", ");
+    buffer.write("coverPhotoUrl=" + "$_coverPhotoUrl" + ", ");
+    buffer.write("promoVideoUrl=" + "$_promoVideoUrl" + ", ");
+    buffer.write("subtitle=" + "$_subtitle" + ", ");
     buffer.write("createdAt=" + (_createdAt != null ? _createdAt!.format() : "null") + ", ");
     buffer.write("updatedAt=" + (_updatedAt != null ? _updatedAt!.format() : "null") + ", ");
     buffer.write("courseContentId=" + "$_courseContentId");
@@ -142,7 +166,7 @@ class Course extends Model {
     return buffer.toString();
   }
   
-  Course copyWith({String? title, String? description, String? thumbnail, String? stripeProduct, List<Section>? Sections, Content? content, String? courseContentId}) {
+  Course copyWith({String? title, String? description, String? thumbnail, String? stripeProduct, List<Section>? Sections, Content? content, String? coverPhotoUrl, String? promoVideoUrl, String? subtitle, String? courseContentId}) {
     return Course._internal(
       id: id,
       title: title ?? this.title,
@@ -151,6 +175,9 @@ class Course extends Model {
       stripeProduct: stripeProduct ?? this.stripeProduct,
       Sections: Sections ?? this.Sections,
       content: content ?? this.content,
+      coverPhotoUrl: coverPhotoUrl ?? this.coverPhotoUrl,
+      promoVideoUrl: promoVideoUrl ?? this.promoVideoUrl,
+      subtitle: subtitle ?? this.subtitle,
       courseContentId: courseContentId ?? this.courseContentId);
   }
   
@@ -169,16 +196,19 @@ class Course extends Model {
       _content = json['content']?['serializedData'] != null
         ? Content.fromJson(new Map<String, dynamic>.from(json['content']['serializedData']))
         : null,
+      _coverPhotoUrl = json['coverPhotoUrl'],
+      _promoVideoUrl = json['promoVideoUrl'],
+      _subtitle = json['subtitle'],
       _createdAt = json['createdAt'] != null ? TemporalDateTime.fromString(json['createdAt']) : null,
       _updatedAt = json['updatedAt'] != null ? TemporalDateTime.fromString(json['updatedAt']) : null,
       _courseContentId = json['courseContentId'];
   
   Map<String, dynamic> toJson() => {
-    'id': id, 'title': _title, 'description': _description, 'thumbnail': _thumbnail, 'stripeProduct': _stripeProduct, 'Sections': _Sections?.map((Section? e) => e?.toJson()).toList(), 'content': _content?.toJson(), 'createdAt': _createdAt?.format(), 'updatedAt': _updatedAt?.format(), 'courseContentId': _courseContentId
+    'id': id, 'title': _title, 'description': _description, 'thumbnail': _thumbnail, 'stripeProduct': _stripeProduct, 'Sections': _Sections?.map((Section? e) => e?.toJson()).toList(), 'content': _content?.toJson(), 'coverPhotoUrl': _coverPhotoUrl, 'promoVideoUrl': _promoVideoUrl, 'subtitle': _subtitle, 'createdAt': _createdAt?.format(), 'updatedAt': _updatedAt?.format(), 'courseContentId': _courseContentId
   };
   
   Map<String, Object?> toMap() => {
-    'id': id, 'title': _title, 'description': _description, 'thumbnail': _thumbnail, 'stripeProduct': _stripeProduct, 'Sections': _Sections, 'content': _content, 'createdAt': _createdAt, 'updatedAt': _updatedAt, 'courseContentId': _courseContentId
+    'id': id, 'title': _title, 'description': _description, 'thumbnail': _thumbnail, 'stripeProduct': _stripeProduct, 'Sections': _Sections, 'content': _content, 'coverPhotoUrl': _coverPhotoUrl, 'promoVideoUrl': _promoVideoUrl, 'subtitle': _subtitle, 'createdAt': _createdAt, 'updatedAt': _updatedAt, 'courseContentId': _courseContentId
   };
 
   static final QueryModelIdentifier<CourseModelIdentifier> MODEL_IDENTIFIER = QueryModelIdentifier<CourseModelIdentifier>();
@@ -193,6 +223,9 @@ class Course extends Model {
   static final QueryField CONTENT = QueryField(
     fieldName: "content",
     fieldType: ModelFieldType(ModelFieldTypeEnum.model, ofModelName: (Content).toString()));
+  static final QueryField COVERPHOTOURL = QueryField(fieldName: "coverPhotoUrl");
+  static final QueryField PROMOVIDEOURL = QueryField(fieldName: "promoVideoUrl");
+  static final QueryField SUBTITLE = QueryField(fieldName: "subtitle");
   static final QueryField COURSECONTENTID = QueryField(fieldName: "courseContentId");
   static var schema = Model.defineSchema(define: (ModelSchemaDefinition modelSchemaDefinition) {
     modelSchemaDefinition.name = "Course";
@@ -247,6 +280,24 @@ class Course extends Model {
       isRequired: false,
       ofModelName: (Content).toString(),
       associatedKey: Content.ID
+    ));
+    
+    modelSchemaDefinition.addField(ModelFieldDefinition.field(
+      key: Course.COVERPHOTOURL,
+      isRequired: false,
+      ofType: ModelFieldType(ModelFieldTypeEnum.string)
+    ));
+    
+    modelSchemaDefinition.addField(ModelFieldDefinition.field(
+      key: Course.PROMOVIDEOURL,
+      isRequired: false,
+      ofType: ModelFieldType(ModelFieldTypeEnum.string)
+    ));
+    
+    modelSchemaDefinition.addField(ModelFieldDefinition.field(
+      key: Course.SUBTITLE,
+      isRequired: false,
+      ofType: ModelFieldType(ModelFieldTypeEnum.string)
     ));
     
     modelSchemaDefinition.addField(ModelFieldDefinition.nonQueryField(

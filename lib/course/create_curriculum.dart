@@ -1,7 +1,6 @@
 import 'package:amplify_api/amplify_api.dart';
 import 'package:contentpub_admin/aws_s3.dart';
 import 'package:contentpub_admin/create_product.dart';
-import 'package:contentpub_admin/editablelesson.dart';
 import 'package:contentpub_admin/file_upload.dart';
 import 'package:contentpub_admin/models/ContentType.dart';
 import 'package:contentpub_admin/models/Course.dart';
@@ -12,11 +11,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter/material.dart';
 
 import 'package:amplify_flutter/amplify_flutter.dart';
+import 'package:flutter_form_builder/flutter_form_builder.dart';
 
 import 'package:video_player/video_player.dart';
 
 class CurriculumCreateWidget extends StatefulWidget {
-  const CurriculumCreateWidget({super.key});
+  final String courseId;
+
+  const CurriculumCreateWidget({required this.courseId, super.key});
 
   @override
   State<CurriculumCreateWidget> createState() => CurriculumCreateWidgetState();
@@ -24,29 +26,22 @@ class CurriculumCreateWidget extends StatefulWidget {
 
 class CurriculumCreateWidgetState extends State<CurriculumCreateWidget> {
   bool _customTileExpanded = false;
+  Course? course;
 
   final ScrollController _firstController = ScrollController();
 
-  String courseId = 'my-course-id-from-amplify';
-
-  List<EditableContent> contentList = [
-    EditableContent(contentType: ContentType.VIDEO, name: "dasfsdfsdfsdfsdf")
-  ];
-
   @override
   void initState() {
-    EditableContent content = EditableContent(
-        contentType: ContentType.VIDEO,
-        name: "Lesson 1",
-        uploadedFileUrl: 'someurl');
-    EditableContent content2 =
-        EditableContent(contentType: ContentType.VIDEO, name: "Lesson 2");
-    EditableContent content3 =
-        EditableContent(contentType: ContentType.VIDEO, name: "Lesson 3");
-
-    contentList.addAll([content, content2, content3]);
+    initWidget();
 
     super.initState();
+  }
+
+  void initWidget() async {
+    Course mycourse = await getCourseDetails() ?? Course();
+    setState(() {
+      course = mycourse;
+    });
   }
 
   @override
@@ -62,93 +57,192 @@ class CurriculumCreateWidgetState extends State<CurriculumCreateWidget> {
                       saveCourse();
                     },
                     child: const Text("Save the course")),
-                for (var content in contentList)
-                  ExpansionTile(
-                    initiallyExpanded: false,
-                    title: Text(content.name ?? 'Please insert title'),
-                    trailing: Icon(
-                      _customTileExpanded
-                          ? Icons.arrow_drop_down_circle
-                          : Icons.arrow_drop_down,
-                    ),
-                    children: <Widget>[
-                      Row(
-                        children: [
-                          Expanded(
-                              child: Center(
-                                  child: Text(content.description ??
-                                      'Please enter description'))),
-                          Expanded(
-                              child: FileUploadWithDrop(
-                            fileType: FileType.VIDEO,
-                          ))
-                        ],
-                      ),
-                    ],
-                    onExpansionChanged: (bool expanded) {
-                      setState(() => _customTileExpanded = expanded);
+                ElevatedButton(
+                    onPressed: () async {
+                      course!.Sections!.add(
+                          Section(courseID: course!.id, name: 'New section'));
+                      setState(() {
+                        course = course;
+                      });
                     },
-                  ),
+                    child: const Text("Add section")),
+                for (var section in course?.Sections ?? List.empty())
+                  ExpansionTile(
+                      trailing: ElevatedButton(
+                          onPressed: () {
+                            section.Lessons.add(Lesson(
+                                sectionID: section.id, name: 'New lesson'));
+                            setState(() {
+                              course = course;
+                            });
+                          },
+                          child: Text('Add Lesson')),
+                      initiallyExpanded: (course?.Sections as List).length == 1,
+                      title: Text(section.name ?? 'Please insert title'),
+                      leading: Icon(
+                        _customTileExpanded
+                            ? Icons.arrow_drop_down_circle
+                            : Icons.arrow_drop_down,
+                      ),
+                      children: <Widget>[
+                        for (var lesson in section.Lessons)
+                          Padding(
+                              padding: EdgeInsets.only(left: 50),
+                              child: ExpansionTile(
+                                initiallyExpanded:
+                                    (section?.Lessons as List).length == 1,
+                                title:
+                                    Text(lesson.name ?? 'Please insert title'),
+                                leading: Icon(
+                                  _customTileExpanded
+                                      ? Icons.arrow_drop_down_circle
+                                      : Icons.arrow_drop_down,
+                                ),
+                                children: <Widget>[
+                                  Row(
+                                      mainAxisSize: MainAxisSize.max,
+                                      children: [
+                                        Padding(
+                                            padding: EdgeInsets.all(20),
+                                            child: Container(
+                                                width: 300,
+                                                child: FileUploadWithDrop(
+                                                  remoteUrl: lesson.video,
+                                                  sourceObject: lesson,
+                                                  fileType: FileType.VIDEO,
+                                                  onComplete: (uploadedFile,
+                                                      sourceObject) {
+                                                    List<Lesson> lessons =
+                                                        (section.Lessons
+                                                            as List<Lesson>);
+
+                                                    int sourceLessonIndex =
+                                                        lessons.indexOf(
+                                                            sourceObject);
+
+                                                    print(
+                                                        '${sourceLessonIndex}. remove edilecek');
+
+                                                    lessons.remove(
+                                                        sourceLessonIndex);
+
+                                                    Lesson newLesson =
+                                                        (sourceObject as Lesson)
+                                                            .copyWith(
+                                                                sectionID:
+                                                                    section.id,
+                                                                video: uploadedFile
+                                                                    .remoteUrl);
+
+                                                    print(newLesson);
+                                                    lessons.insert(
+                                                        sourceLessonIndex,
+                                                        newLesson);
+
+                                                    print(uploadedFile);
+                                                    print(sourceObject.video);
+                                                    setState(() {});
+                                                  },
+                                                  onClear: () {},
+                                                ))),
+                                        Expanded(
+                                            child: FormBuilder(
+                                                child: FormBuilderTextField(
+                                          name: 'text',
+                                          initialValue: lesson.name,
+                                          onChanged: (val) {
+                                            print(val);
+                                          },
+                                        ))),
+                                      ]),
+                                ],
+                                onExpansionChanged: (bool expanded) {
+                                  setState(
+                                      () => _customTileExpanded = expanded);
+                                },
+                              ))
+                      ]),
               ],
             )));
   }
-}
 
-Future<void> uploadHtmlFile(EditableLesson l) async {
-  String bucketName =
-      "https://contentpub-media174002-staging.s3.amazonaws.com/public/";
+  void saveCourse() {
+    for (Section section in course!.Sections ?? List.empty()) {
+      for (Lesson lesson in section.Lessons ?? List.empty()) {
+        final lessonSaveRequest = ModelMutations.create(lesson);
+        print(lesson);
+        Amplify.API.mutate(request: lessonSaveRequest);
+      }
 
-  print("cozulecek dosya");
-  print("name:${l.localVideoUrl}");
+      final sectionSaveRequest = ModelMutations.create(section);
 
-  AWSFile file = AWSFile.fromPath(l.localVideoUrl ?? 'wrong video url',
-      contentType: "video/mp4");
+      Amplify.API.mutate(request: sectionSaveRequest);
+    }
 
-  print("awsfile:${file.toString()}");
-  print("local video size:${l.localVideoSize}");
+    final courseSaveRequest = ModelMutations.create(course!);
 
-  final String bucket = "contentpub-media174002-staging";
-  final endpoint = 'https://$bucket.s3.amazonaws.com';
+    Amplify.API.mutate(request: courseSaveRequest);
 
-  print(endpoint);
+    print('Course id: ${course!.id}');
 
-  final uploadDest = 'public/${l.localVideoName}';
+    setState(() {
+      course = course;
+    });
+  }
 
-  AwsS3.uploadFile(
-      accessKey: "AKIAVCISBNGUGFQ4LAPR", // cognitoya cevir
-      secretKey: "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",
-      inputStream: file.stream,
-      fileSize: l.localVideoSize ?? 10000,
-      filename: "myfile.mp4", //degistri, laf olsun diye koyduk
-      bucket: bucket,
-      destination: uploadDest,
-      region: "us-east-1");
-}
+  Future<Course?> getCourseDetails() async {
+    const getCourse = 'getCourse';
 
-Future<void> saveCourse() async {
-  Course course = Course(
-      // id: '5e226317-ef09-4f4c-b1f8-eb20446dcc32',
-      title: 'My Spring Boot course 2');
+    String graphQLQuery =
+        '''query GetCourseDetailsWithLessonSummaries(\$courseId: ID!) {
+              $getCourse(id: \$courseId) {
+                title
+                thumbnail
+                stripeProduct
+                id
+                description
+                
+                Sections {
+                  items {
+                    id
+                    name
+                    description
+                    Lessons {
+                      items {
+                        id
+                        name
+                        video
+                        description
+                      }
+                    }
+                  }
+                }
+              }
+            }
+    ''';
 
-  final courseSaveRequest = ModelMutations.create(course);
+    final request = GraphQLRequest<Course>(
+        document: graphQLQuery,
+        modelType: Course.classType,
+        variables: <String, String>{
+          'courseId': widget.courseId,
+        },
+        decodePath: getCourse);
 
-  Amplify.API.mutate(request: courseSaveRequest);
+    try {
+      var response = await Amplify.API.query(request: request).response;
+      var course = response.data;
+      print(course);
+      for (var section in course?.Sections ?? List.empty()) {
+        for (var lesson in section.Lessons ?? List.empty()) {
+          print(lesson);
+        }
+      }
+      return course;
+    } catch (e) {
+      print(e);
+    }
 
-  print('Course id: ${course.id}');
-
-  Section section = Section(courseID: course.id, name: 'Introduction 2');
-
-  final sectionSaveRequest = ModelMutations.create(section);
-
-  Amplify.API.mutate(request: sectionSaveRequest);
-
-  print('Section id: ${section.id}');
-
-  Lesson lesson1 = Lesson(sectionID: section.id, name: 'lesson 1');
-
-  final lessonSaveRequest = ModelMutations.create(lesson1);
-
-  Amplify.API.mutate(request: lessonSaveRequest);
-
-  print('Lesson id: ${lesson1.id}');
+    return Course();
+  }
 }

@@ -19,22 +19,19 @@
 
 // ignore_for_file: public_member_api_docs, annotate_overrides, dead_code, dead_codepublic_member_api_docs, depend_on_referenced_packages, file_names, library_private_types_in_public_api, no_leading_underscores_for_library_prefixes, no_leading_underscores_for_local_identifiers, non_constant_identifier_names, null_check_on_nullable_type_parameter, prefer_adjacent_string_concatenation, prefer_const_constructors, prefer_if_null_operators, prefer_interpolation_to_compose_strings, slash_for_doc_comments, sort_child_properties_last, unnecessary_const, unnecessary_constructor_name, unnecessary_late, unnecessary_new, unnecessary_null_aware_assignments, unnecessary_nullable_for_final_variable_declarations, unnecessary_string_interpolations, use_build_context_synchronously
 
-import 'ModelProvider.dart';
 import 'package:amplify_core/amplify_core.dart';
-import 'package:collection/collection.dart';
 import 'package:flutter/foundation.dart';
 
 
-/** This is an auto generated class representing the Customer type in your schema. */
+/** This is an auto generated class representing the TenantConfiguration type in your schema. */
 @immutable
-class Customer extends Model {
-  static const classType = const _CustomerModelType();
+class TenantConfiguration extends Model {
+  static const classType = const _TenantConfigurationModelType();
   final String id;
-  final String? _userName;
-  final String? _stripeId;
-  final TemporalDate? _createDate;
-  final List<Purchase>? _purchases;
-  final String? _email;
+  final String? _stripeSecretKey;
+  final String? _stripeWebhookSecretKey;
+  final String? _stripeWebhookUrl;
+  final String? _contentpubApiKey;
   final TemporalDateTime? _createdAt;
   final TemporalDateTime? _updatedAt;
 
@@ -45,30 +42,26 @@ class Customer extends Model {
   @override
   String getId() => id;
   
-  CustomerModelIdentifier get modelIdentifier {
-      return CustomerModelIdentifier(
+  TenantConfigurationModelIdentifier get modelIdentifier {
+      return TenantConfigurationModelIdentifier(
         id: id
       );
   }
   
-  String? get userName {
-    return _userName;
+  String? get stripeSecretKey {
+    return _stripeSecretKey;
   }
   
-  String? get stripeId {
-    return _stripeId;
+  String? get stripeWebhookSecretKey {
+    return _stripeWebhookSecretKey;
   }
   
-  TemporalDate? get createDate {
-    return _createDate;
+  String? get stripeWebhookUrl {
+    return _stripeWebhookUrl;
   }
   
-  List<Purchase>? get purchases {
-    return _purchases;
-  }
-  
-  String? get email {
-    return _email;
+  String? get contentpubApiKey {
+    return _contentpubApiKey;
   }
   
   TemporalDateTime? get createdAt {
@@ -79,16 +72,15 @@ class Customer extends Model {
     return _updatedAt;
   }
   
-  const Customer._internal({required this.id, userName, stripeId, createDate, purchases, email, createdAt, updatedAt}): _userName = userName, _stripeId = stripeId, _createDate = createDate, _purchases = purchases, _email = email, _createdAt = createdAt, _updatedAt = updatedAt;
+  const TenantConfiguration._internal({required this.id, stripeSecretKey, stripeWebhookSecretKey, stripeWebhookUrl, contentpubApiKey, createdAt, updatedAt}): _stripeSecretKey = stripeSecretKey, _stripeWebhookSecretKey = stripeWebhookSecretKey, _stripeWebhookUrl = stripeWebhookUrl, _contentpubApiKey = contentpubApiKey, _createdAt = createdAt, _updatedAt = updatedAt;
   
-  factory Customer({String? id, String? userName, String? stripeId, TemporalDate? createDate, List<Purchase>? purchases, String? email}) {
-    return Customer._internal(
+  factory TenantConfiguration({String? id, String? stripeSecretKey, String? stripeWebhookSecretKey, String? stripeWebhookUrl, String? contentpubApiKey}) {
+    return TenantConfiguration._internal(
       id: id == null ? UUID.getUUID() : id,
-      userName: userName,
-      stripeId: stripeId,
-      createDate: createDate,
-      purchases: purchases != null ? List<Purchase>.unmodifiable(purchases) : purchases,
-      email: email);
+      stripeSecretKey: stripeSecretKey,
+      stripeWebhookSecretKey: stripeWebhookSecretKey,
+      stripeWebhookUrl: stripeWebhookUrl,
+      contentpubApiKey: contentpubApiKey);
   }
   
   bool equals(Object other) {
@@ -98,13 +90,12 @@ class Customer extends Model {
   @override
   bool operator ==(Object other) {
     if (identical(other, this)) return true;
-    return other is Customer &&
+    return other is TenantConfiguration &&
       id == other.id &&
-      _userName == other._userName &&
-      _stripeId == other._stripeId &&
-      _createDate == other._createDate &&
-      DeepCollectionEquality().equals(_purchases, other._purchases) &&
-      _email == other._email;
+      _stripeSecretKey == other._stripeSecretKey &&
+      _stripeWebhookSecretKey == other._stripeWebhookSecretKey &&
+      _stripeWebhookUrl == other._stripeWebhookUrl &&
+      _contentpubApiKey == other._contentpubApiKey;
   }
   
   @override
@@ -114,12 +105,12 @@ class Customer extends Model {
   String toString() {
     var buffer = new StringBuffer();
     
-    buffer.write("Customer {");
+    buffer.write("TenantConfiguration {");
     buffer.write("id=" + "$id" + ", ");
-    buffer.write("userName=" + "$_userName" + ", ");
-    buffer.write("stripeId=" + "$_stripeId" + ", ");
-    buffer.write("createDate=" + (_createDate != null ? _createDate!.format() : "null") + ", ");
-    buffer.write("email=" + "$_email" + ", ");
+    buffer.write("stripeSecretKey=" + "$_stripeSecretKey" + ", ");
+    buffer.write("stripeWebhookSecretKey=" + "$_stripeWebhookSecretKey" + ", ");
+    buffer.write("stripeWebhookUrl=" + "$_stripeWebhookUrl" + ", ");
+    buffer.write("contentpubApiKey=" + "$_contentpubApiKey" + ", ");
     buffer.write("createdAt=" + (_createdAt != null ? _createdAt!.format() : "null") + ", ");
     buffer.write("updatedAt=" + (_updatedAt != null ? _updatedAt!.format() : "null"));
     buffer.write("}");
@@ -127,51 +118,41 @@ class Customer extends Model {
     return buffer.toString();
   }
   
-  Customer copyWith({String? userName, String? stripeId, TemporalDate? createDate, List<Purchase>? purchases, String? email}) {
-    return Customer._internal(
+  TenantConfiguration copyWith({String? stripeSecretKey, String? stripeWebhookSecretKey, String? stripeWebhookUrl, String? contentpubApiKey}) {
+    return TenantConfiguration._internal(
       id: id,
-      userName: userName ?? this.userName,
-      stripeId: stripeId ?? this.stripeId,
-      createDate: createDate ?? this.createDate,
-      purchases: purchases ?? this.purchases,
-      email: email ?? this.email);
+      stripeSecretKey: stripeSecretKey ?? this.stripeSecretKey,
+      stripeWebhookSecretKey: stripeWebhookSecretKey ?? this.stripeWebhookSecretKey,
+      stripeWebhookUrl: stripeWebhookUrl ?? this.stripeWebhookUrl,
+      contentpubApiKey: contentpubApiKey ?? this.contentpubApiKey);
   }
   
-  Customer.fromJson(Map<String, dynamic> json)  
+  TenantConfiguration.fromJson(Map<String, dynamic> json)  
     : id = json['id'],
-      _userName = json['userName'],
-      _stripeId = json['stripeId'],
-      _createDate = json['createDate'] != null ? TemporalDate.fromString(json['createDate']) : null,
-      _purchases = json['purchases'] is List
-        ? (json['purchases'] as List)
-          .where((e) => e?['serializedData'] != null)
-          .map((e) => Purchase.fromJson(new Map<String, dynamic>.from(e['serializedData'])))
-          .toList()
-        : null,
-      _email = json['email'],
+      _stripeSecretKey = json['stripeSecretKey'],
+      _stripeWebhookSecretKey = json['stripeWebhookSecretKey'],
+      _stripeWebhookUrl = json['stripeWebhookUrl'],
+      _contentpubApiKey = json['contentpubApiKey'],
       _createdAt = json['createdAt'] != null ? TemporalDateTime.fromString(json['createdAt']) : null,
       _updatedAt = json['updatedAt'] != null ? TemporalDateTime.fromString(json['updatedAt']) : null;
   
   Map<String, dynamic> toJson() => {
-    'id': id, 'userName': _userName, 'stripeId': _stripeId, 'createDate': _createDate?.format(), 'purchases': _purchases?.map((Purchase? e) => e?.toJson()).toList(), 'email': _email, 'createdAt': _createdAt?.format(), 'updatedAt': _updatedAt?.format()
+    'id': id, 'stripeSecretKey': _stripeSecretKey, 'stripeWebhookSecretKey': _stripeWebhookSecretKey, 'stripeWebhookUrl': _stripeWebhookUrl, 'contentpubApiKey': _contentpubApiKey, 'createdAt': _createdAt?.format(), 'updatedAt': _updatedAt?.format()
   };
   
   Map<String, Object?> toMap() => {
-    'id': id, 'userName': _userName, 'stripeId': _stripeId, 'createDate': _createDate, 'purchases': _purchases, 'email': _email, 'createdAt': _createdAt, 'updatedAt': _updatedAt
+    'id': id, 'stripeSecretKey': _stripeSecretKey, 'stripeWebhookSecretKey': _stripeWebhookSecretKey, 'stripeWebhookUrl': _stripeWebhookUrl, 'contentpubApiKey': _contentpubApiKey, 'createdAt': _createdAt, 'updatedAt': _updatedAt
   };
 
-  static final QueryModelIdentifier<CustomerModelIdentifier> MODEL_IDENTIFIER = QueryModelIdentifier<CustomerModelIdentifier>();
+  static final QueryModelIdentifier<TenantConfigurationModelIdentifier> MODEL_IDENTIFIER = QueryModelIdentifier<TenantConfigurationModelIdentifier>();
   static final QueryField ID = QueryField(fieldName: "id");
-  static final QueryField USERNAME = QueryField(fieldName: "userName");
-  static final QueryField STRIPEID = QueryField(fieldName: "stripeId");
-  static final QueryField CREATEDATE = QueryField(fieldName: "createDate");
-  static final QueryField PURCHASES = QueryField(
-    fieldName: "purchases",
-    fieldType: ModelFieldType(ModelFieldTypeEnum.model, ofModelName: (Purchase).toString()));
-  static final QueryField EMAIL = QueryField(fieldName: "email");
+  static final QueryField STRIPESECRETKEY = QueryField(fieldName: "stripeSecretKey");
+  static final QueryField STRIPEWEBHOOKSECRETKEY = QueryField(fieldName: "stripeWebhookSecretKey");
+  static final QueryField STRIPEWEBHOOKURL = QueryField(fieldName: "stripeWebhookUrl");
+  static final QueryField CONTENTPUBAPIKEY = QueryField(fieldName: "contentpubApiKey");
   static var schema = Model.defineSchema(define: (ModelSchemaDefinition modelSchemaDefinition) {
-    modelSchemaDefinition.name = "Customer";
-    modelSchemaDefinition.pluralName = "Customers";
+    modelSchemaDefinition.name = "TenantConfiguration";
+    modelSchemaDefinition.pluralName = "TenantConfigurations";
     
     modelSchemaDefinition.authRules = [
       AuthRule(
@@ -187,32 +168,25 @@ class Customer extends Model {
     modelSchemaDefinition.addField(ModelFieldDefinition.id());
     
     modelSchemaDefinition.addField(ModelFieldDefinition.field(
-      key: Customer.USERNAME,
+      key: TenantConfiguration.STRIPESECRETKEY,
       isRequired: false,
       ofType: ModelFieldType(ModelFieldTypeEnum.string)
     ));
     
     modelSchemaDefinition.addField(ModelFieldDefinition.field(
-      key: Customer.STRIPEID,
+      key: TenantConfiguration.STRIPEWEBHOOKSECRETKEY,
       isRequired: false,
       ofType: ModelFieldType(ModelFieldTypeEnum.string)
     ));
     
     modelSchemaDefinition.addField(ModelFieldDefinition.field(
-      key: Customer.CREATEDATE,
+      key: TenantConfiguration.STRIPEWEBHOOKURL,
       isRequired: false,
-      ofType: ModelFieldType(ModelFieldTypeEnum.date)
-    ));
-    
-    modelSchemaDefinition.addField(ModelFieldDefinition.hasMany(
-      key: Customer.PURCHASES,
-      isRequired: false,
-      ofModelName: (Purchase).toString(),
-      associatedKey: Purchase.CUSTOMERID
+      ofType: ModelFieldType(ModelFieldTypeEnum.string)
     ));
     
     modelSchemaDefinition.addField(ModelFieldDefinition.field(
-      key: Customer.EMAIL,
+      key: TenantConfiguration.CONTENTPUBAPIKEY,
       isRequired: false,
       ofType: ModelFieldType(ModelFieldTypeEnum.string)
     ));
@@ -233,25 +207,25 @@ class Customer extends Model {
   });
 }
 
-class _CustomerModelType extends ModelType<Customer> {
-  const _CustomerModelType();
+class _TenantConfigurationModelType extends ModelType<TenantConfiguration> {
+  const _TenantConfigurationModelType();
   
   @override
-  Customer fromJson(Map<String, dynamic> jsonData) {
-    return Customer.fromJson(jsonData);
+  TenantConfiguration fromJson(Map<String, dynamic> jsonData) {
+    return TenantConfiguration.fromJson(jsonData);
   }
 }
 
 /**
  * This is an auto generated class representing the model identifier
- * of [Customer] in your schema.
+ * of [TenantConfiguration] in your schema.
  */
 @immutable
-class CustomerModelIdentifier implements ModelIdentifier<Customer> {
+class TenantConfigurationModelIdentifier implements ModelIdentifier<TenantConfiguration> {
   final String id;
 
-  /** Create an instance of CustomerModelIdentifier using [id] the primary key. */
-  const CustomerModelIdentifier({
+  /** Create an instance of TenantConfigurationModelIdentifier using [id] the primary key. */
+  const TenantConfigurationModelIdentifier({
     required this.id});
   
   @override
@@ -269,7 +243,7 @@ class CustomerModelIdentifier implements ModelIdentifier<Customer> {
   String serializeAsString() => serializeAsMap().values.join('#');
   
   @override
-  String toString() => 'CustomerModelIdentifier(id: $id)';
+  String toString() => 'TenantConfigurationModelIdentifier(id: $id)';
   
   @override
   bool operator ==(Object other) {
@@ -277,7 +251,7 @@ class CustomerModelIdentifier implements ModelIdentifier<Customer> {
       return true;
     }
     
-    return other is CustomerModelIdentifier &&
+    return other is TenantConfigurationModelIdentifier &&
       id == other.id;
   }
   

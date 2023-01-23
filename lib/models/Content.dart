@@ -21,6 +21,7 @@
 
 import 'ModelProvider.dart';
 import 'package:amplify_core/amplify_core.dart';
+import 'package:collection/collection.dart';
 import 'package:flutter/foundation.dart';
 
 
@@ -36,6 +37,7 @@ class Content extends Model {
   final String? _objectId;
   final String? _owner;
   final Bundle? _bundles;
+  final List<ContentCoworker>? _coworkers;
   final TemporalDateTime? _createdAt;
   final TemporalDateTime? _updatedAt;
 
@@ -80,6 +82,10 @@ class Content extends Model {
     return _bundles;
   }
   
+  List<ContentCoworker>? get coworkers {
+    return _coworkers;
+  }
+  
   TemporalDateTime? get createdAt {
     return _createdAt;
   }
@@ -88,9 +94,9 @@ class Content extends Model {
     return _updatedAt;
   }
   
-  const Content._internal({required this.id, name, description, s3Url, type, objectId, owner, bundles, createdAt, updatedAt}): _name = name, _description = description, _s3Url = s3Url, _type = type, _objectId = objectId, _owner = owner, _bundles = bundles, _createdAt = createdAt, _updatedAt = updatedAt;
+  const Content._internal({required this.id, name, description, s3Url, type, objectId, owner, bundles, coworkers, createdAt, updatedAt}): _name = name, _description = description, _s3Url = s3Url, _type = type, _objectId = objectId, _owner = owner, _bundles = bundles, _coworkers = coworkers, _createdAt = createdAt, _updatedAt = updatedAt;
   
-  factory Content({String? id, String? name, String? description, String? s3Url, ContentType? type, String? objectId, String? owner, Bundle? bundles}) {
+  factory Content({String? id, String? name, String? description, String? s3Url, ContentType? type, String? objectId, String? owner, Bundle? bundles, List<ContentCoworker>? coworkers}) {
     return Content._internal(
       id: id == null ? UUID.getUUID() : id,
       name: name,
@@ -99,7 +105,8 @@ class Content extends Model {
       type: type,
       objectId: objectId,
       owner: owner,
-      bundles: bundles);
+      bundles: bundles,
+      coworkers: coworkers != null ? List<ContentCoworker>.unmodifiable(coworkers) : coworkers);
   }
   
   bool equals(Object other) {
@@ -117,7 +124,8 @@ class Content extends Model {
       _type == other._type &&
       _objectId == other._objectId &&
       _owner == other._owner &&
-      _bundles == other._bundles;
+      _bundles == other._bundles &&
+      DeepCollectionEquality().equals(_coworkers, other._coworkers);
   }
   
   @override
@@ -143,7 +151,7 @@ class Content extends Model {
     return buffer.toString();
   }
   
-  Content copyWith({String? name, String? description, String? s3Url, ContentType? type, String? objectId, String? owner, Bundle? bundles}) {
+  Content copyWith({String? name, String? description, String? s3Url, ContentType? type, String? objectId, String? owner, Bundle? bundles, List<ContentCoworker>? coworkers}) {
     return Content._internal(
       id: id,
       name: name ?? this.name,
@@ -152,7 +160,8 @@ class Content extends Model {
       type: type ?? this.type,
       objectId: objectId ?? this.objectId,
       owner: owner ?? this.owner,
-      bundles: bundles ?? this.bundles);
+      bundles: bundles ?? this.bundles,
+      coworkers: coworkers ?? this.coworkers);
   }
   
   Content.fromJson(Map<String, dynamic> json)  
@@ -166,15 +175,21 @@ class Content extends Model {
       _bundles = json['bundles']?['serializedData'] != null
         ? Bundle.fromJson(new Map<String, dynamic>.from(json['bundles']['serializedData']))
         : null,
+      _coworkers = json['coworkers'] is List
+        ? (json['coworkers'] as List)
+          .where((e) => e?['serializedData'] != null)
+          .map((e) => ContentCoworker.fromJson(new Map<String, dynamic>.from(e['serializedData'])))
+          .toList()
+        : null,
       _createdAt = json['createdAt'] != null ? TemporalDateTime.fromString(json['createdAt']) : null,
       _updatedAt = json['updatedAt'] != null ? TemporalDateTime.fromString(json['updatedAt']) : null;
   
   Map<String, dynamic> toJson() => {
-    'id': id, 'name': _name, 'description': _description, 's3Url': _s3Url, 'type': enumToString(_type), 'objectId': _objectId, 'owner': _owner, 'bundles': _bundles?.toJson(), 'createdAt': _createdAt?.format(), 'updatedAt': _updatedAt?.format()
+    'id': id, 'name': _name, 'description': _description, 's3Url': _s3Url, 'type': enumToString(_type), 'objectId': _objectId, 'owner': _owner, 'bundles': _bundles?.toJson(), 'coworkers': _coworkers?.map((ContentCoworker? e) => e?.toJson()).toList(), 'createdAt': _createdAt?.format(), 'updatedAt': _updatedAt?.format()
   };
   
   Map<String, Object?> toMap() => {
-    'id': id, 'name': _name, 'description': _description, 's3Url': _s3Url, 'type': _type, 'objectId': _objectId, 'owner': _owner, 'bundles': _bundles, 'createdAt': _createdAt, 'updatedAt': _updatedAt
+    'id': id, 'name': _name, 'description': _description, 's3Url': _s3Url, 'type': _type, 'objectId': _objectId, 'owner': _owner, 'bundles': _bundles, 'coworkers': _coworkers, 'createdAt': _createdAt, 'updatedAt': _updatedAt
   };
 
   static final QueryModelIdentifier<ContentModelIdentifier> MODEL_IDENTIFIER = QueryModelIdentifier<ContentModelIdentifier>();
@@ -188,6 +203,9 @@ class Content extends Model {
   static final QueryField BUNDLES = QueryField(
     fieldName: "bundles",
     fieldType: ModelFieldType(ModelFieldTypeEnum.model, ofModelName: (Bundle).toString()));
+  static final QueryField COWORKERS = QueryField(
+    fieldName: "coworkers",
+    fieldType: ModelFieldType(ModelFieldTypeEnum.model, ofModelName: (ContentCoworker).toString()));
   static var schema = Model.defineSchema(define: (ModelSchemaDefinition modelSchemaDefinition) {
     modelSchemaDefinition.name = "Content";
     modelSchemaDefinition.pluralName = "Contents";
@@ -246,6 +264,13 @@ class Content extends Model {
       isRequired: false,
       targetNames: ["bundleContentsId"],
       ofModelName: (Bundle).toString()
+    ));
+    
+    modelSchemaDefinition.addField(ModelFieldDefinition.hasMany(
+      key: Content.COWORKERS,
+      isRequired: false,
+      ofModelName: (ContentCoworker).toString(),
+      associatedKey: ContentCoworker.CONTENT
     ));
     
     modelSchemaDefinition.addField(ModelFieldDefinition.nonQueryField(

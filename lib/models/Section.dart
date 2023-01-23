@@ -34,6 +34,7 @@ class Section extends Model {
   final String? _description;
   final String? _courseID;
   final List<Lesson>? _Lessons;
+  final String? _subtitle;
   final TemporalDateTime? _createdAt;
   final TemporalDateTime? _updatedAt;
 
@@ -75,6 +76,10 @@ class Section extends Model {
     return _Lessons;
   }
   
+  String? get subtitle {
+    return _subtitle;
+  }
+  
   TemporalDateTime? get createdAt {
     return _createdAt;
   }
@@ -83,15 +88,16 @@ class Section extends Model {
     return _updatedAt;
   }
   
-  const Section._internal({required this.id, name, description, required courseID, Lessons, createdAt, updatedAt}): _name = name, _description = description, _courseID = courseID, _Lessons = Lessons, _createdAt = createdAt, _updatedAt = updatedAt;
+  const Section._internal({required this.id, name, description, required courseID, Lessons, subtitle, createdAt, updatedAt}): _name = name, _description = description, _courseID = courseID, _Lessons = Lessons, _subtitle = subtitle, _createdAt = createdAt, _updatedAt = updatedAt;
   
-  factory Section({String? id, String? name, String? description, required String courseID, List<Lesson>? Lessons}) {
+  factory Section({String? id, String? name, String? description, required String courseID, List<Lesson>? Lessons, String? subtitle}) {
     return Section._internal(
       id: id == null ? UUID.getUUID() : id,
       name: name,
       description: description,
       courseID: courseID,
-      Lessons: Lessons != null ? List<Lesson>.unmodifiable(Lessons) : Lessons);
+      Lessons: Lessons != null ? List<Lesson>.unmodifiable(Lessons) : Lessons,
+      subtitle: subtitle);
   }
   
   bool equals(Object other) {
@@ -106,7 +112,8 @@ class Section extends Model {
       _name == other._name &&
       _description == other._description &&
       _courseID == other._courseID &&
-      DeepCollectionEquality().equals(_Lessons, other._Lessons);
+      DeepCollectionEquality().equals(_Lessons, other._Lessons) &&
+      _subtitle == other._subtitle;
   }
   
   @override
@@ -121,6 +128,7 @@ class Section extends Model {
     buffer.write("name=" + "$_name" + ", ");
     buffer.write("description=" + "$_description" + ", ");
     buffer.write("courseID=" + "$_courseID" + ", ");
+    buffer.write("subtitle=" + "$_subtitle" + ", ");
     buffer.write("createdAt=" + (_createdAt != null ? _createdAt!.format() : "null") + ", ");
     buffer.write("updatedAt=" + (_updatedAt != null ? _updatedAt!.format() : "null"));
     buffer.write("}");
@@ -128,13 +136,14 @@ class Section extends Model {
     return buffer.toString();
   }
   
-  Section copyWith({String? name, String? description, String? courseID, List<Lesson>? Lessons}) {
+  Section copyWith({String? name, String? description, String? courseID, List<Lesson>? Lessons, String? subtitle}) {
     return Section._internal(
       id: id,
       name: name ?? this.name,
       description: description ?? this.description,
       courseID: courseID ?? this.courseID,
-      Lessons: Lessons ?? this.Lessons);
+      Lessons: Lessons ?? this.Lessons,
+      subtitle: subtitle ?? this.subtitle);
   }
   
   Section.fromJson(Map<String, dynamic> json)  
@@ -148,15 +157,16 @@ class Section extends Model {
           .map((e) => Lesson.fromJson(new Map<String, dynamic>.from(e['serializedData'])))
           .toList()
         : null,
+      _subtitle = json['subtitle'],
       _createdAt = json['createdAt'] != null ? TemporalDateTime.fromString(json['createdAt']) : null,
       _updatedAt = json['updatedAt'] != null ? TemporalDateTime.fromString(json['updatedAt']) : null;
   
   Map<String, dynamic> toJson() => {
-    'id': id, 'name': _name, 'description': _description, 'courseID': _courseID, 'Lessons': _Lessons?.map((Lesson? e) => e?.toJson()).toList(), 'createdAt': _createdAt?.format(), 'updatedAt': _updatedAt?.format()
+    'id': id, 'name': _name, 'description': _description, 'courseID': _courseID, 'Lessons': _Lessons?.map((Lesson? e) => e?.toJson()).toList(), 'subtitle': _subtitle, 'createdAt': _createdAt?.format(), 'updatedAt': _updatedAt?.format()
   };
   
   Map<String, Object?> toMap() => {
-    'id': id, 'name': _name, 'description': _description, 'courseID': _courseID, 'Lessons': _Lessons, 'createdAt': _createdAt, 'updatedAt': _updatedAt
+    'id': id, 'name': _name, 'description': _description, 'courseID': _courseID, 'Lessons': _Lessons, 'subtitle': _subtitle, 'createdAt': _createdAt, 'updatedAt': _updatedAt
   };
 
   static final QueryModelIdentifier<SectionModelIdentifier> MODEL_IDENTIFIER = QueryModelIdentifier<SectionModelIdentifier>();
@@ -167,6 +177,7 @@ class Section extends Model {
   static final QueryField LESSONS = QueryField(
     fieldName: "Lessons",
     fieldType: ModelFieldType(ModelFieldTypeEnum.model, ofModelName: (Lesson).toString()));
+  static final QueryField SUBTITLE = QueryField(fieldName: "subtitle");
   static var schema = Model.defineSchema(define: (ModelSchemaDefinition modelSchemaDefinition) {
     modelSchemaDefinition.name = "Section";
     modelSchemaDefinition.pluralName = "Sections";
@@ -211,6 +222,12 @@ class Section extends Model {
       isRequired: false,
       ofModelName: (Lesson).toString(),
       associatedKey: Lesson.SECTIONID
+    ));
+    
+    modelSchemaDefinition.addField(ModelFieldDefinition.field(
+      key: Section.SUBTITLE,
+      isRequired: false,
+      ofType: ModelFieldType(ModelFieldTypeEnum.string)
     ));
     
     modelSchemaDefinition.addField(ModelFieldDefinition.nonQueryField(

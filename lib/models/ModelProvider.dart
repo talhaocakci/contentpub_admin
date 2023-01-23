@@ -22,18 +22,23 @@
 import 'package:amplify_core/amplify_core.dart';
 import 'Bundle.dart';
 import 'Content.dart';
+import 'ContentCoworker.dart';
 import 'Course.dart';
+import 'Coworker.dart';
 import 'Customer.dart';
 import 'Lesson.dart';
 import 'Price.dart';
 import 'Purchase.dart';
 import 'Section.dart';
 import 'Tenant.dart';
+import 'TenantConfiguration.dart';
 
 export 'Bundle.dart';
 export 'Content.dart';
+export 'ContentCoworker.dart';
 export 'ContentType.dart';
 export 'Course.dart';
+export 'Coworker.dart';
 export 'Customer.dart';
 export 'Lesson.dart';
 export 'Price.dart';
@@ -43,12 +48,13 @@ export 'RecurrenceType.dart';
 export 'Section.dart';
 export 'Source.dart';
 export 'Tenant.dart';
+export 'TenantConfiguration.dart';
 
 class ModelProvider implements ModelProviderInterface {
   @override
-  String version = "bbf5d1e5d28a29cd794fc7ca7a03d120";
+  String version = "8ddb6f848e33a69068cc5498b3fa227c";
   @override
-  List<ModelSchema> modelSchemas = [Bundle.schema, Content.schema, Course.schema, Customer.schema, Lesson.schema, Price.schema, Purchase.schema, Section.schema, Tenant.schema];
+  List<ModelSchema> modelSchemas = [Bundle.schema, Content.schema, ContentCoworker.schema, Course.schema, Coworker.schema, Customer.schema, Lesson.schema, Price.schema, Purchase.schema, Section.schema, Tenant.schema, TenantConfiguration.schema];
   static final ModelProvider _instance = ModelProvider();
   @override
   List<ModelSchema> customTypeSchemas = [];
@@ -61,8 +67,12 @@ class ModelProvider implements ModelProviderInterface {
         return Bundle.classType;
       case "Content":
         return Content.classType;
+      case "ContentCoworker":
+        return ContentCoworker.classType;
       case "Course":
         return Course.classType;
+      case "Coworker":
+        return Coworker.classType;
       case "Customer":
         return Customer.classType;
       case "Lesson":
@@ -75,6 +85,8 @@ class ModelProvider implements ModelProviderInterface {
         return Section.classType;
       case "Tenant":
         return Tenant.classType;
+      case "TenantConfiguration":
+        return TenantConfiguration.classType;
       default:
         throw Exception("Failed to find model in model provider for model name: " + modelName);
     }

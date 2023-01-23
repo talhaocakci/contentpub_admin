@@ -25,16 +25,16 @@ import 'package:collection/collection.dart';
 import 'package:flutter/foundation.dart';
 
 
-/** This is an auto generated class representing the Customer type in your schema. */
+/** This is an auto generated class representing the Coworker type in your schema. */
 @immutable
-class Customer extends Model {
-  static const classType = const _CustomerModelType();
+class Coworker extends Model {
+  static const classType = const _CoworkerModelType();
   final String id;
-  final String? _userName;
-  final String? _stripeId;
-  final TemporalDate? _createDate;
-  final List<Purchase>? _purchases;
   final String? _email;
+  final String? _displayName;
+  final String? _photoUrl;
+  final String? _description;
+  final List<ContentCoworker>? _contents;
   final TemporalDateTime? _createdAt;
   final TemporalDateTime? _updatedAt;
 
@@ -45,30 +45,30 @@ class Customer extends Model {
   @override
   String getId() => id;
   
-  CustomerModelIdentifier get modelIdentifier {
-      return CustomerModelIdentifier(
+  CoworkerModelIdentifier get modelIdentifier {
+      return CoworkerModelIdentifier(
         id: id
       );
   }
   
-  String? get userName {
-    return _userName;
-  }
-  
-  String? get stripeId {
-    return _stripeId;
-  }
-  
-  TemporalDate? get createDate {
-    return _createDate;
-  }
-  
-  List<Purchase>? get purchases {
-    return _purchases;
-  }
-  
   String? get email {
     return _email;
+  }
+  
+  String? get displayName {
+    return _displayName;
+  }
+  
+  String? get photoUrl {
+    return _photoUrl;
+  }
+  
+  String? get description {
+    return _description;
+  }
+  
+  List<ContentCoworker>? get contents {
+    return _contents;
   }
   
   TemporalDateTime? get createdAt {
@@ -79,16 +79,16 @@ class Customer extends Model {
     return _updatedAt;
   }
   
-  const Customer._internal({required this.id, userName, stripeId, createDate, purchases, email, createdAt, updatedAt}): _userName = userName, _stripeId = stripeId, _createDate = createDate, _purchases = purchases, _email = email, _createdAt = createdAt, _updatedAt = updatedAt;
+  const Coworker._internal({required this.id, email, displayName, photoUrl, description, contents, createdAt, updatedAt}): _email = email, _displayName = displayName, _photoUrl = photoUrl, _description = description, _contents = contents, _createdAt = createdAt, _updatedAt = updatedAt;
   
-  factory Customer({String? id, String? userName, String? stripeId, TemporalDate? createDate, List<Purchase>? purchases, String? email}) {
-    return Customer._internal(
+  factory Coworker({String? id, String? email, String? displayName, String? photoUrl, String? description, List<ContentCoworker>? contents}) {
+    return Coworker._internal(
       id: id == null ? UUID.getUUID() : id,
-      userName: userName,
-      stripeId: stripeId,
-      createDate: createDate,
-      purchases: purchases != null ? List<Purchase>.unmodifiable(purchases) : purchases,
-      email: email);
+      email: email,
+      displayName: displayName,
+      photoUrl: photoUrl,
+      description: description,
+      contents: contents != null ? List<ContentCoworker>.unmodifiable(contents) : contents);
   }
   
   bool equals(Object other) {
@@ -98,13 +98,13 @@ class Customer extends Model {
   @override
   bool operator ==(Object other) {
     if (identical(other, this)) return true;
-    return other is Customer &&
+    return other is Coworker &&
       id == other.id &&
-      _userName == other._userName &&
-      _stripeId == other._stripeId &&
-      _createDate == other._createDate &&
-      DeepCollectionEquality().equals(_purchases, other._purchases) &&
-      _email == other._email;
+      _email == other._email &&
+      _displayName == other._displayName &&
+      _photoUrl == other._photoUrl &&
+      _description == other._description &&
+      DeepCollectionEquality().equals(_contents, other._contents);
   }
   
   @override
@@ -114,12 +114,12 @@ class Customer extends Model {
   String toString() {
     var buffer = new StringBuffer();
     
-    buffer.write("Customer {");
+    buffer.write("Coworker {");
     buffer.write("id=" + "$id" + ", ");
-    buffer.write("userName=" + "$_userName" + ", ");
-    buffer.write("stripeId=" + "$_stripeId" + ", ");
-    buffer.write("createDate=" + (_createDate != null ? _createDate!.format() : "null") + ", ");
     buffer.write("email=" + "$_email" + ", ");
+    buffer.write("displayName=" + "$_displayName" + ", ");
+    buffer.write("photoUrl=" + "$_photoUrl" + ", ");
+    buffer.write("description=" + "$_description" + ", ");
     buffer.write("createdAt=" + (_createdAt != null ? _createdAt!.format() : "null") + ", ");
     buffer.write("updatedAt=" + (_updatedAt != null ? _updatedAt!.format() : "null"));
     buffer.write("}");
@@ -127,51 +127,51 @@ class Customer extends Model {
     return buffer.toString();
   }
   
-  Customer copyWith({String? userName, String? stripeId, TemporalDate? createDate, List<Purchase>? purchases, String? email}) {
-    return Customer._internal(
+  Coworker copyWith({String? email, String? displayName, String? photoUrl, String? description, List<ContentCoworker>? contents}) {
+    return Coworker._internal(
       id: id,
-      userName: userName ?? this.userName,
-      stripeId: stripeId ?? this.stripeId,
-      createDate: createDate ?? this.createDate,
-      purchases: purchases ?? this.purchases,
-      email: email ?? this.email);
+      email: email ?? this.email,
+      displayName: displayName ?? this.displayName,
+      photoUrl: photoUrl ?? this.photoUrl,
+      description: description ?? this.description,
+      contents: contents ?? this.contents);
   }
   
-  Customer.fromJson(Map<String, dynamic> json)  
+  Coworker.fromJson(Map<String, dynamic> json)  
     : id = json['id'],
-      _userName = json['userName'],
-      _stripeId = json['stripeId'],
-      _createDate = json['createDate'] != null ? TemporalDate.fromString(json['createDate']) : null,
-      _purchases = json['purchases'] is List
-        ? (json['purchases'] as List)
+      _email = json['email'],
+      _displayName = json['displayName'],
+      _photoUrl = json['photoUrl'],
+      _description = json['description'],
+      _contents = json['contents'] is List
+        ? (json['contents'] as List)
           .where((e) => e?['serializedData'] != null)
-          .map((e) => Purchase.fromJson(new Map<String, dynamic>.from(e['serializedData'])))
+          .map((e) => ContentCoworker.fromJson(new Map<String, dynamic>.from(e['serializedData'])))
           .toList()
         : null,
-      _email = json['email'],
       _createdAt = json['createdAt'] != null ? TemporalDateTime.fromString(json['createdAt']) : null,
       _updatedAt = json['updatedAt'] != null ? TemporalDateTime.fromString(json['updatedAt']) : null;
   
   Map<String, dynamic> toJson() => {
-    'id': id, 'userName': _userName, 'stripeId': _stripeId, 'createDate': _createDate?.format(), 'purchases': _purchases?.map((Purchase? e) => e?.toJson()).toList(), 'email': _email, 'createdAt': _createdAt?.format(), 'updatedAt': _updatedAt?.format()
+    'id': id, 'email': _email, 'displayName': _displayName, 'photoUrl': _photoUrl, 'description': _description, 'contents': _contents?.map((ContentCoworker? e) => e?.toJson()).toList(), 'createdAt': _createdAt?.format(), 'updatedAt': _updatedAt?.format()
   };
   
   Map<String, Object?> toMap() => {
-    'id': id, 'userName': _userName, 'stripeId': _stripeId, 'createDate': _createDate, 'purchases': _purchases, 'email': _email, 'createdAt': _createdAt, 'updatedAt': _updatedAt
+    'id': id, 'email': _email, 'displayName': _displayName, 'photoUrl': _photoUrl, 'description': _description, 'contents': _contents, 'createdAt': _createdAt, 'updatedAt': _updatedAt
   };
 
-  static final QueryModelIdentifier<CustomerModelIdentifier> MODEL_IDENTIFIER = QueryModelIdentifier<CustomerModelIdentifier>();
+  static final QueryModelIdentifier<CoworkerModelIdentifier> MODEL_IDENTIFIER = QueryModelIdentifier<CoworkerModelIdentifier>();
   static final QueryField ID = QueryField(fieldName: "id");
-  static final QueryField USERNAME = QueryField(fieldName: "userName");
-  static final QueryField STRIPEID = QueryField(fieldName: "stripeId");
-  static final QueryField CREATEDATE = QueryField(fieldName: "createDate");
-  static final QueryField PURCHASES = QueryField(
-    fieldName: "purchases",
-    fieldType: ModelFieldType(ModelFieldTypeEnum.model, ofModelName: (Purchase).toString()));
   static final QueryField EMAIL = QueryField(fieldName: "email");
+  static final QueryField DISPLAYNAME = QueryField(fieldName: "displayName");
+  static final QueryField PHOTOURL = QueryField(fieldName: "photoUrl");
+  static final QueryField DESCRIPTION = QueryField(fieldName: "description");
+  static final QueryField CONTENTS = QueryField(
+    fieldName: "contents",
+    fieldType: ModelFieldType(ModelFieldTypeEnum.model, ofModelName: (ContentCoworker).toString()));
   static var schema = Model.defineSchema(define: (ModelSchemaDefinition modelSchemaDefinition) {
-    modelSchemaDefinition.name = "Customer";
-    modelSchemaDefinition.pluralName = "Customers";
+    modelSchemaDefinition.name = "Coworker";
+    modelSchemaDefinition.pluralName = "Coworkers";
     
     modelSchemaDefinition.authRules = [
       AuthRule(
@@ -187,34 +187,34 @@ class Customer extends Model {
     modelSchemaDefinition.addField(ModelFieldDefinition.id());
     
     modelSchemaDefinition.addField(ModelFieldDefinition.field(
-      key: Customer.USERNAME,
+      key: Coworker.EMAIL,
       isRequired: false,
       ofType: ModelFieldType(ModelFieldTypeEnum.string)
     ));
     
     modelSchemaDefinition.addField(ModelFieldDefinition.field(
-      key: Customer.STRIPEID,
+      key: Coworker.DISPLAYNAME,
       isRequired: false,
       ofType: ModelFieldType(ModelFieldTypeEnum.string)
     ));
     
     modelSchemaDefinition.addField(ModelFieldDefinition.field(
-      key: Customer.CREATEDATE,
+      key: Coworker.PHOTOURL,
       isRequired: false,
-      ofType: ModelFieldType(ModelFieldTypeEnum.date)
+      ofType: ModelFieldType(ModelFieldTypeEnum.string)
+    ));
+    
+    modelSchemaDefinition.addField(ModelFieldDefinition.field(
+      key: Coworker.DESCRIPTION,
+      isRequired: false,
+      ofType: ModelFieldType(ModelFieldTypeEnum.string)
     ));
     
     modelSchemaDefinition.addField(ModelFieldDefinition.hasMany(
-      key: Customer.PURCHASES,
+      key: Coworker.CONTENTS,
       isRequired: false,
-      ofModelName: (Purchase).toString(),
-      associatedKey: Purchase.CUSTOMERID
-    ));
-    
-    modelSchemaDefinition.addField(ModelFieldDefinition.field(
-      key: Customer.EMAIL,
-      isRequired: false,
-      ofType: ModelFieldType(ModelFieldTypeEnum.string)
+      ofModelName: (ContentCoworker).toString(),
+      associatedKey: ContentCoworker.COWORKER
     ));
     
     modelSchemaDefinition.addField(ModelFieldDefinition.nonQueryField(
@@ -233,25 +233,25 @@ class Customer extends Model {
   });
 }
 
-class _CustomerModelType extends ModelType<Customer> {
-  const _CustomerModelType();
+class _CoworkerModelType extends ModelType<Coworker> {
+  const _CoworkerModelType();
   
   @override
-  Customer fromJson(Map<String, dynamic> jsonData) {
-    return Customer.fromJson(jsonData);
+  Coworker fromJson(Map<String, dynamic> jsonData) {
+    return Coworker.fromJson(jsonData);
   }
 }
 
 /**
  * This is an auto generated class representing the model identifier
- * of [Customer] in your schema.
+ * of [Coworker] in your schema.
  */
 @immutable
-class CustomerModelIdentifier implements ModelIdentifier<Customer> {
+class CoworkerModelIdentifier implements ModelIdentifier<Coworker> {
   final String id;
 
-  /** Create an instance of CustomerModelIdentifier using [id] the primary key. */
-  const CustomerModelIdentifier({
+  /** Create an instance of CoworkerModelIdentifier using [id] the primary key. */
+  const CoworkerModelIdentifier({
     required this.id});
   
   @override
@@ -269,7 +269,7 @@ class CustomerModelIdentifier implements ModelIdentifier<Customer> {
   String serializeAsString() => serializeAsMap().values.join('#');
   
   @override
-  String toString() => 'CustomerModelIdentifier(id: $id)';
+  String toString() => 'CoworkerModelIdentifier(id: $id)';
   
   @override
   bool operator ==(Object other) {
@@ -277,7 +277,7 @@ class CustomerModelIdentifier implements ModelIdentifier<Customer> {
       return true;
     }
     
-    return other is CustomerModelIdentifier &&
+    return other is CoworkerModelIdentifier &&
       id == other.id;
   }
   

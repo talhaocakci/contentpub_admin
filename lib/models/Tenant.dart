@@ -19,6 +19,7 @@
 
 // ignore_for_file: public_member_api_docs, annotate_overrides, dead_code, dead_codepublic_member_api_docs, depend_on_referenced_packages, file_names, library_private_types_in_public_api, no_leading_underscores_for_library_prefixes, no_leading_underscores_for_local_identifiers, non_constant_identifier_names, null_check_on_nullable_type_parameter, prefer_adjacent_string_concatenation, prefer_const_constructors, prefer_if_null_operators, prefer_interpolation_to_compose_strings, slash_for_doc_comments, sort_child_properties_last, unnecessary_const, unnecessary_constructor_name, unnecessary_late, unnecessary_new, unnecessary_null_aware_assignments, unnecessary_nullable_for_final_variable_declarations, unnecessary_string_interpolations, use_build_context_synchronously
 
+import 'ModelProvider.dart';
 import 'package:amplify_core/amplify_core.dart';
 import 'package:flutter/foundation.dart';
 
@@ -29,8 +30,15 @@ class Tenant extends Model {
   static const classType = const _TenantModelType();
   final String id;
   final String? _name;
+  final TenantConfiguration? _testingConfiguration;
+  final TenantConfiguration? _productionConfiguration;
+  final String? _coverPhotoUrl;
+  final String? _promoVideoUrl;
+  final String? _description;
   final TemporalDateTime? _createdAt;
   final TemporalDateTime? _updatedAt;
+  final String? _tenantTestingConfigurationId;
+  final String? _tenantProductionConfigurationId;
 
   @override
   getInstanceType() => classType;
@@ -49,6 +57,26 @@ class Tenant extends Model {
     return _name;
   }
   
+  TenantConfiguration? get testingConfiguration {
+    return _testingConfiguration;
+  }
+  
+  TenantConfiguration? get productionConfiguration {
+    return _productionConfiguration;
+  }
+  
+  String? get coverPhotoUrl {
+    return _coverPhotoUrl;
+  }
+  
+  String? get promoVideoUrl {
+    return _promoVideoUrl;
+  }
+  
+  String? get description {
+    return _description;
+  }
+  
   TemporalDateTime? get createdAt {
     return _createdAt;
   }
@@ -57,12 +85,27 @@ class Tenant extends Model {
     return _updatedAt;
   }
   
-  const Tenant._internal({required this.id, name, createdAt, updatedAt}): _name = name, _createdAt = createdAt, _updatedAt = updatedAt;
+  String? get tenantTestingConfigurationId {
+    return _tenantTestingConfigurationId;
+  }
   
-  factory Tenant({String? id, String? name}) {
+  String? get tenantProductionConfigurationId {
+    return _tenantProductionConfigurationId;
+  }
+  
+  const Tenant._internal({required this.id, name, testingConfiguration, productionConfiguration, coverPhotoUrl, promoVideoUrl, description, createdAt, updatedAt, tenantTestingConfigurationId, tenantProductionConfigurationId}): _name = name, _testingConfiguration = testingConfiguration, _productionConfiguration = productionConfiguration, _coverPhotoUrl = coverPhotoUrl, _promoVideoUrl = promoVideoUrl, _description = description, _createdAt = createdAt, _updatedAt = updatedAt, _tenantTestingConfigurationId = tenantTestingConfigurationId, _tenantProductionConfigurationId = tenantProductionConfigurationId;
+  
+  factory Tenant({String? id, String? name, TenantConfiguration? testingConfiguration, TenantConfiguration? productionConfiguration, String? coverPhotoUrl, String? promoVideoUrl, String? description, String? tenantTestingConfigurationId, String? tenantProductionConfigurationId}) {
     return Tenant._internal(
       id: id == null ? UUID.getUUID() : id,
-      name: name);
+      name: name,
+      testingConfiguration: testingConfiguration,
+      productionConfiguration: productionConfiguration,
+      coverPhotoUrl: coverPhotoUrl,
+      promoVideoUrl: promoVideoUrl,
+      description: description,
+      tenantTestingConfigurationId: tenantTestingConfigurationId,
+      tenantProductionConfigurationId: tenantProductionConfigurationId);
   }
   
   bool equals(Object other) {
@@ -74,7 +117,14 @@ class Tenant extends Model {
     if (identical(other, this)) return true;
     return other is Tenant &&
       id == other.id &&
-      _name == other._name;
+      _name == other._name &&
+      _testingConfiguration == other._testingConfiguration &&
+      _productionConfiguration == other._productionConfiguration &&
+      _coverPhotoUrl == other._coverPhotoUrl &&
+      _promoVideoUrl == other._promoVideoUrl &&
+      _description == other._description &&
+      _tenantTestingConfigurationId == other._tenantTestingConfigurationId &&
+      _tenantProductionConfigurationId == other._tenantProductionConfigurationId;
   }
   
   @override
@@ -87,36 +137,70 @@ class Tenant extends Model {
     buffer.write("Tenant {");
     buffer.write("id=" + "$id" + ", ");
     buffer.write("name=" + "$_name" + ", ");
+    buffer.write("coverPhotoUrl=" + "$_coverPhotoUrl" + ", ");
+    buffer.write("promoVideoUrl=" + "$_promoVideoUrl" + ", ");
+    buffer.write("description=" + "$_description" + ", ");
     buffer.write("createdAt=" + (_createdAt != null ? _createdAt!.format() : "null") + ", ");
-    buffer.write("updatedAt=" + (_updatedAt != null ? _updatedAt!.format() : "null"));
+    buffer.write("updatedAt=" + (_updatedAt != null ? _updatedAt!.format() : "null") + ", ");
+    buffer.write("tenantTestingConfigurationId=" + "$_tenantTestingConfigurationId" + ", ");
+    buffer.write("tenantProductionConfigurationId=" + "$_tenantProductionConfigurationId");
     buffer.write("}");
     
     return buffer.toString();
   }
   
-  Tenant copyWith({String? name}) {
+  Tenant copyWith({String? name, TenantConfiguration? testingConfiguration, TenantConfiguration? productionConfiguration, String? coverPhotoUrl, String? promoVideoUrl, String? description, String? tenantTestingConfigurationId, String? tenantProductionConfigurationId}) {
     return Tenant._internal(
       id: id,
-      name: name ?? this.name);
+      name: name ?? this.name,
+      testingConfiguration: testingConfiguration ?? this.testingConfiguration,
+      productionConfiguration: productionConfiguration ?? this.productionConfiguration,
+      coverPhotoUrl: coverPhotoUrl ?? this.coverPhotoUrl,
+      promoVideoUrl: promoVideoUrl ?? this.promoVideoUrl,
+      description: description ?? this.description,
+      tenantTestingConfigurationId: tenantTestingConfigurationId ?? this.tenantTestingConfigurationId,
+      tenantProductionConfigurationId: tenantProductionConfigurationId ?? this.tenantProductionConfigurationId);
   }
   
   Tenant.fromJson(Map<String, dynamic> json)  
     : id = json['id'],
       _name = json['name'],
+      _testingConfiguration = json['testingConfiguration']?['serializedData'] != null
+        ? TenantConfiguration.fromJson(new Map<String, dynamic>.from(json['testingConfiguration']['serializedData']))
+        : null,
+      _productionConfiguration = json['productionConfiguration']?['serializedData'] != null
+        ? TenantConfiguration.fromJson(new Map<String, dynamic>.from(json['productionConfiguration']['serializedData']))
+        : null,
+      _coverPhotoUrl = json['coverPhotoUrl'],
+      _promoVideoUrl = json['promoVideoUrl'],
+      _description = json['description'],
       _createdAt = json['createdAt'] != null ? TemporalDateTime.fromString(json['createdAt']) : null,
-      _updatedAt = json['updatedAt'] != null ? TemporalDateTime.fromString(json['updatedAt']) : null;
+      _updatedAt = json['updatedAt'] != null ? TemporalDateTime.fromString(json['updatedAt']) : null,
+      _tenantTestingConfigurationId = json['tenantTestingConfigurationId'],
+      _tenantProductionConfigurationId = json['tenantProductionConfigurationId'];
   
   Map<String, dynamic> toJson() => {
-    'id': id, 'name': _name, 'createdAt': _createdAt?.format(), 'updatedAt': _updatedAt?.format()
+    'id': id, 'name': _name, 'testingConfiguration': _testingConfiguration?.toJson(), 'productionConfiguration': _productionConfiguration?.toJson(), 'coverPhotoUrl': _coverPhotoUrl, 'promoVideoUrl': _promoVideoUrl, 'description': _description, 'createdAt': _createdAt?.format(), 'updatedAt': _updatedAt?.format(), 'tenantTestingConfigurationId': _tenantTestingConfigurationId, 'tenantProductionConfigurationId': _tenantProductionConfigurationId
   };
   
   Map<String, Object?> toMap() => {
-    'id': id, 'name': _name, 'createdAt': _createdAt, 'updatedAt': _updatedAt
+    'id': id, 'name': _name, 'testingConfiguration': _testingConfiguration, 'productionConfiguration': _productionConfiguration, 'coverPhotoUrl': _coverPhotoUrl, 'promoVideoUrl': _promoVideoUrl, 'description': _description, 'createdAt': _createdAt, 'updatedAt': _updatedAt, 'tenantTestingConfigurationId': _tenantTestingConfigurationId, 'tenantProductionConfigurationId': _tenantProductionConfigurationId
   };
 
   static final QueryModelIdentifier<TenantModelIdentifier> MODEL_IDENTIFIER = QueryModelIdentifier<TenantModelIdentifier>();
   static final QueryField ID = QueryField(fieldName: "id");
   static final QueryField NAME = QueryField(fieldName: "name");
+  static final QueryField TESTINGCONFIGURATION = QueryField(
+    fieldName: "testingConfiguration",
+    fieldType: ModelFieldType(ModelFieldTypeEnum.model, ofModelName: (TenantConfiguration).toString()));
+  static final QueryField PRODUCTIONCONFIGURATION = QueryField(
+    fieldName: "productionConfiguration",
+    fieldType: ModelFieldType(ModelFieldTypeEnum.model, ofModelName: (TenantConfiguration).toString()));
+  static final QueryField COVERPHOTOURL = QueryField(fieldName: "coverPhotoUrl");
+  static final QueryField PROMOVIDEOURL = QueryField(fieldName: "promoVideoUrl");
+  static final QueryField DESCRIPTION = QueryField(fieldName: "description");
+  static final QueryField TENANTTESTINGCONFIGURATIONID = QueryField(fieldName: "tenantTestingConfigurationId");
+  static final QueryField TENANTPRODUCTIONCONFIGURATIONID = QueryField(fieldName: "tenantProductionConfigurationId");
   static var schema = Model.defineSchema(define: (ModelSchemaDefinition modelSchemaDefinition) {
     modelSchemaDefinition.name = "Tenant";
     modelSchemaDefinition.pluralName = "Tenants";
@@ -140,6 +224,38 @@ class Tenant extends Model {
       ofType: ModelFieldType(ModelFieldTypeEnum.string)
     ));
     
+    modelSchemaDefinition.addField(ModelFieldDefinition.hasOne(
+      key: Tenant.TESTINGCONFIGURATION,
+      isRequired: false,
+      ofModelName: (TenantConfiguration).toString(),
+      associatedKey: TenantConfiguration.ID
+    ));
+    
+    modelSchemaDefinition.addField(ModelFieldDefinition.hasOne(
+      key: Tenant.PRODUCTIONCONFIGURATION,
+      isRequired: false,
+      ofModelName: (TenantConfiguration).toString(),
+      associatedKey: TenantConfiguration.ID
+    ));
+    
+    modelSchemaDefinition.addField(ModelFieldDefinition.field(
+      key: Tenant.COVERPHOTOURL,
+      isRequired: false,
+      ofType: ModelFieldType(ModelFieldTypeEnum.string)
+    ));
+    
+    modelSchemaDefinition.addField(ModelFieldDefinition.field(
+      key: Tenant.PROMOVIDEOURL,
+      isRequired: false,
+      ofType: ModelFieldType(ModelFieldTypeEnum.string)
+    ));
+    
+    modelSchemaDefinition.addField(ModelFieldDefinition.field(
+      key: Tenant.DESCRIPTION,
+      isRequired: false,
+      ofType: ModelFieldType(ModelFieldTypeEnum.string)
+    ));
+    
     modelSchemaDefinition.addField(ModelFieldDefinition.nonQueryField(
       fieldName: 'createdAt',
       isRequired: false,
@@ -152,6 +268,18 @@ class Tenant extends Model {
       isRequired: false,
       isReadOnly: true,
       ofType: ModelFieldType(ModelFieldTypeEnum.dateTime)
+    ));
+    
+    modelSchemaDefinition.addField(ModelFieldDefinition.field(
+      key: Tenant.TENANTTESTINGCONFIGURATIONID,
+      isRequired: false,
+      ofType: ModelFieldType(ModelFieldTypeEnum.string)
+    ));
+    
+    modelSchemaDefinition.addField(ModelFieldDefinition.field(
+      key: Tenant.TENANTPRODUCTIONCONFIGURATIONID,
+      isRequired: false,
+      ofType: ModelFieldType(ModelFieldTypeEnum.string)
     ));
   });
 }

@@ -14,9 +14,11 @@ import 'package:http/http.dart' as http;
 
 class VideoPlayerScreen extends StatefulWidget {
   final String videoUrl;
+  final bool? autoPlay;
 
   const VideoPlayerScreen({
     required this.videoUrl,
+    this.autoPlay,
     Key? key,
   }) : super(key: key);
 
@@ -48,8 +50,10 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
     _controller.setLooping(true);
     _initializeVideoPlayerFuture =
         _controller.initialize().then((_) => setState(() {}));
-    _controller.play();
 
+    if (widget.autoPlay == true) {
+      _controller.play();
+    }
     // Use the controller to loop the video.
     _controller.setLooping(true);
   }
