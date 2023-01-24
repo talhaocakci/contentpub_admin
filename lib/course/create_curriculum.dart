@@ -16,6 +16,8 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 
 import 'package:video_player/video_player.dart';
 
+import 'package:uuid/uuid.dart';
+
 class CurriculumCreateWidget extends StatefulWidget {
   final String courseId;
 
@@ -65,9 +67,27 @@ class CurriculumCreateWidgetState extends State<CurriculumCreateWidget> {
                     child: const Text("Save the course")),
                 ElevatedButton(
                     onPressed: () async {
-                      setState(() {
-                        course = course;
-                      });
+                      var uuid = Uuid();
+
+                      String sectionId = uuid.v4();
+
+                      var newSection = EditableSection(
+                          courseID: editableCourse?.id, name: 'New section');
+
+                      newSection.id = sectionId;
+                      newSection.dirty = true;
+                      newSection.newItem = true;
+
+                      newSection.Lessons = [
+                        EditableLesson(
+                            dirty: true,
+                            newItem: true,
+                            sectionID: sectionId,
+                            name: 'New lesson')
+                      ];
+
+                      editableCourse?.Sections?.add(newSection);
+                      setState(() {});
                     },
                     child: const Text("Add section")),
                 for (var section in editableCourse?.Sections ?? List.empty())
@@ -75,14 +95,20 @@ class CurriculumCreateWidgetState extends State<CurriculumCreateWidget> {
                       trailing: ElevatedButton(
                           onPressed: () {
                             section.Lessons.add(EditableLesson(
-                                sectionID: section.id, name: 'New lesson'));
+                                dirty: true,
+                                sectionID: section.id,
+                                name: 'New lesson'));
                             setState(() {
                               course = course;
                             });
                           },
                           child: Text('Add Lesson')),
                       initiallyExpanded: (course?.Sections as List).length == 1,
-                      title: Text(section.name ?? 'Please insert title'),
+                      title: Text(section.name ?? 'Please insert title',
+                          style: TextStyle(
+                              color: (!section.dirty)
+                                  ? Colors.greenAccent
+                                  : Colors.redAccent)),
                       leading: Icon(
                         _customTileExpanded
                             ? Icons.arrow_drop_down_circle
@@ -95,8 +121,13 @@ class CurriculumCreateWidgetState extends State<CurriculumCreateWidget> {
                               child: ExpansionTile(
                                 initiallyExpanded:
                                     (section?.Lessons as List).length == 1,
-                                title:
-                                    Text(lesson.name ?? 'Please insert title'),
+                                title: Text(
+                                  lesson.name ?? 'Please insert title',
+                                  style: TextStyle(
+                                      color: (!lesson.dirty)
+                                          ? Colors.greenAccent
+                                          : Colors.redAccent),
+                                ),
                                 leading: Icon(
                                   _customTileExpanded
                                       ? Icons.arrow_drop_down_circle
@@ -162,6 +193,9 @@ class CurriculumCreateWidgetState extends State<CurriculumCreateWidget> {
             print(lessonSaveRequest.variables);
             var response =
                 await Amplify.API.mutate(request: lessonSaveRequest).response;
+            if (!response.hasErrors) {
+              lesson.dirty = false;
+            }
             print(response.errors);
             print(response.data);
           } else {
@@ -171,11 +205,17 @@ class CurriculumCreateWidgetState extends State<CurriculumCreateWidget> {
             print(lessonSaveRequest.variables);
             var response =
                 await Amplify.API.mutate(request: lessonSaveRequest).response;
+            if (!response.hasErrors) {
+              lesson.dirty = false;
+            }
             print(response.errors);
             print(response.data);
           }
         }
       }
+      section.dirty = false;
+
+      setState(() {});
 
       // final sectionSaveRequest = ModelMutations.create(section);
 

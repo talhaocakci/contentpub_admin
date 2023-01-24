@@ -70,6 +70,12 @@ class EditableSection {
   bool dirty = false;
   bool newItem = false;
 
+  EditableSection(
+      {required this.courseID,
+      required this.name,
+      this.dirty: true,
+      this.newItem: true});
+
   static Section fromEditable(EditableSection editable) {
     List<Lesson>? editableLessons = (editable.Lessons != null)
         ? editable.Lessons?.map((e) => EditableLesson.fromEditable(e)).toList()
@@ -89,7 +95,8 @@ class EditableSection {
         ? section.Lessons?.map((e) => EditableLesson.toEditable(e)).toList()
         : List.empty();
 
-    EditableSection editableSection = EditableSection();
+    EditableSection editableSection =
+        EditableSection(courseID: section.courseID, name: section.name);
 
     editableSection.id = section.id;
     editableSection.name = section.name;
@@ -97,6 +104,7 @@ class EditableSection {
     editableSection.subtitle = section.subtitle;
     editableSection.courseID = section.courseID;
     editableSection.Lessons = editableLessons;
+    editableSection.dirty = false;
 
     return editableSection;
   }
@@ -111,7 +119,11 @@ class EditableLesson {
   bool dirty = false;
   bool newItem = false;
 
-  EditableLesson({required this.sectionID, required this.name});
+  EditableLesson(
+      {required this.sectionID,
+      required this.name,
+      this.dirty: true,
+      this.newItem: true});
 
   static Lesson fromEditable(EditableLesson editable) {
     return Lesson(
@@ -130,6 +142,7 @@ class EditableLesson {
     editableLesson.video = lesson.video;
     editableLesson.id = lesson.id;
     editableLesson.sectionID = lesson.sectionID;
+    editableLesson.dirty = false;
 
     return editableLesson;
   }
