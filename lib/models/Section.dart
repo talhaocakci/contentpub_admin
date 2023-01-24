@@ -24,7 +24,6 @@ import 'package:amplify_core/amplify_core.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/foundation.dart';
 
-
 /** This is an auto generated class representing the Section type in your schema. */
 @immutable
 class Section extends Model {
@@ -40,215 +39,256 @@ class Section extends Model {
 
   @override
   getInstanceType() => classType;
-  
-  @Deprecated('[getId] is being deprecated in favor of custom primary key feature. Use getter [modelIdentifier] to get model identifier.')
+
+  @Deprecated(
+      '[getId] is being deprecated in favor of custom primary key feature. Use getter [modelIdentifier] to get model identifier.')
   @override
   String getId() => id;
-  
+
   SectionModelIdentifier get modelIdentifier {
-      return SectionModelIdentifier(
-        id: id
-      );
+    return SectionModelIdentifier(id: id);
   }
-  
+
   String? get name {
     return _name;
   }
-  
+
   String? get description {
     return _description;
   }
-  
+
   String get courseID {
     try {
-      return _courseID!;
-    } catch(e) {
+      return _courseID ?? '';
+    } catch (e) {
       throw new AmplifyCodeGenModelException(
-          AmplifyExceptionMessages.codeGenRequiredFieldForceCastExceptionMessage,
-          recoverySuggestion:
-            AmplifyExceptionMessages.codeGenRequiredFieldForceCastRecoverySuggestion,
-          underlyingException: e.toString()
-          );
+          AmplifyExceptionMessages
+              .codeGenRequiredFieldForceCastExceptionMessage,
+          recoverySuggestion: AmplifyExceptionMessages
+              .codeGenRequiredFieldForceCastRecoverySuggestion,
+          underlyingException: e.toString());
     }
   }
-  
+
   List<Lesson>? get Lessons {
     return _Lessons;
   }
-  
+
   String? get subtitle {
     return _subtitle;
   }
-  
+
   TemporalDateTime? get createdAt {
     return _createdAt;
   }
-  
+
   TemporalDateTime? get updatedAt {
     return _updatedAt;
   }
-  
-  const Section._internal({required this.id, name, description, required courseID, Lessons, subtitle, createdAt, updatedAt}): _name = name, _description = description, _courseID = courseID, _Lessons = Lessons, _subtitle = subtitle, _createdAt = createdAt, _updatedAt = updatedAt;
-  
-  factory Section({String? id, String? name, String? description, required String courseID, List<Lesson>? Lessons, String? subtitle}) {
+
+  const Section._internal(
+      {required this.id,
+      name,
+      description,
+      required courseID,
+      Lessons,
+      subtitle,
+      createdAt,
+      updatedAt})
+      : _name = name,
+        _description = description,
+        _courseID = courseID,
+        _Lessons = Lessons,
+        _subtitle = subtitle,
+        _createdAt = createdAt,
+        _updatedAt = updatedAt;
+
+  factory Section(
+      {String? id,
+      String? name,
+      String? description,
+      required String courseID,
+      List<Lesson>? Lessons,
+      String? subtitle}) {
     return Section._internal(
-      id: id == null ? UUID.getUUID() : id,
-      name: name,
-      description: description,
-      courseID: courseID,
-      Lessons: Lessons != null ? List<Lesson>.unmodifiable(Lessons) : Lessons,
-      subtitle: subtitle);
+        id: id == null ? UUID.getUUID() : id,
+        name: name,
+        description: description,
+        courseID: courseID,
+        Lessons: Lessons != null ? List<Lesson>.unmodifiable(Lessons) : Lessons,
+        subtitle: subtitle);
   }
-  
+
   bool equals(Object other) {
     return this == other;
   }
-  
+
   @override
   bool operator ==(Object other) {
     if (identical(other, this)) return true;
     return other is Section &&
-      id == other.id &&
-      _name == other._name &&
-      _description == other._description &&
-      _courseID == other._courseID &&
-      DeepCollectionEquality().equals(_Lessons, other._Lessons) &&
-      _subtitle == other._subtitle;
+        id == other.id &&
+        _name == other._name &&
+        _description == other._description &&
+        _courseID == other._courseID &&
+        DeepCollectionEquality().equals(_Lessons, other._Lessons) &&
+        _subtitle == other._subtitle;
   }
-  
+
   @override
   int get hashCode => toString().hashCode;
-  
+
   @override
   String toString() {
     var buffer = new StringBuffer();
-    
+
     buffer.write("Section {");
     buffer.write("id=" + "$id" + ", ");
     buffer.write("name=" + "$_name" + ", ");
     buffer.write("description=" + "$_description" + ", ");
     buffer.write("courseID=" + "$_courseID" + ", ");
     buffer.write("subtitle=" + "$_subtitle" + ", ");
-    buffer.write("createdAt=" + (_createdAt != null ? _createdAt!.format() : "null") + ", ");
-    buffer.write("updatedAt=" + (_updatedAt != null ? _updatedAt!.format() : "null"));
+    buffer.write("createdAt=" +
+        (_createdAt != null ? _createdAt!.format() : "null") +
+        ", ");
+    buffer.write(
+        "updatedAt=" + (_updatedAt != null ? _updatedAt!.format() : "null"));
     buffer.write("}");
-    
+
     return buffer.toString();
   }
-  
-  Section copyWith({String? name, String? description, String? courseID, List<Lesson>? Lessons, String? subtitle}) {
-    return Section._internal(
-      id: id,
-      name: name ?? this.name,
-      description: description ?? this.description,
-      courseID: courseID ?? this.courseID,
-      Lessons: Lessons ?? this.Lessons,
-      subtitle: subtitle ?? this.subtitle);
-  }
-  
-  Section.fromJson(Map<String, dynamic> json)  
-    : id = json['id'],
-      _name = json['name'],
-      _description = json['description'],
-      _courseID = json['courseID'],
-      _Lessons = json['Lessons'] is List
-        ? (json['Lessons'] as List)
-          .where((e) => e?['serializedData'] != null)
-          .map((e) => Lesson.fromJson(new Map<String, dynamic>.from(e['serializedData'])))
-          .toList()
-        : null,
-      _subtitle = json['subtitle'],
-      _createdAt = json['createdAt'] != null ? TemporalDateTime.fromString(json['createdAt']) : null,
-      _updatedAt = json['updatedAt'] != null ? TemporalDateTime.fromString(json['updatedAt']) : null;
-  
-  Map<String, dynamic> toJson() => {
-    'id': id, 'name': _name, 'description': _description, 'courseID': _courseID, 'Lessons': _Lessons?.map((Lesson? e) => e?.toJson()).toList(), 'subtitle': _subtitle, 'createdAt': _createdAt?.format(), 'updatedAt': _updatedAt?.format()
-  };
-  
-  Map<String, Object?> toMap() => {
-    'id': id, 'name': _name, 'description': _description, 'courseID': _courseID, 'Lessons': _Lessons, 'subtitle': _subtitle, 'createdAt': _createdAt, 'updatedAt': _updatedAt
-  };
 
-  static final QueryModelIdentifier<SectionModelIdentifier> MODEL_IDENTIFIER = QueryModelIdentifier<SectionModelIdentifier>();
+  Section copyWith(
+      {String? name,
+      String? description,
+      String? courseID,
+      List<Lesson>? Lessons,
+      String? subtitle}) {
+    return Section._internal(
+        id: id,
+        name: name ?? this.name,
+        description: description ?? this.description,
+        courseID: courseID ?? this.courseID,
+        Lessons: Lessons ?? this.Lessons,
+        subtitle: subtitle ?? this.subtitle);
+  }
+
+  Section.fromJson(Map<String, dynamic> json)
+      : id = json['id'],
+        _name = json['name'],
+        _description = json['description'],
+        _courseID = json['courseID'],
+        _Lessons = json['Lessons'] is List
+            ? (json['Lessons'] as List)
+                .where((e) => e?['serializedData'] != null)
+                .map((e) => Lesson.fromJson(
+                    new Map<String, dynamic>.from(e['serializedData'])))
+                .toList()
+            : null,
+        _subtitle = json['subtitle'],
+        _createdAt = json['createdAt'] != null
+            ? TemporalDateTime.fromString(json['createdAt'])
+            : null,
+        _updatedAt = json['updatedAt'] != null
+            ? TemporalDateTime.fromString(json['updatedAt'])
+            : null;
+
+  Map<String, dynamic> toJson() => {
+        'id': id,
+        'name': _name,
+        'description': _description,
+        'courseID': _courseID,
+        'Lessons': _Lessons?.map((Lesson? e) => e?.toJson()).toList(),
+        'subtitle': _subtitle,
+        'createdAt': _createdAt?.format(),
+        'updatedAt': _updatedAt?.format()
+      };
+
+  Map<String, Object?> toMap() => {
+        'id': id,
+        'name': _name,
+        'description': _description,
+        'courseID': _courseID,
+        'Lessons': _Lessons,
+        'subtitle': _subtitle,
+        'createdAt': _createdAt,
+        'updatedAt': _updatedAt
+      };
+
+  static final QueryModelIdentifier<SectionModelIdentifier> MODEL_IDENTIFIER =
+      QueryModelIdentifier<SectionModelIdentifier>();
   static final QueryField ID = QueryField(fieldName: "id");
   static final QueryField NAME = QueryField(fieldName: "name");
   static final QueryField DESCRIPTION = QueryField(fieldName: "description");
   static final QueryField COURSEID = QueryField(fieldName: "courseID");
   static final QueryField LESSONS = QueryField(
-    fieldName: "Lessons",
-    fieldType: ModelFieldType(ModelFieldTypeEnum.model, ofModelName: (Lesson).toString()));
+      fieldName: "Lessons",
+      fieldType: ModelFieldType(ModelFieldTypeEnum.model,
+          ofModelName: (Lesson).toString()));
   static final QueryField SUBTITLE = QueryField(fieldName: "subtitle");
-  static var schema = Model.defineSchema(define: (ModelSchemaDefinition modelSchemaDefinition) {
+  static var schema =
+      Model.defineSchema(define: (ModelSchemaDefinition modelSchemaDefinition) {
     modelSchemaDefinition.name = "Section";
     modelSchemaDefinition.pluralName = "Sections";
-    
+
     modelSchemaDefinition.authRules = [
-      AuthRule(
-        authStrategy: AuthStrategy.PUBLIC,
-        operations: [
-          ModelOperation.CREATE,
-          ModelOperation.UPDATE,
-          ModelOperation.DELETE,
-          ModelOperation.READ
-        ])
+      AuthRule(authStrategy: AuthStrategy.PUBLIC, operations: [
+        ModelOperation.CREATE,
+        ModelOperation.UPDATE,
+        ModelOperation.DELETE,
+        ModelOperation.READ
+      ])
     ];
-    
+
     modelSchemaDefinition.indexes = [
       ModelIndex(fields: const ["courseID"], name: "byCourse")
     ];
-    
+
     modelSchemaDefinition.addField(ModelFieldDefinition.id());
-    
+
     modelSchemaDefinition.addField(ModelFieldDefinition.field(
-      key: Section.NAME,
-      isRequired: false,
-      ofType: ModelFieldType(ModelFieldTypeEnum.string)
-    ));
-    
+        key: Section.NAME,
+        isRequired: false,
+        ofType: ModelFieldType(ModelFieldTypeEnum.string)));
+
     modelSchemaDefinition.addField(ModelFieldDefinition.field(
-      key: Section.DESCRIPTION,
-      isRequired: false,
-      ofType: ModelFieldType(ModelFieldTypeEnum.string)
-    ));
-    
+        key: Section.DESCRIPTION,
+        isRequired: false,
+        ofType: ModelFieldType(ModelFieldTypeEnum.string)));
+
     modelSchemaDefinition.addField(ModelFieldDefinition.field(
-      key: Section.COURSEID,
-      isRequired: true,
-      ofType: ModelFieldType(ModelFieldTypeEnum.string)
-    ));
-    
+        key: Section.COURSEID,
+        isRequired: true,
+        ofType: ModelFieldType(ModelFieldTypeEnum.string)));
+
     modelSchemaDefinition.addField(ModelFieldDefinition.hasMany(
-      key: Section.LESSONS,
-      isRequired: false,
-      ofModelName: (Lesson).toString(),
-      associatedKey: Lesson.SECTIONID
-    ));
-    
+        key: Section.LESSONS,
+        isRequired: false,
+        ofModelName: (Lesson).toString(),
+        associatedKey: Lesson.SECTIONID));
+
     modelSchemaDefinition.addField(ModelFieldDefinition.field(
-      key: Section.SUBTITLE,
-      isRequired: false,
-      ofType: ModelFieldType(ModelFieldTypeEnum.string)
-    ));
-    
+        key: Section.SUBTITLE,
+        isRequired: false,
+        ofType: ModelFieldType(ModelFieldTypeEnum.string)));
+
     modelSchemaDefinition.addField(ModelFieldDefinition.nonQueryField(
-      fieldName: 'createdAt',
-      isRequired: false,
-      isReadOnly: true,
-      ofType: ModelFieldType(ModelFieldTypeEnum.dateTime)
-    ));
-    
+        fieldName: 'createdAt',
+        isRequired: false,
+        isReadOnly: true,
+        ofType: ModelFieldType(ModelFieldTypeEnum.dateTime)));
+
     modelSchemaDefinition.addField(ModelFieldDefinition.nonQueryField(
-      fieldName: 'updatedAt',
-      isRequired: false,
-      isReadOnly: true,
-      ofType: ModelFieldType(ModelFieldTypeEnum.dateTime)
-    ));
+        fieldName: 'updatedAt',
+        isRequired: false,
+        isReadOnly: true,
+        ofType: ModelFieldType(ModelFieldTypeEnum.dateTime)));
   });
 }
 
 class _SectionModelType extends ModelType<Section> {
   const _SectionModelType();
-  
+
   @override
   Section fromJson(Map<String, dynamic> jsonData) {
     return Section.fromJson(jsonData);
@@ -264,37 +304,32 @@ class SectionModelIdentifier implements ModelIdentifier<Section> {
   final String id;
 
   /** Create an instance of SectionModelIdentifier using [id] the primary key. */
-  const SectionModelIdentifier({
-    required this.id});
-  
+  const SectionModelIdentifier({required this.id});
+
   @override
-  Map<String, dynamic> serializeAsMap() => (<String, dynamic>{
-    'id': id
-  });
-  
+  Map<String, dynamic> serializeAsMap() => (<String, dynamic>{'id': id});
+
   @override
   List<Map<String, dynamic>> serializeAsList() => serializeAsMap()
-    .entries
-    .map((entry) => (<String, dynamic>{ entry.key: entry.value }))
-    .toList();
-  
+      .entries
+      .map((entry) => (<String, dynamic>{entry.key: entry.value}))
+      .toList();
+
   @override
   String serializeAsString() => serializeAsMap().values.join('#');
-  
+
   @override
   String toString() => 'SectionModelIdentifier(id: $id)';
-  
+
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) {
       return true;
     }
-    
-    return other is SectionModelIdentifier &&
-      id == other.id;
+
+    return other is SectionModelIdentifier && id == other.id;
   }
-  
+
   @override
-  int get hashCode =>
-    id.hashCode;
+  int get hashCode => id.hashCode;
 }

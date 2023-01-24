@@ -6,6 +6,7 @@ import 'package:contentpub_admin/models/ContentType.dart';
 import 'package:contentpub_admin/models/Course.dart';
 import 'package:contentpub_admin/models/Lesson.dart';
 import 'package:contentpub_admin/models/Section.dart';
+import 'package:contentpub_admin/models/editable/editables.dart';
 import 'package:flutter/material.dart';
 
 import 'package:flutter/material.dart';
@@ -27,6 +28,7 @@ class CurriculumCreateWidget extends StatefulWidget {
 class CurriculumCreateWidgetState extends State<CurriculumCreateWidget> {
   bool _customTileExpanded = false;
   Course? course;
+  EditableCourse? editableCourse;
 
   final ScrollController _firstController = ScrollController();
 
@@ -39,8 +41,12 @@ class CurriculumCreateWidgetState extends State<CurriculumCreateWidget> {
 
   void initWidget() async {
     Course mycourse = await getCourseDetails() ?? Course();
+
+    editableCourse = EditableCourse.toEditable(mycourse);
+
     setState(() {
       course = mycourse;
+      editableCourse = editableCourse;
     });
   }
 
@@ -59,18 +65,16 @@ class CurriculumCreateWidgetState extends State<CurriculumCreateWidget> {
                     child: const Text("Save the course")),
                 ElevatedButton(
                     onPressed: () async {
-                      course!.Sections!.add(
-                          Section(courseID: course!.id, name: 'New section'));
                       setState(() {
                         course = course;
                       });
                     },
                     child: const Text("Add section")),
-                for (var section in course?.Sections ?? List.empty())
+                for (var section in editableCourse?.Sections ?? List.empty())
                   ExpansionTile(
                       trailing: ElevatedButton(
                           onPressed: () {
-                            section.Lessons.add(Lesson(
+                            section.Lessons.add(EditableLesson(
                                 sectionID: section.id, name: 'New lesson'));
                             setState(() {
                               course = course;
@@ -108,40 +112,18 @@ class CurriculumCreateWidgetState extends State<CurriculumCreateWidget> {
                                                 width: 300,
                                                 child: FileUploadWithDrop(
                                                   remoteUrl: lesson.video,
-                                                  sourceObject: lesson,
                                                   fileType: FileType.VIDEO,
-                                                  onComplete: (uploadedFile,
-                                                      sourceObject) {
-                                                    List<Lesson> lessons =
-                                                        (section.Lessons
-                                                            as List<Lesson>);
-
-                                                    int sourceLessonIndex =
-                                                        lessons.indexOf(
-                                                            sourceObject);
-
-                                                    print(
-                                                        '${sourceLessonIndex}. remove edilecek');
-
-                                                    lessons.remove(
-                                                        sourceLessonIndex);
-
-                                                    Lesson newLesson =
-                                                        (sourceObject as Lesson)
-                                                            .copyWith(
-                                                                sectionID:
-                                                                    section.id,
-                                                                video: uploadedFile
-                                                                    .remoteUrl);
-
-                                                    print(newLesson);
-                                                    lessons.insert(
-                                                        sourceLessonIndex,
-                                                        newLesson);
-
-                                                    print(uploadedFile);
-                                                    print(sourceObject.video);
-                                                    setState(() {});
+                                                  onComplete: (uploadedFile) {
+                                                    var editable = (lesson
+                                                        as EditableLesson);
+                                                    editable.video =
+                                                        uploadedFile.remoteUrl;
+                                                    editable.dirty = true;
+                                                    section.dirty = true;
+                                                    print(lesson.video);
+                                                    setState(() {
+                                                      lesson = lesson;
+                                                    });
                                                   },
                                                   onClear: () {},
                                                 ))),
@@ -166,28 +148,45 @@ class CurriculumCreateWidgetState extends State<CurriculumCreateWidget> {
             )));
   }
 
-  void saveCourse() {
-    for (Section section in course!.Sections ?? List.empty()) {
-      for (Lesson lesson in section.Lessons ?? List.empty()) {
-        final lessonSaveRequest = ModelMutations.create(lesson);
-        print(lesson);
-        Amplify.API.mutate(request: lessonSaveRequest);
+  void saveCourse() async {
+    //course = EditableCourse.fromEditable(editableCourse ?? EditableCourse());
+
+    for (EditableSection section in editableCourse!.Sections ?? List.empty()) {
+      for (EditableLesson lesson in section.Lessons ?? List.empty()) {
+        if (lesson.dirty) {
+          lesson.sectionID = section.id;
+          if (lesson.newItem) {
+            var lessonSaveRequest =
+                ModelMutations.create(EditableLesson.fromEditable(lesson));
+            print(lessonSaveRequest.document);
+            print(lessonSaveRequest.variables);
+            var response =
+                await Amplify.API.mutate(request: lessonSaveRequest).response;
+            print(response.errors);
+            print(response.data);
+          } else {
+            var lessonSaveRequest =
+                ModelMutations.update(EditableLesson.fromEditable(lesson));
+            print(lessonSaveRequest.document);
+            print(lessonSaveRequest.variables);
+            var response =
+                await Amplify.API.mutate(request: lessonSaveRequest).response;
+            print(response.errors);
+            print(response.data);
+          }
+        }
       }
 
-      final sectionSaveRequest = ModelMutations.create(section);
+      // final sectionSaveRequest = ModelMutations.create(section);
 
-      Amplify.API.mutate(request: sectionSaveRequest);
+      // Amplify.API.mutate(request: sectionSaveRequest);
     }
 
-    final courseSaveRequest = ModelMutations.create(course!);
+    // final courseSaveRequest = ModelMutations.create(course);
 
-    Amplify.API.mutate(request: courseSaveRequest);
+    //Amplify.API.mutate(request: courseSaveRequest);
 
-    print('Course id: ${course!.id}');
-
-    setState(() {
-      course = course;
-    });
+    //print('Course id: ${course!.id}');
   }
 
   Future<Course?> getCourseDetails() async {
@@ -213,6 +212,7 @@ class CurriculumCreateWidgetState extends State<CurriculumCreateWidget> {
                         name
                         video
                         description
+                        sectionID
                       }
                     }
                   }

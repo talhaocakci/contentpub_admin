@@ -27,16 +27,14 @@ import 'dart:convert';
 class FileUploadWithDrop extends StatefulWidget {
   final FileType fileType;
   final String? remoteUrl;
-  final Function(UploadedFile, dynamic) onComplete;
+  final Function(UploadedFile) onComplete;
   final Function() onClear;
-  final dynamic sourceObject;
 
   const FileUploadWithDrop(
       {required this.fileType,
       required this.onComplete,
       required this.onClear,
       this.remoteUrl,
-      this.sourceObject,
       Key? key})
       : super(key: key);
 
@@ -255,18 +253,18 @@ class _FileUploadWithDropState extends State<FileUploadWithDrop> {
 
     //make s3 resign call to access the video
 
-    setState(() {
-      uploadInProgress = false;
-      uploadedFileUrl = remoteFileUrl;
-    });
-
     UploadedFile uploadedFile = UploadedFile(
         remoteUrl: remoteFileUrl,
         localFileName: localFile,
         fileSize: fileSize,
         fileType: widget.fileType);
 
-    widget.onComplete(uploadedFile, widget.sourceObject);
+    widget.onComplete(uploadedFile);
+
+    setState(() {
+      uploadInProgress = false;
+      uploadedFileUrl = remoteFileUrl;
+    });
   }
 
   void printprogress(int bytes, int totalBytes) {

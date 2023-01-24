@@ -30,7 +30,7 @@ class Lesson extends Model {
   final String? _name;
   final String? _description;
   final String? _video;
-  final String? _sectionID;
+  final String _sectionID;
   final TemporalDateTime? _createdAt;
   final TemporalDateTime? _updatedAt;
 
@@ -60,7 +60,7 @@ class Lesson extends Model {
 
   String get sectionID {
     try {
-      return _sectionID!;
+      return _sectionID;
     } catch (e) {
       throw new AmplifyCodeGenModelException(
           AmplifyExceptionMessages

@@ -180,7 +180,7 @@ class _CreateCourseWidgetState extends State<CreateCourseWidget> {
                           Expanded(
                             child: FileUploadWithDrop(
                                 fileType: FileType.PICTURE,
-                                onComplete: (uploadedFile, sourceObject) {
+                                onComplete: (uploadedFile) {
                                   coverPhotoUrl = uploadedFile.remoteUrl;
                                 },
                                 onClear: () {
@@ -195,7 +195,7 @@ class _CreateCourseWidgetState extends State<CreateCourseWidget> {
                           Expanded(
                             child: FileUploadWithDrop(
                                 fileType: FileType.VIDEO,
-                                onComplete: (uploadedFile, sourceObject) {
+                                onComplete: (uploadedFile) {
                                   promoVideoUrl = uploadedFile.remoteUrl;
                                   print(uploadedFile.remoteUrl);
                                 },
@@ -415,7 +415,7 @@ class _CreateCourseWidgetState extends State<CreateCourseWidget> {
   }
 
   Future<void> saveCourseAndNavigate() async {
-    /*var uuid = Uuid();
+    var uuid = Uuid();
 
     String courseId = uuid.v4();
     String sectionId = uuid.v4();
@@ -445,25 +445,25 @@ class _CreateCourseWidgetState extends State<CreateCourseWidget> {
 
     print('Lesson id: ${lesson.id}');
 
-    section = section.copyWith([lesson]);
+    section = section.copyWith(Lessons: [lesson]);
 
     course = course.copyWith(Sections: [section]);
 
     final courseSaveRequest = ModelMutations.create(course);
 
-    Amplify.API.mutate(request: courseSaveRequest);
+    await Amplify.API.mutate(request: courseSaveRequest).response;
 
     print('Course id: ${course.id}');
 
     setState(() {
       course = course;
     });
-*/
+
     Navigator.push(
         context,
         MaterialPageRoute(
             builder: (context) => CurriculumCreateWidget(
-                  courseId: '8b98f378-c251-48a3-baa1-c39cbc836b35',
+                  courseId: course.id,
                 )));
   }
 }
