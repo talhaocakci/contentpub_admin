@@ -3,6 +3,7 @@ import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:contentpub_admin/course/create_curriculum.dart';
 import 'package:contentpub_admin/create_product.dart';
 import 'package:contentpub_admin/file_upload.dart';
+import 'package:contentpub_admin/models/Content.dart';
 import 'package:contentpub_admin/models/ContentType.dart';
 import 'package:contentpub_admin/models/Course.dart';
 import 'package:contentpub_admin/models/Lesson.dart';
@@ -420,11 +421,13 @@ class _CreateCourseWidgetState extends State<CreateCourseWidget> {
     String courseId = uuid.v4();
     String sectionId = uuid.v4();
     String lessonId = uuid.v4();
+    String contentId = uuid.v4();
 
     Course course = Course(
         id: courseId,
         title: titleTextController!.text,
         subtitle: subtitleTextController!.text,
+        courseContentId: contentId,
         description: descriptionTextController!.text);
 
     Section section =
@@ -454,6 +457,16 @@ class _CreateCourseWidgetState extends State<CreateCourseWidget> {
     await Amplify.API.mutate(request: courseSaveRequest).response;
 
     print('Course id: ${course.id}');
+
+    var content = Content(
+        id: contentId,
+        type: ContentType.COURSE,
+        objectId: courseId,
+        name: course.title);
+
+    final contentSaveRequest = ModelMutations.create(content);
+
+    await Amplify.API.mutate(request: contentSaveRequest).response;
 
     setState(() {
       course = course;

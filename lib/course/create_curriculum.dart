@@ -92,6 +92,7 @@ class CurriculumCreateWidgetState extends State<CurriculumCreateWidget> {
                     child: const Text("Add section")),
                 for (var section in editableCourse?.Sections ?? List.empty())
                   ExpansionTile(
+                      expandedCrossAxisAlignment: CrossAxisAlignment.start,
                       trailing: ElevatedButton(
                           onPressed: () {
                             section.Lessons.add(EditableLesson(
@@ -135,6 +136,10 @@ class CurriculumCreateWidgetState extends State<CurriculumCreateWidget> {
                                 ),
                                 children: <Widget>[
                                   Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
                                       mainAxisSize: MainAxisSize.max,
                                       children: [
                                         Padding(
@@ -159,14 +164,37 @@ class CurriculumCreateWidgetState extends State<CurriculumCreateWidget> {
                                                   onClear: () {},
                                                 ))),
                                         Expanded(
-                                            child: FormBuilder(
-                                                child: FormBuilderTextField(
-                                          name: 'text',
-                                          initialValue: lesson.name,
-                                          onChanged: (val) {
-                                            print(val);
-                                          },
-                                        ))),
+                                            child: Column(
+                                                mainAxisSize: MainAxisSize.min,
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                              FormBuilderTextField(
+                                                name: 'text',
+                                                decoration:
+                                                    const InputDecoration(
+                                                        labelText: 'Title'),
+                                                initialValue: lesson.name,
+                                                onChanged: (val) {
+                                                  print(val);
+                                                },
+                                              ),
+                                              FormBuilderTextField(
+                                                autocorrect: true,
+                                                decoration:
+                                                    const InputDecoration(
+                                                        labelText:
+                                                            'Description'),
+                                                minLines: 6,
+                                                maxLines: 12,
+                                                name: 'description',
+                                                initialValue:
+                                                    lesson.description,
+                                                onChanged: (val) {
+                                                  print(val);
+                                                },
+                                              )
+                                            ])),
                                       ]),
                                 ],
                                 onExpansionChanged: (bool expanded) {
