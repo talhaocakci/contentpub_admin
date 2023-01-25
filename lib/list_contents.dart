@@ -1,5 +1,7 @@
 import 'package:amplify_flutter/amplify_flutter.dart';
+import 'package:contentpub_admin/course/create_course.dart';
 import 'package:contentpub_admin/models/Content.dart';
+import 'package:contentpub_admin/models/ContentType.dart';
 
 import '../flutter_flow/flutter_flow_theme.dart';
 import '../flutter_flow/flutter_flow_util.dart';
@@ -512,9 +514,22 @@ class _ListContentsWidgetState extends State<ListContentsWidget> {
                                     children: [
                                       FFButtonWidget(
                                         onPressed: () {
-                                          print('Button-Reserve pressed ...');
+                                          if (content?.type ==
+                                              ContentType.COURSE) {
+                                            print(
+                                                'Content icindeki object: ${content!.objectId}');
+                                            Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        CreateCourseWidget(
+                                                          courseId: content!
+                                                                  .objectId ??
+                                                              '',
+                                                        )));
+                                          }
                                         },
-                                        text: 'Reserve',
+                                        text: 'Edit',
                                         icon: const Icon(
                                           Icons.add_rounded,
                                           color: Colors.white,
