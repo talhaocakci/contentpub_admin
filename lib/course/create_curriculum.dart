@@ -208,7 +208,7 @@ class CurriculumCreateWidgetState extends State<CurriculumCreateWidget> {
   }
 
   void saveCourse() async {
-    //course = EditableCourse.fromEditable(editableCourse ?? EditableCourse());
+    course = EditableCourse.fromEditable(editableCourse ?? EditableCourse());
 
     for (EditableSection section in editableCourse!.Sections ?? List.empty()) {
       for (EditableLesson lesson in section.Lessons ?? List.empty()) {
@@ -250,9 +250,15 @@ class CurriculumCreateWidgetState extends State<CurriculumCreateWidget> {
       // Amplify.API.mutate(request: sectionSaveRequest);
     }
 
-    // final courseSaveRequest = ModelMutations.create(course);
+    if (course?.id != '') {
+      final courseSaveRequest = ModelMutations.create(course!);
 
-    //Amplify.API.mutate(request: courseSaveRequest);
+      Amplify.API.mutate(request: courseSaveRequest);
+    } else {
+      final courseSaveRequest = ModelMutations.update(course!);
+
+      Amplify.API.mutate(request: courseSaveRequest);
+    }
 
     //print('Course id: ${course!.id}');
   }

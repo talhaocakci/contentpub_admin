@@ -8,6 +8,7 @@ import 'package:contentpub_admin/models/ContentType.dart';
 import 'package:contentpub_admin/models/Course.dart';
 import 'package:contentpub_admin/models/Lesson.dart';
 import 'package:contentpub_admin/models/Section.dart';
+import 'package:contentpub_admin/models/editable/editables.dart';
 
 import '../flutter_flow/flutter_flow_icon_button.dart';
 import '../flutter_flow/flutter_flow_theme.dart';
@@ -19,7 +20,10 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:uuid/uuid.dart';
 
 class CreateCourseWidget extends StatefulWidget {
-  const CreateCourseWidget({Key? key}) : super(key: key);
+  final String courseId;
+
+  const CreateCourseWidget({Key? key, required this.courseId})
+      : super(key: key);
 
   @override
   _CreateCourseWidgetState createState() => _CreateCourseWidgetState();
@@ -28,25 +32,38 @@ class CreateCourseWidget extends StatefulWidget {
 class _CreateCourseWidgetState extends State<CreateCourseWidget> {
   String? coverPhotoUrl;
   String? promoVideoUrl;
-  TextEditingController? titleTextController;
-  TextEditingController? subtitleTextController;
-  TextEditingController? descriptionTextController;
+
   bool? switchListTileValue;
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
+  Course? course;
+  EditableCourse? editableCourse;
+
   @override
   void initState() {
+    if (widget.courseId != '') {
+      initCourse();
+    } else {
+      course = Course();
+    }
+
     super.initState();
-    titleTextController = TextEditingController();
-    subtitleTextController = TextEditingController();
-    descriptionTextController = TextEditingController();
+  }
+
+  Future<EditableCourse> initCourse() async {
+    course = await getCourse(widget.courseId);
+    print('in initCourse: ${course}');
+
+    editableCourse =
+        course != null ? EditableCourse.toEditable(course!) : EditableCourse();
+
+    print('editable course : ${editableCourse!.title}');
+
+    return editableCourse ?? EditableCourse();
   }
 
   @override
   void dispose() {
-    titleTextController?.dispose();
-    subtitleTextController?.dispose();
-    descriptionTextController?.dispose();
     super.dispose();
   }
 
@@ -85,138 +102,270 @@ class _CreateCourseWidgetState extends State<CreateCourseWidget> {
         centerTitle: false,
         elevation: 0,
       ),
-      body: SingleChildScrollView(
-        child: Column(
-          mainAxisSize: MainAxisSize.max,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Padding(
-              padding: EdgeInsetsDirectional.fromSTEB(0, 1, 0, 0),
-              child: Container(
-                width: MediaQuery.of(context).size.width,
-                decoration: BoxDecoration(
-                  color: FlutterFlowTheme.of(context).secondaryBackground,
-                  boxShadow: [
-                    BoxShadow(
-                      blurRadius: 5,
-                      color: Color(0x430F1113),
-                      offset: Offset(0, 2),
-                    )
-                  ],
-                  borderRadius: BorderRadius.only(
-                    bottomLeft: Radius.circular(8),
-                    bottomRight: Radius.circular(8),
-                    topLeft: Radius.circular(0),
-                    topRight: Radius.circular(0),
-                  ),
-                ),
-                child: Padding(
-                  padding: EdgeInsetsDirectional.fromSTEB(0, 0, 0, 20),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.max,
-                    children: [
-                      Row(
-                        mainAxisSize: MainAxisSize.max,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Expanded(
-                            child: Stack(
+      body: FutureBuilder(
+        future: initCourse(),
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            return SingleChildScrollView(
+              child: Column(
+                mainAxisSize: MainAxisSize.max,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Padding(
+                    padding: EdgeInsetsDirectional.fromSTEB(0, 1, 0, 0),
+                    child: Container(
+                      width: MediaQuery.of(context).size.width,
+                      decoration: BoxDecoration(
+                        color: FlutterFlowTheme.of(context).secondaryBackground,
+                        boxShadow: [
+                          BoxShadow(
+                            blurRadius: 5,
+                            color: Color(0x430F1113),
+                            offset: Offset(0, 2),
+                          )
+                        ],
+                        borderRadius: BorderRadius.only(
+                          bottomLeft: Radius.circular(8),
+                          bottomRight: Radius.circular(8),
+                          topLeft: Radius.circular(0),
+                          topRight: Radius.circular(0),
+                        ),
+                      ),
+                      child: Padding(
+                        padding: EdgeInsetsDirectional.fromSTEB(0, 0, 0, 20),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.max,
+                          children: [
+                            Row(
+                              mainAxisSize: MainAxisSize.max,
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Align(
-                                  alignment: AlignmentDirectional(0, 0),
-                                  child: Image.network(
-                                    'https://images.unsplash.com/photo-1626544827763-d516dce335e2?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MTc1fHxwcm9kdWN0fGVufDB8fDB8fA%3D%3D&auto=format&fit=crop&w=800&q=60',
-                                    width: MediaQuery.of(context).size.width,
-                                    height: 130,
-                                    fit: BoxFit.cover,
-                                  ),
-                                ),
-                                Align(
-                                  alignment: AlignmentDirectional(0, 0),
-                                  child: Container(
-                                    width: MediaQuery.of(context).size.width,
-                                    height: 130,
-                                    decoration: BoxDecoration(
-                                      color: Color(0x77090F13),
-                                    ),
-                                    child: Column(
-                                      mainAxisSize: MainAxisSize.max,
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        FlutterFlowIconButton(
-                                          borderColor: Colors.transparent,
-                                          borderRadius: 30,
-                                          buttonSize: 48,
-                                          icon: Icon(
-                                            Icons.photo_camera,
-                                            color: Colors.white,
-                                            size: 30,
-                                          ),
-                                          onPressed: () {
-                                            print('IconButton pressed ...');
-                                          },
+                                Expanded(
+                                  child: Stack(
+                                    children: [
+                                      Align(
+                                        alignment: AlignmentDirectional(0, 0),
+                                        child: Image.network(
+                                          'https://images.unsplash.com/photo-1626544827763-d516dce335e2?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MTc1fHxwcm9kdWN0fGVufDB8fDB8fA%3D%3D&auto=format&fit=crop&w=800&q=60',
+                                          width:
+                                              MediaQuery.of(context).size.width,
+                                          height: 130,
+                                          fit: BoxFit.cover,
                                         ),
-                                        Text(
-                                          'Change Cover Photo',
-                                          style: GoogleFonts.getFont(
-                                            'DM Sans',
-                                            color: Colors.white,
-                                            fontWeight: FontWeight.w500,
-                                            fontSize: 10,
+                                      ),
+                                      Align(
+                                        alignment: AlignmentDirectional(0, 0),
+                                        child: Container(
+                                          width:
+                                              MediaQuery.of(context).size.width,
+                                          height: 130,
+                                          decoration: BoxDecoration(
+                                            color: Color(0x77090F13),
+                                          ),
+                                          child: Column(
+                                            mainAxisSize: MainAxisSize.max,
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              FlutterFlowIconButton(
+                                                borderColor: Colors.transparent,
+                                                borderRadius: 30,
+                                                buttonSize: 48,
+                                                icon: Icon(
+                                                  Icons.photo_camera,
+                                                  color: Colors.white,
+                                                  size: 30,
+                                                ),
+                                                onPressed: () {
+                                                  print(
+                                                      'IconButton pressed ...');
+                                                },
+                                              ),
+                                              Text(
+                                                'Change Cover Photo',
+                                                style: GoogleFonts.getFont(
+                                                  'DM Sans',
+                                                  color: Colors.white,
+                                                  fontWeight: FontWeight.w500,
+                                                  fontSize: 10,
+                                                ),
+                                              ),
+                                            ],
                                           ),
                                         ),
-                                      ],
-                                    ),
+                                      ),
+                                    ],
                                   ),
                                 ),
                               ],
                             ),
-                          ),
-                        ],
-                      ),
-                      Row(
-                        mainAxisSize: MainAxisSize.max,
-                        children: [
-                          Expanded(
-                            child: FileUploadWithDrop(
-                                fileType: FileType.PICTURE,
-                                onComplete: (uploadedFile) {
-                                  coverPhotoUrl = uploadedFile.remoteUrl;
-                                },
-                                onClear: () {
-                                  print('Clear the object here as well');
-                                }),
-                          ),
-                        ],
-                      ),
-                      Row(
-                        mainAxisSize: MainAxisSize.max,
-                        children: [
-                          Expanded(
-                            child: FileUploadWithDrop(
-                                fileType: FileType.VIDEO,
-                                onComplete: (uploadedFile) {
-                                  promoVideoUrl = uploadedFile.remoteUrl;
-                                  print(uploadedFile.remoteUrl);
-                                },
-                                onClear: () {
-                                  print('Clear the object here as well');
-                                }),
-                          ),
-                        ],
-                      ),
-                      Padding(
-                        padding: EdgeInsetsDirectional.fromSTEB(8, 8, 8, 8),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.max,
-                          children: [
-                            Expanded(
+                            Row(
+                              mainAxisSize: MainAxisSize.max,
+                              children: [
+                                Expanded(
+                                  child: FileUploadWithDrop(
+                                      isPublic: true,
+                                      remoteUrl: editableCourse?.coverPhotoUrl,
+                                      fileType: FileType.PICTURE,
+                                      onComplete: (uploadedFile) {
+                                        editableCourse?.coverPhotoUrl =
+                                            uploadedFile.remoteUrl;
+                                      },
+                                      onClear: () {
+                                        print('Clear the object here as well');
+                                      }),
+                                ),
+                              ],
+                            ),
+                            Row(
+                              mainAxisSize: MainAxisSize.max,
+                              children: [
+                                Expanded(
+                                  child: FileUploadWithDrop(
+                                      isPublic: true,
+                                      fileType: FileType.VIDEO,
+                                      remoteUrl: editableCourse?.promoVideoUrl,
+                                      onComplete: (uploadedFile) {
+                                        editableCourse?.promoVideoUrl =
+                                            uploadedFile.remoteUrl;
+                                      },
+                                      onClear: () {
+                                        print('Clear the object here as well');
+                                      }),
+                                ),
+                              ],
+                            ),
+                            Padding(
+                              padding:
+                                  EdgeInsetsDirectional.fromSTEB(8, 8, 8, 8),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.max,
+                                children: [
+                                  Expanded(
+                                    child: TextFormField(
+                                      onChanged: (value) {
+                                        //editableCourse!.title = value;
+                                      },
+                                      initialValue: editableCourse?.title,
+                                      obscureText: false,
+                                      decoration: InputDecoration(
+                                        labelText: 'Title',
+                                        hintStyle: FlutterFlowTheme.of(context)
+                                            .bodyText2,
+                                        enabledBorder: OutlineInputBorder(
+                                          borderSide: BorderSide(
+                                            color: FlutterFlowTheme.of(context)
+                                                .primaryBackground,
+                                            width: 2,
+                                          ),
+                                          borderRadius:
+                                              BorderRadius.circular(8),
+                                        ),
+                                        focusedBorder: OutlineInputBorder(
+                                          borderSide: BorderSide(
+                                            color: FlutterFlowTheme.of(context)
+                                                .primaryBackground,
+                                            width: 2,
+                                          ),
+                                          borderRadius:
+                                              BorderRadius.circular(8),
+                                        ),
+                                        errorBorder: OutlineInputBorder(
+                                          borderSide: BorderSide(
+                                            color: Color(0x00000000),
+                                            width: 2,
+                                          ),
+                                          borderRadius:
+                                              BorderRadius.circular(8),
+                                        ),
+                                        focusedErrorBorder: OutlineInputBorder(
+                                          borderSide: BorderSide(
+                                            color: Color(0x00000000),
+                                            width: 2,
+                                          ),
+                                          borderRadius:
+                                              BorderRadius.circular(8),
+                                        ),
+                                      ),
+                                      style: FlutterFlowTheme.of(context)
+                                          .bodyText1,
+                                      maxLines: null,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Padding(
+                              padding:
+                                  EdgeInsetsDirectional.fromSTEB(8, 8, 8, 8),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.max,
+                                children: [
+                                  Expanded(
+                                    child: TextFormField(
+                                      onChanged: (value) {
+                                        editableCourse!.subtitle = value;
+                                      },
+                                      obscureText: false,
+                                      initialValue:
+                                          editableCourse?.subtitle ?? '',
+                                      decoration: InputDecoration(
+                                        labelText: 'Subtitle',
+                                        hintStyle: FlutterFlowTheme.of(context)
+                                            .bodyText2,
+                                        enabledBorder: OutlineInputBorder(
+                                          borderSide: BorderSide(
+                                            color: FlutterFlowTheme.of(context)
+                                                .primaryBackground,
+                                            width: 2,
+                                          ),
+                                          borderRadius:
+                                              BorderRadius.circular(8),
+                                        ),
+                                        focusedBorder: OutlineInputBorder(
+                                          borderSide: BorderSide(
+                                            color: FlutterFlowTheme.of(context)
+                                                .primaryBackground,
+                                            width: 2,
+                                          ),
+                                          borderRadius:
+                                              BorderRadius.circular(8),
+                                        ),
+                                        errorBorder: OutlineInputBorder(
+                                          borderSide: BorderSide(
+                                            color: Color(0x00000000),
+                                            width: 2,
+                                          ),
+                                          borderRadius:
+                                              BorderRadius.circular(8),
+                                        ),
+                                        focusedErrorBorder: OutlineInputBorder(
+                                          borderSide: BorderSide(
+                                            color: Color(0x00000000),
+                                            width: 2,
+                                          ),
+                                          borderRadius:
+                                              BorderRadius.circular(8),
+                                        ),
+                                      ),
+                                      style: FlutterFlowTheme.of(context)
+                                          .bodyText1,
+                                      maxLines: null,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Container(
+                              height: 200,
                               child: TextFormField(
-                                controller: titleTextController,
                                 obscureText: false,
+                                initialValue: editableCourse?.description ?? '',
+                                onChanged: (value) {
+                                  editableCourse!.description = value;
+                                },
                                 decoration: InputDecoration(
-                                  labelText: 'Title',
+                                  labelText: 'Description',
                                   hintStyle:
                                       FlutterFlowTheme.of(context).bodyText2,
                                   enabledBorder: OutlineInputBorder(
@@ -251,168 +400,113 @@ class _CreateCourseWidgetState extends State<CreateCourseWidget> {
                                   ),
                                 ),
                                 style: FlutterFlowTheme.of(context).bodyText1,
-                                maxLines: null,
+                                maxLines: 20,
                               ),
                             ),
-                          ],
-                        ),
-                      ),
-                      Padding(
-                        padding: EdgeInsetsDirectional.fromSTEB(8, 8, 8, 8),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.max,
-                          children: [
-                            Expanded(
-                              child: TextFormField(
-                                controller: subtitleTextController,
-                                obscureText: false,
-                                decoration: InputDecoration(
-                                  labelText: 'Subtitle',
-                                  hintStyle:
-                                      FlutterFlowTheme.of(context).bodyText2,
-                                  enabledBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(
-                                      color: FlutterFlowTheme.of(context)
-                                          .primaryBackground,
-                                      width: 2,
-                                    ),
-                                    borderRadius: BorderRadius.circular(8),
-                                  ),
-                                  focusedBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(
-                                      color: FlutterFlowTheme.of(context)
-                                          .primaryBackground,
-                                      width: 2,
-                                    ),
-                                    borderRadius: BorderRadius.circular(8),
-                                  ),
-                                  errorBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(
-                                      color: Color(0x00000000),
-                                      width: 2,
-                                    ),
-                                    borderRadius: BorderRadius.circular(8),
-                                  ),
-                                  focusedErrorBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(
-                                      color: Color(0x00000000),
-                                      width: 2,
-                                    ),
-                                    borderRadius: BorderRadius.circular(8),
-                                  ),
-                                ),
-                                style: FlutterFlowTheme.of(context).bodyText1,
-                                maxLines: null,
-                              ),
+                            Container(
+                              height: 200,
+                              decoration: BoxDecoration(),
                             ),
-                          ],
-                        ),
-                      ),
-                      Container(
-                        height: 200,
-                        child: TextFormField(
-                          controller: descriptionTextController,
-                          obscureText: false,
-                          decoration: InputDecoration(
-                            labelText: 'Description',
-                            hintStyle: FlutterFlowTheme.of(context).bodyText2,
-                            enabledBorder: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                color: FlutterFlowTheme.of(context)
-                                    .primaryBackground,
-                                width: 2,
+                            SwitchListTile.adaptive(
+                              value: switchListTileValue ??= true,
+                              onChanged: (newValue) async {
+                                setState(() => switchListTileValue = newValue!);
+                              },
+                              title: Text(
+                                'Recieve Notifications',
+                                style: FlutterFlowTheme.of(context).subtitle2,
                               ),
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                            focusedBorder: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                color: FlutterFlowTheme.of(context)
-                                    .primaryBackground,
-                                width: 2,
+                              subtitle: Text(
+                                'Turn on notifications.',
+                                style: FlutterFlowTheme.of(context).bodyText2,
                               ),
-                              borderRadius: BorderRadius.circular(8),
+                              tileColor: Colors.white,
+                              activeColor: Color(0xFF4B39EF),
+                              activeTrackColor: Color(0x8D4B39EF),
+                              dense: false,
+                              controlAffinity: ListTileControlAffinity.trailing,
                             ),
-                            errorBorder: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                color: Color(0x00000000),
-                                width: 2,
-                              ),
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                            focusedErrorBorder: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                color: Color(0x00000000),
-                                width: 2,
-                              ),
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                          ),
-                          style: FlutterFlowTheme.of(context).bodyText1,
-                          maxLines: 20,
-                        ),
-                      ),
-                      Container(
-                        height: 200,
-                        decoration: BoxDecoration(),
-                      ),
-                      SwitchListTile.adaptive(
-                        value: switchListTileValue ??= true,
-                        onChanged: (newValue) async {
-                          setState(() => switchListTileValue = newValue!);
-                        },
-                        title: Text(
-                          'Recieve Notifications',
-                          style: FlutterFlowTheme.of(context).subtitle2,
-                        ),
-                        subtitle: Text(
-                          'Turn on notifications.',
-                          style: FlutterFlowTheme.of(context).bodyText2,
-                        ),
-                        tileColor: Colors.white,
-                        activeColor: Color(0xFF4B39EF),
-                        activeTrackColor: Color(0x8D4B39EF),
-                        dense: false,
-                        controlAffinity: ListTileControlAffinity.trailing,
-                      ),
-                      Padding(
-                        padding: EdgeInsetsDirectional.fromSTEB(0, 12, 0, 12),
-                        child: FFButtonWidget(
-                          onPressed: () {
-                            saveCourseAndNavigate();
-                            // save course here
-                            ;
+                            Padding(
+                              padding:
+                                  EdgeInsetsDirectional.fromSTEB(0, 12, 0, 12),
+                              child: FFButtonWidget(
+                                onPressed: () {
+                                  saveCourseAndNavigate();
+                                  // save course here
+                                  ;
 
-                            print('Button_Secondary pressed ...');
-                          },
-                          text: 'Save Changes and continue curriculum',
-                          options: FFButtonOptions(
-                            width: 300,
-                            height: 50,
-                            color: Color(0xFF4B39EF),
-                            textStyle:
-                                FlutterFlowTheme.of(context).bodyText2.override(
-                                      fontFamily: 'Lexend Deca',
-                                      color: Colors.white,
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.normal,
-                                    ),
-                            elevation: 3,
-                            borderSide: BorderSide(
-                              color: Colors.transparent,
-                              width: 1,
+                                  print('Button_Secondary pressed ...');
+                                },
+                                text: 'Save Changes and continue curriculum',
+                                options: FFButtonOptions(
+                                  width: 300,
+                                  height: 50,
+                                  color: Color(0xFF4B39EF),
+                                  textStyle: FlutterFlowTheme.of(context)
+                                      .bodyText2
+                                      .override(
+                                        fontFamily: 'Lexend Deca',
+                                        color: Colors.white,
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.normal,
+                                      ),
+                                  elevation: 3,
+                                  borderSide: BorderSide(
+                                    color: Colors.transparent,
+                                    width: 1,
+                                  ),
+                                ),
+                              ),
                             ),
-                          ),
+                          ],
                         ),
                       ),
-                    ],
+                    ),
                   ),
-                ),
+                ],
               ),
-            ),
-          ],
-        ),
+            );
+          }
+          return Text('Loading');
+        },
       ),
     );
+  }
+
+  Future<Course?> getCourse(String id) async {
+    const getCourse = 'getCourse';
+
+    String graphQLQuery =
+        '''query GetCourseDetailsWithLessonSummaries(\$courseId: ID!) {
+              $getCourse(id: \$courseId) {
+                title
+                thumbnail
+                stripeProduct
+                id
+                description
+              }
+            }
+    ''';
+
+    final request = GraphQLRequest<Course>(
+        document: graphQLQuery,
+        modelType: Course.classType,
+        variables: <String, String>{
+          'courseId': id,
+        },
+        decodePath: getCourse);
+
+    try {
+      var response = await Amplify.API.query(request: request).response;
+      var retrievedCourse = response.data ?? Course();
+
+      //print('Retrieved course: ${mycourse}');
+      return retrievedCourse;
+    } catch (e) {
+      print(e);
+    }
+
+    return Course();
   }
 
   Future<void> saveCourseAndNavigate() async {
@@ -425,10 +519,12 @@ class _CreateCourseWidgetState extends State<CreateCourseWidget> {
 
     Course course = Course(
         id: courseId,
-        title: titleTextController!.text,
-        subtitle: subtitleTextController!.text,
+        title: editableCourse!.title,
+        subtitle: editableCourse!.subtitle,
         courseContentId: contentId,
-        description: descriptionTextController!.text);
+        coverPhotoUrl: editableCourse?.coverPhotoUrl,
+        promoVideoUrl: editableCourse?.promoVideoUrl,
+        description: editableCourse!.description);
 
     Section section =
         Section(id: sectionId, courseID: courseId, name: 'Section 1');
@@ -452,11 +548,17 @@ class _CreateCourseWidgetState extends State<CreateCourseWidget> {
 
     course = course.copyWith(Sections: [section]);
 
+    print('Course to save ${course}');
+
     final courseSaveRequest = ModelMutations.create(course);
 
-    await Amplify.API.mutate(request: courseSaveRequest).response;
+    var response =
+        await Amplify.API.mutate(request: courseSaveRequest).response;
 
-    print('Course id: ${course.id}');
+    print('Saved course ${response}');
+    print('Saved course errors: ${response.errors}');
+
+    print('Retrieved course id: ${course.id}');
 
     var content = Content(
         id: contentId,
@@ -467,6 +569,19 @@ class _CreateCourseWidgetState extends State<CreateCourseWidget> {
     final contentSaveRequest = ModelMutations.create(content);
 
     await Amplify.API.mutate(request: contentSaveRequest).response;
+
+    print('Course id ${course.id}');
+    print('Course id ${course}');
+
+    if (course.id != '') {
+      final courseSaveRequest = ModelMutations.create(course!);
+
+      Amplify.API.mutate(request: courseSaveRequest);
+    } else {
+      final courseSaveRequest = ModelMutations.update(course!);
+
+      Amplify.API.mutate(request: courseSaveRequest);
+    }
 
     setState(() {
       course = course;

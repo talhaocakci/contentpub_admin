@@ -55,6 +55,8 @@ class EditableCourse {
     editableCourse.promoVideoUrl = course.promoVideoUrl;
     editableCourse.subtitle = course.subtitle;
     editableCourse.courseContentId = course.courseContentId;
+    editableCourse.newItem = false;
+    editableCourse.dirty = false;
 
     return editableCourse;
   }
@@ -104,6 +106,7 @@ class EditableSection {
     editableSection.subtitle = section.subtitle;
     editableSection.courseID = section.courseID;
     editableSection.Lessons = editableLessons;
+    editableSection.newItem = false;
     editableSection.dirty = false;
 
     return editableSection;
@@ -142,6 +145,7 @@ class EditableLesson {
     editableLesson.video = lesson.video;
     editableLesson.id = lesson.id;
     editableLesson.sectionID = lesson.sectionID;
+    editableLesson.newItem = false;
     editableLesson.dirty = false;
 
     return editableLesson;

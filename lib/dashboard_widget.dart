@@ -569,7 +569,9 @@ class _DashboardWidgetState extends State<DashboardWidget> {
                                             context,
                                             MaterialPageRoute(
                                                 builder: (context) =>
-                                                    CreateCourseWidget()));
+                                                    CreateCourseWidget(
+                                                      courseId: '',
+                                                    )));
                                       },
                                       child: Padding(
                                         padding: EdgeInsetsDirectional.fromSTEB(

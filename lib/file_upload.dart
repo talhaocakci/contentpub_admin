@@ -29,11 +29,13 @@ class FileUploadWithDrop extends StatefulWidget {
   final String? remoteUrl;
   final Function(UploadedFile) onComplete;
   final Function() onClear;
+  final bool? isPublic;
 
   const FileUploadWithDrop(
       {required this.fileType,
       required this.onComplete,
       required this.onClear,
+      this.isPublic,
       this.remoteUrl,
       Key? key})
       : super(key: key);
@@ -100,7 +102,7 @@ class _FileUploadWithDropState extends State<FileUploadWithDrop> {
                 ? Column(children: [
                     Row(
                       children: [
-                        Expanded(child: Text('Drop file below or')),
+                        const Expanded(child: Text('Drop file below or')),
                         ElevatedButton(
                           onPressed: () async {
                             print(await controller2.pickFiles());
@@ -109,7 +111,7 @@ class _FileUploadWithDropState extends State<FileUploadWithDrop> {
                             borderColor: Colors.transparent,
                             borderRadius: 30,
                             buttonSize: 48,
-                            icon: Icon(
+                            icon: const Icon(
                               Icons.photo_camera,
                               color: Colors.white,
                               size: 20,
@@ -138,7 +140,7 @@ class _FileUploadWithDropState extends State<FileUploadWithDrop> {
                                         localFileSize = null;
                                       });
                                     },
-                                    child: Text('Clear')),
+                                    child: const Text('Clear')),
                                 SizedBox(
                                     height: 150,
                                     child: VideoPlayerScreen(
@@ -157,12 +159,16 @@ class _FileUploadWithDropState extends State<FileUploadWithDrop> {
                                             localFileSize = null;
                                           });
                                         },
-                                        child: Text('Clear')),
+                                        child: const Text('Clear')),
                                     Container(
                                         height: 100,
                                         width: 100,
-                                        child: Image.network(
-                                            uploadedFileUrl ?? ''))
+                                        decoration: BoxDecoration(
+                                            image: DecorationImage(
+                                                alignment: Alignment(-.2, 0),
+                                                image: NetworkImage(
+                                                    uploadedFileUrl ?? ''),
+                                                fit: BoxFit.fill)))
                                   ]
                                 : [
                                     ElevatedButton(
@@ -174,7 +180,7 @@ class _FileUploadWithDropState extends State<FileUploadWithDrop> {
                                             localFileSize = null;
                                           });
                                         },
-                                        child: Text('Clear')),
+                                        child: const Text('Clear')),
                                     ElevatedButton(
                                         onPressed: () => downloadFile(
                                             uploadedFileUrl ?? 'Wrong url'),
@@ -220,9 +226,13 @@ class _FileUploadWithDropState extends State<FileUploadWithDrop> {
     print("awsfile:${file.toString()}");
     print("awsfile:${url.toString()}");
 
-    const String bucket = "contentpub-media174002-staging";
+    String bucket = "contentpub-media174002-staging-restricted";
 
-    final uploadDest = 'public';
+    bucket = (widget.isPublic ?? false)
+        ? "contentpub-media174002-staging-public"
+        : bucket;
+
+    String uploadDest = 'images';
 
     String remoteFileUrl =
         'https://$bucket.s3.amazonaws.com/$uploadDest/${ev.name}';
@@ -241,13 +251,14 @@ class _FileUploadWithDropState extends State<FileUploadWithDrop> {
     });
 
     await AwsS3.uploadFile(
+        //acl: ,
         accessKey: "AKIAVCISBNGUGFQ4LAPR", // cognitoya cevir
         secretKey: "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",
         inputStream: file.stream,
         fileSize: fileSize,
+        destination: uploadDest,
         filename: ev.name, //degistri, laf olsun diye koyduk
         bucket: bucket,
-        destination: uploadDest,
         onProgress: (bytes, totalBytes) => printprogress(bytes, totalBytes),
         region: "us-east-1");
 
