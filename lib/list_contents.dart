@@ -582,6 +582,8 @@ class _ListContentsWidgetState extends State<ListContentsWidget> {
                   s3Url
                   description
                   type
+                  createdAt
+                  updatedAt
                   coworkers {
                     items {
                       id
@@ -606,6 +608,14 @@ class _ListContentsWidgetState extends State<ListContentsWidget> {
       for (var content in contents) {
         print(content);
       }
+
+      retrievedContents.sort((a, b) =>
+          (b!.updatedAt ?? TemporalDateTime(DateTime.now()))
+              .compareTo(a!.updatedAt ?? TemporalDateTime(DateTime.now())));
+
+      retrievedContents.forEach((element) {
+        print(element!.updatedAt);
+      });
 
       setState(() {
         contents = retrievedContents;

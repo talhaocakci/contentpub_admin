@@ -106,15 +106,16 @@ class _CreateCourseWidgetState extends State<CreateCourseWidget> {
         future: initCourse(),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
-            return SingleChildScrollView(
+            return Center(
+                child: SingleChildScrollView(
               child: Column(
-                mainAxisSize: MainAxisSize.max,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Padding(
                     padding: EdgeInsetsDirectional.fromSTEB(0, 1, 0, 0),
                     child: Container(
-                      width: MediaQuery.of(context).size.width,
+                      //width: MediaQuery.of(context).size.width / 2,
+                      margin: EdgeInsets.all(50),
                       decoration: BoxDecoration(
                         color: FlutterFlowTheme.of(context).secondaryBackground,
                         boxShadow: [
@@ -153,52 +154,12 @@ class _CreateCourseWidgetState extends State<CreateCourseWidget> {
                                           fit: BoxFit.cover,
                                         ),
                                       ),
-                                      Align(
-                                        alignment: AlignmentDirectional(0, 0),
-                                        child: Container(
-                                          width:
-                                              MediaQuery.of(context).size.width,
-                                          height: 130,
-                                          decoration: BoxDecoration(
-                                            color: Color(0x77090F13),
-                                          ),
-                                          child: Column(
-                                            mainAxisSize: MainAxisSize.max,
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            children: [
-                                              FlutterFlowIconButton(
-                                                borderColor: Colors.transparent,
-                                                borderRadius: 30,
-                                                buttonSize: 48,
-                                                icon: Icon(
-                                                  Icons.photo_camera,
-                                                  color: Colors.white,
-                                                  size: 30,
-                                                ),
-                                                onPressed: () {
-                                                  print(
-                                                      'IconButton pressed ...');
-                                                },
-                                              ),
-                                              Text(
-                                                'Change Cover Photo',
-                                                style: GoogleFonts.getFont(
-                                                  'DM Sans',
-                                                  color: Colors.white,
-                                                  fontWeight: FontWeight.w500,
-                                                  fontSize: 10,
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      ),
                                     ],
                                   ),
                                 ),
                               ],
                             ),
+                            Text('Cover photo:'),
                             Row(
                               mainAxisSize: MainAxisSize.max,
                               children: [
@@ -217,6 +178,7 @@ class _CreateCourseWidgetState extends State<CreateCourseWidget> {
                                 ),
                               ],
                             ),
+                            Text('Promo video :'),
                             Row(
                               mainAxisSize: MainAxisSize.max,
                               children: [
@@ -244,7 +206,8 @@ class _CreateCourseWidgetState extends State<CreateCourseWidget> {
                                   Expanded(
                                     child: TextFormField(
                                       onChanged: (value) {
-                                        //editableCourse!.title = value;
+                                        editableCourse!.title = value;
+                                        editableCourse!.dirty = true;
                                       },
                                       initialValue: editableCourse?.title,
                                       obscureText: false,
@@ -305,6 +268,7 @@ class _CreateCourseWidgetState extends State<CreateCourseWidget> {
                                     child: TextFormField(
                                       onChanged: (value) {
                                         editableCourse!.subtitle = value;
+                                        editableCourse!.dirty = true;
                                       },
                                       obscureText: false,
                                       initialValue:
@@ -363,6 +327,7 @@ class _CreateCourseWidgetState extends State<CreateCourseWidget> {
                                 initialValue: editableCourse?.description ?? '',
                                 onChanged: (value) {
                                   editableCourse!.description = value;
+                                  editableCourse!.dirty = true;
                                 },
                                 decoration: InputDecoration(
                                   labelText: 'Description',
@@ -403,11 +368,7 @@ class _CreateCourseWidgetState extends State<CreateCourseWidget> {
                                 maxLines: 20,
                               ),
                             ),
-                            Container(
-                              height: 200,
-                              decoration: BoxDecoration(),
-                            ),
-                            SwitchListTile.adaptive(
+                            /*SwitchListTile.adaptive(
                               value: switchListTileValue ??= true,
                               onChanged: (newValue) async {
                                 setState(() => switchListTileValue = newValue!);
@@ -426,6 +387,7 @@ class _CreateCourseWidgetState extends State<CreateCourseWidget> {
                               dense: false,
                               controlAffinity: ListTileControlAffinity.trailing,
                             ),
+                           */
                             Padding(
                               padding:
                                   EdgeInsetsDirectional.fromSTEB(0, 12, 0, 12),
@@ -433,7 +395,6 @@ class _CreateCourseWidgetState extends State<CreateCourseWidget> {
                                 onPressed: () {
                                   saveCourseAndNavigate();
                                   // save course here
-                                  ;
 
                                   print('Button_Secondary pressed ...');
                                 },
@@ -465,7 +426,7 @@ class _CreateCourseWidgetState extends State<CreateCourseWidget> {
                   ),
                 ],
               ),
-            );
+            ));
           }
           return Text('Loading');
         },
@@ -480,10 +441,13 @@ class _CreateCourseWidgetState extends State<CreateCourseWidget> {
         '''query GetCourseDetailsWithLessonSummaries(\$courseId: ID!) {
               $getCourse(id: \$courseId) {
                 title
+                subtitle
                 thumbnail
                 stripeProduct
                 id
                 description
+                coverPhotoUrl
+                promoVideoUrl
               }
             }
     ''';
@@ -512,7 +476,7 @@ class _CreateCourseWidgetState extends State<CreateCourseWidget> {
   Future<void> saveCourseAndNavigate() async {
     var uuid = Uuid();
 
-    String courseId = uuid.v4();
+    String courseId = (widget.courseId != '') ? widget.courseId : uuid.v4();
     String sectionId = uuid.v4();
     String lessonId = uuid.v4();
     String contentId = uuid.v4();
@@ -526,54 +490,56 @@ class _CreateCourseWidgetState extends State<CreateCourseWidget> {
         promoVideoUrl: editableCourse?.promoVideoUrl,
         description: editableCourse!.description);
 
-    Section section =
-        Section(id: sectionId, courseID: courseId, name: 'Section 1');
+    if (widget.courseId == '') {
+      Section section =
+          Section(id: sectionId, courseID: courseId, name: 'Section 1');
 
-    final sectionSaveRequest = ModelMutations.create(section);
+      final sectionSaveRequest = ModelMutations.create(section);
 
-    Amplify.API.mutate(request: sectionSaveRequest);
+      Amplify.API.mutate(request: sectionSaveRequest);
 
-    print('Section id: ${section.id}');
+      print('Section id: ${section.id}');
 
-    Lesson lesson =
-        Lesson(id: lessonId, sectionID: sectionId, name: 'Lesson 1');
+      Lesson lesson =
+          Lesson(id: lessonId, sectionID: sectionId, name: 'Lesson 1');
 
-    final lessonSaveRequest = ModelMutations.create(lesson);
+      final lessonSaveRequest = ModelMutations.create(lesson);
 
-    Amplify.API.mutate(request: lessonSaveRequest);
+      Amplify.API.mutate(request: lessonSaveRequest);
 
-    print('Lesson id: ${lesson.id}');
+      print('Lesson id: ${lesson.id}');
 
-    section = section.copyWith(Lessons: [lesson]);
+      section = section.copyWith(Lessons: [lesson]);
 
-    course = course.copyWith(Sections: [section]);
+      course = course.copyWith(Sections: [section]);
 
-    print('Course to save ${course}');
+      print('Course to save ${course}');
 
-    final courseSaveRequest = ModelMutations.create(course);
+      final courseSaveRequest = ModelMutations.create(course);
 
-    var response =
-        await Amplify.API.mutate(request: courseSaveRequest).response;
+      var response =
+          await Amplify.API.mutate(request: courseSaveRequest).response;
 
-    print('Saved course ${response}');
-    print('Saved course errors: ${response.errors}');
+      print('Saved course ${response}');
+      print('Saved course errors: ${response.errors}');
 
-    print('Retrieved course id: ${course.id}');
+      print('Retrieved course id: ${course.id}');
 
-    var content = Content(
-        id: contentId,
-        type: ContentType.COURSE,
-        objectId: courseId,
-        name: course.title);
+      var content = Content(
+          id: contentId,
+          type: ContentType.COURSE,
+          objectId: courseId,
+          name: course.title);
 
-    final contentSaveRequest = ModelMutations.create(content);
+      final contentSaveRequest = ModelMutations.create(content);
 
-    await Amplify.API.mutate(request: contentSaveRequest).response;
+      await Amplify.API.mutate(request: contentSaveRequest).response;
 
-    print('Course id ${course.id}');
-    print('Course id ${course}');
+      print('Course id ${course.id}');
+      print('Course id ${course}');
+    }
 
-    if (course.id != '') {
+    if (course.id == '') {
       final courseSaveRequest = ModelMutations.create(course!);
 
       Amplify.API.mutate(request: courseSaveRequest);

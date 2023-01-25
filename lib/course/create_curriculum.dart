@@ -161,7 +161,12 @@ class CurriculumCreateWidgetState extends State<CurriculumCreateWidget> {
                                                       lesson = lesson;
                                                     });
                                                   },
-                                                  onClear: () {},
+                                                  onClear: () {
+                                                    var editable = (lesson
+                                                        as EditableLesson);
+                                                    editable.video = '';
+                                                    editable.dirty = true;
+                                                  },
                                                 ))),
                                         Expanded(
                                             child: Column(
@@ -176,7 +181,10 @@ class CurriculumCreateWidgetState extends State<CurriculumCreateWidget> {
                                                         labelText: 'Title'),
                                                 initialValue: lesson.name,
                                                 onChanged: (val) {
-                                                  print(val);
+                                                  var editable = (lesson
+                                                      as EditableLesson);
+                                                  editable.name = val;
+                                                  editable.dirty = true;
                                                 },
                                               ),
                                               FormBuilderTextField(
@@ -191,7 +199,8 @@ class CurriculumCreateWidgetState extends State<CurriculumCreateWidget> {
                                                 initialValue:
                                                     lesson.description,
                                                 onChanged: (val) {
-                                                  print(val);
+                                                  lesson.description = val;
+                                                  lesson.dirty = true;
                                                 },
                                               )
                                             ])),
@@ -245,9 +254,17 @@ class CurriculumCreateWidgetState extends State<CurriculumCreateWidget> {
 
       setState(() {});
 
-      // final sectionSaveRequest = ModelMutations.create(section);
+      if (section.newItem) {
+        var s = EditableSection.fromEditable(section);
+        final sectionSaveRequest = ModelMutations.create(s);
 
-      // Amplify.API.mutate(request: sectionSaveRequest);
+        Amplify.API.mutate(request: sectionSaveRequest);
+      } else {
+        var s = EditableSection.fromEditable(section);
+        final sectionSaveRequest = ModelMutations.update(s);
+
+        Amplify.API.mutate(request: sectionSaveRequest);
+      }
     }
 
     if (course?.id != '') {

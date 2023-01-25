@@ -143,6 +143,7 @@ class _FileUploadWithDropState extends State<FileUploadWithDrop> {
                                     child: const Text('Clear')),
                                 SizedBox(
                                     height: 150,
+                                    width: double.infinity,
                                     child: VideoPlayerScreen(
                                       videoUrl: uploadedFileUrl ?? '',
                                       autoPlay: false,
@@ -161,8 +162,8 @@ class _FileUploadWithDropState extends State<FileUploadWithDrop> {
                                         },
                                         child: const Text('Clear')),
                                     Container(
-                                        height: 100,
-                                        width: 100,
+                                        height: 150,
+                                        width: double.infinity,
                                         decoration: BoxDecoration(
                                             image: DecorationImage(
                                                 alignment: Alignment(-.2, 0),
@@ -234,12 +235,16 @@ class _FileUploadWithDropState extends State<FileUploadWithDrop> {
 
     String uploadDest = 'images';
 
+    String extension = ev.name.substring(ev.name.lastIndexOf('.'));
+    String filename =
+        '${ev.name.replaceAll(RegExp('[^A-Za-z0-9]'), '')}${extension}';
+
     String remoteFileUrl =
-        'https://$bucket.s3.amazonaws.com/$uploadDest/${ev.name}';
+        'https://$bucket.s3.amazonaws.com/$uploadDest/${filename}';
 
     uploadedFileUrl = remoteFileUrl;
 
-    print('ev.name: ${ev.name}');
+    print('ev.name: ${filename}');
 
     int fileSize = await getFileSize(controller, ev);
 
@@ -257,7 +262,7 @@ class _FileUploadWithDropState extends State<FileUploadWithDrop> {
         inputStream: file.stream,
         fileSize: fileSize,
         destination: uploadDest,
-        filename: ev.name, //degistri, laf olsun diye koyduk
+        filename: filename, //degistri, laf olsun diye koyduk
         bucket: bucket,
         onProgress: (bytes, totalBytes) => printprogress(bytes, totalBytes),
         region: "us-east-1");
