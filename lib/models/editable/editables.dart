@@ -43,6 +43,8 @@ class EditableCourse {
         ? course.Sections?.map((e) => EditableSection.toEditable(e)).toList()
         : List.empty();
 
+    sections!.sort((a, b) => (a.order ?? 0).compareTo(b.order ?? 0));
+
     EditableCourse editableCourse = EditableCourse();
     editableCourse.id = course.id;
     editableCourse.title = course.title;
@@ -69,6 +71,7 @@ class EditableSection {
   String? courseID;
   List<EditableLesson>? Lessons;
   String? subtitle;
+  int? order;
   bool dirty = false;
   bool newItem = false;
 
@@ -89,6 +92,7 @@ class EditableSection {
         description: editable.description,
         subtitle: editable.subtitle,
         courseID: editable.courseID ?? '',
+        order: editable.order,
         Lessons: editableLessons);
   }
 
@@ -96,6 +100,8 @@ class EditableSection {
     List<EditableLesson>? editableLessons = (section.Lessons != null)
         ? section.Lessons?.map((e) => EditableLesson.toEditable(e)).toList()
         : List.empty();
+
+    editableLessons!.sort((a, b) => (a.order ?? 0).compareTo(b.order ?? 0));
 
     EditableSection editableSection =
         EditableSection(courseID: section.courseID, name: section.name);
@@ -108,6 +114,7 @@ class EditableSection {
     editableSection.Lessons = editableLessons;
     editableSection.newItem = false;
     editableSection.dirty = false;
+    editableSection.order = section.order;
 
     return editableSection;
   }
@@ -119,6 +126,7 @@ class EditableLesson {
   String? description;
   String? video;
   String? sectionID;
+  int? order;
   bool dirty = false;
   bool newItem = false;
 
@@ -134,6 +142,7 @@ class EditableLesson {
         name: editable.name,
         description: editable.description,
         video: editable.video,
+        order: editable.order,
         id: editable.id);
   }
 
@@ -145,6 +154,7 @@ class EditableLesson {
     editableLesson.video = lesson.video;
     editableLesson.id = lesson.id;
     editableLesson.sectionID = lesson.sectionID;
+    editableLesson.order = lesson.order;
     editableLesson.newItem = false;
     editableLesson.dirty = false;
 

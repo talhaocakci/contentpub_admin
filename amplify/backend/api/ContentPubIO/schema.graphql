@@ -32,6 +32,7 @@ type Section @model @auth(rules: [{allow: public}]) {
   courseID: ID! @index(name: "byCourse")
   Lessons: [Lesson] @hasMany(indexName: "bySection", fields: ["id"])
   subtitle: String
+  order: Int
 }
 
 type Tenant @model @auth(rules: [{allow: public}]) {
@@ -121,6 +122,7 @@ type Lesson @model @auth(rules: [{allow: public}]) {
   description: String
   video: String
   sectionID: ID! @index(name: "bySection")
+  order: Int
 }
 
 type Course @model @auth(rules: [{allow: public}]) {

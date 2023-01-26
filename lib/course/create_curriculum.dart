@@ -219,8 +219,19 @@ class CurriculumCreateWidgetState extends State<CurriculumCreateWidget> {
   void saveCourse() async {
     course = EditableCourse.fromEditable(editableCourse ?? EditableCourse());
 
+    int sectionOrder = 0;
     for (EditableSection section in editableCourse!.Sections ?? List.empty()) {
+      if (section.order != sectionOrder) {
+        section.dirty = true;
+      }
+      section.order = sectionOrder;
+      int lessonOrder = 0;
+
       for (EditableLesson lesson in section.Lessons ?? List.empty()) {
+        if (lesson.order != lessonOrder) {
+          lesson.dirty = true;
+        }
+        lesson.order = lessonOrder;
         if (lesson.dirty) {
           lesson.sectionID = section.id;
           if (lesson.newItem) {
@@ -249,6 +260,7 @@ class CurriculumCreateWidgetState extends State<CurriculumCreateWidget> {
             print(response.data);
           }
         }
+        lessonOrder++;
       }
       section.dirty = false;
 
@@ -265,6 +277,7 @@ class CurriculumCreateWidgetState extends State<CurriculumCreateWidget> {
 
         Amplify.API.mutate(request: sectionSaveRequest);
       }
+      sectionOrder++;
     }
 
     if (course?.id != '') {
@@ -297,6 +310,8 @@ class CurriculumCreateWidgetState extends State<CurriculumCreateWidget> {
                     id
                     name
                     description
+                    courseID
+                    order
                     Lessons {
                       items {
                         id
@@ -304,6 +319,7 @@ class CurriculumCreateWidgetState extends State<CurriculumCreateWidget> {
                         video
                         description
                         sectionID
+                        order
                       }
                     }
                   }
