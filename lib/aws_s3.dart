@@ -78,7 +78,7 @@ class AwsS3 {
 
       print(res.statusCode);
 
-      if (res.statusCode == 204) return destination;
+      if (res.statusCode == 204) return uploadDest;
     } catch (e) {
       print('Failed to upload to AWS, with exception:');
       print(e);

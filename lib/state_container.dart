@@ -70,8 +70,6 @@ class StateContainerState extends State<StateContainer> {
     setState(() {
       _isLoading = false; // important to set the state!
     });
-
-    authUser = await getCurrentUser();
   }
 
   Future<void> _configureAmplify() async {
@@ -135,7 +133,7 @@ class StateContainerState extends State<StateContainer> {
   }
 
   void processAuthUser() async {
-    AuthUser authUser = await getCurrentUser();
+    authUser = await getCurrentUser();
 
     List<AuthUserAttribute> authUserAttributes =
         await Amplify.Auth.fetchUserAttributes();

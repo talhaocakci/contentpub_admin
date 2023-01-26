@@ -18,6 +18,8 @@ import 'package:video_player/video_player.dart';
 
 import 'package:uuid/uuid.dart';
 
+var uuid = Uuid();
+
 class CurriculumCreateWidget extends StatefulWidget {
   final String courseId;
 
@@ -67,8 +69,6 @@ class CurriculumCreateWidgetState extends State<CurriculumCreateWidget> {
                     child: const Text("Save the course")),
                 ElevatedButton(
                     onPressed: () async {
-                      var uuid = Uuid();
-
                       String sectionId = uuid.v4();
 
                       var newSection = EditableSection(
@@ -96,6 +96,7 @@ class CurriculumCreateWidgetState extends State<CurriculumCreateWidget> {
                       trailing: ElevatedButton(
                           onPressed: () {
                             section.Lessons.add(EditableLesson(
+                                id: uuid.v4(),
                                 dirty: true,
                                 sectionID: section.id,
                                 name: 'New lesson'));
@@ -147,6 +148,9 @@ class CurriculumCreateWidgetState extends State<CurriculumCreateWidget> {
                                             child: Container(
                                                 width: 300,
                                                 child: FileUploadWithDrop(
+                                                  remoteDirectory: course!.id,
+                                                  remoteFileName:
+                                                      '${lesson?.id}',
                                                   remoteUrl: lesson.video,
                                                   fileType: FileType.VIDEO,
                                                   onComplete: (uploadedFile) {

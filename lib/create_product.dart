@@ -130,6 +130,10 @@ class _CreateProductWidgetState extends State<CreateProductWidget> {
                               width: 300,
                               height: 300,
                               child: FileUploadWithDrop(
+                                remoteDirectory:
+                                    editableContent!.id ?? 'unknown-content',
+                                remoteFileName:
+                                    '${editableContent?.id}-document',
                                 fileType: FileType.OTHER,
                                 onComplete: (uploadedFile) {
                                   print(uploadedFile.remoteUrl);

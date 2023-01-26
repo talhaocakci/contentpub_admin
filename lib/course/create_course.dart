@@ -44,7 +44,7 @@ class _CreateCourseWidgetState extends State<CreateCourseWidget> {
     if (widget.courseId != '') {
       initCourse();
     } else {
-      course = Course();
+      course = Course(id: Uuid().v4());
     }
 
     super.initState();
@@ -165,6 +165,8 @@ class _CreateCourseWidgetState extends State<CreateCourseWidget> {
                               children: [
                                 Expanded(
                                   child: FileUploadWithDrop(
+                                      remoteDirectory: course!.id,
+                                      remoteFileName: 'cover-photo',
                                       isPublic: true,
                                       remoteUrl: editableCourse?.coverPhotoUrl,
                                       fileType: FileType.PICTURE,
@@ -184,6 +186,8 @@ class _CreateCourseWidgetState extends State<CreateCourseWidget> {
                               children: [
                                 Expanded(
                                   child: FileUploadWithDrop(
+                                      remoteDirectory: course!.id,
+                                      remoteFileName: 'promo-video',
                                       isPublic: true,
                                       fileType: FileType.VIDEO,
                                       remoteUrl: editableCourse?.promoVideoUrl,
@@ -388,37 +392,101 @@ class _CreateCourseWidgetState extends State<CreateCourseWidget> {
                               controlAffinity: ListTileControlAffinity.trailing,
                             ),
                            */
-                            Padding(
-                              padding:
-                                  EdgeInsetsDirectional.fromSTEB(0, 12, 0, 12),
-                              child: FFButtonWidget(
-                                onPressed: () {
-                                  saveCourseAndNavigate();
-                                  // save course here
+                            Row(children: [
+                              Padding(
+                                padding: EdgeInsetsDirectional.fromSTEB(
+                                    0, 12, 0, 12),
+                                child: FFButtonWidget(
+                                  onPressed: () {
+                                    saveCourse();
+                                    // save course here
 
-                                  print('Button_Secondary pressed ...');
-                                },
-                                text: 'Save Changes and continue curriculum',
-                                options: FFButtonOptions(
-                                  width: 300,
-                                  height: 50,
-                                  color: Color(0xFF4B39EF),
-                                  textStyle: FlutterFlowTheme.of(context)
-                                      .bodyText2
-                                      .override(
-                                        fontFamily: 'Lexend Deca',
-                                        color: Colors.white,
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.normal,
-                                      ),
-                                  elevation: 3,
-                                  borderSide: BorderSide(
-                                    color: Colors.transparent,
-                                    width: 1,
+                                    print('Button_Secondary pressed ...');
+                                  },
+                                  text: 'Save Changes',
+                                  options: FFButtonOptions(
+                                    width: 300,
+                                    height: 50,
+                                    color: Color(0xFF4B39EF),
+                                    textStyle: FlutterFlowTheme.of(context)
+                                        .bodyText2
+                                        .override(
+                                          fontFamily: 'Lexend Deca',
+                                          color: Colors.white,
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.normal,
+                                        ),
+                                    elevation: 3,
+                                    borderSide: BorderSide(
+                                      color: Colors.transparent,
+                                      width: 1,
+                                    ),
                                   ),
                                 ),
                               ),
-                            ),
+                              Padding(
+                                padding: EdgeInsetsDirectional.fromSTEB(
+                                    0, 12, 0, 12),
+                                child: FFButtonWidget(
+                                  onPressed: () {
+                                    goToCurriculum(course!.id);
+                                    // save course here
+
+                                    print('Button_Secondary pressed ...');
+                                  },
+                                  text: 'Edit curriculum',
+                                  options: FFButtonOptions(
+                                    width: 300,
+                                    height: 50,
+                                    color: Color(0xFF4B39EF),
+                                    textStyle: FlutterFlowTheme.of(context)
+                                        .bodyText2
+                                        .override(
+                                          fontFamily: 'Lexend Deca',
+                                          color: Colors.white,
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.normal,
+                                        ),
+                                    elevation: 3,
+                                    borderSide: BorderSide(
+                                      color: Colors.transparent,
+                                      width: 1,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              Padding(
+                                padding: EdgeInsetsDirectional.fromSTEB(
+                                    0, 12, 0, 12),
+                                child: FFButtonWidget(
+                                  onPressed: () {
+                                    goToProductPage();
+                                    // save course here
+
+                                    print('Button_Secondary pressed ...');
+                                  },
+                                  text: 'Edit selling options',
+                                  options: FFButtonOptions(
+                                    width: 300,
+                                    height: 50,
+                                    color: Color(0xFF4B39EF),
+                                    textStyle: FlutterFlowTheme.of(context)
+                                        .bodyText2
+                                        .override(
+                                          fontFamily: 'Lexend Deca',
+                                          color: Colors.white,
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.normal,
+                                        ),
+                                    elevation: 3,
+                                    borderSide: BorderSide(
+                                      color: Colors.transparent,
+                                      width: 1,
+                                    ),
+                                  ),
+                                ),
+                              )
+                            ]),
                           ],
                         ),
                       ),
@@ -473,7 +541,7 @@ class _CreateCourseWidgetState extends State<CreateCourseWidget> {
     return Course();
   }
 
-  Future<void> saveCourseAndNavigate() async {
+  Future<void> saveCourse() async {
     var uuid = Uuid();
 
     String courseId = (widget.courseId != '') ? widget.courseId : uuid.v4();
@@ -552,12 +620,19 @@ class _CreateCourseWidgetState extends State<CreateCourseWidget> {
     setState(() {
       course = course;
     });
+  }
 
+  void goToCurriculum(String courseId) {
     Navigator.push(
         context,
         MaterialPageRoute(
             builder: (context) => CurriculumCreateWidget(
-                  courseId: course.id,
+                  courseId: courseId,
                 )));
+  }
+
+  void goToProductPage() {
+    Navigator.push(context,
+        MaterialPageRoute(builder: (context) => CreateProductWidget()));
   }
 }

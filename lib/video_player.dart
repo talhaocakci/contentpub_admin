@@ -79,18 +79,17 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
             // If the VideoPlayerController has finished initialization, use
             // the data it provides to limit the aspect ratio of the video.
             return Container(
-                padding: const EdgeInsets.only(top: 40),
                 child: AspectRatio(
-                  aspectRatio: _controller.value.aspectRatio,
-                  child: Stack(
-                    alignment: Alignment.bottomCenter,
-                    children: <Widget>[
-                      VideoPlayer(_controller),
-                      _ControlsOverlay(controller: _controller),
-                      VideoProgressIndicator(_controller, allowScrubbing: true),
-                    ],
-                  ),
-                ));
+              aspectRatio: _controller.value.aspectRatio,
+              child: Stack(
+                alignment: Alignment.bottomCenter,
+                children: <Widget>[
+                  VideoPlayer(_controller),
+                  _ControlsOverlay(controller: _controller),
+                  VideoProgressIndicator(_controller, allowScrubbing: true),
+                ],
+              ),
+            ));
           } else {
             // If the VideoPlayerController is still initializing, show a
             // loading spinner.

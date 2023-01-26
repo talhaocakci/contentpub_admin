@@ -133,6 +133,7 @@ class EditableLesson {
   EditableLesson(
       {required this.sectionID,
       required this.name,
+      this.id,
       this.dirty: true,
       this.newItem: true});
 

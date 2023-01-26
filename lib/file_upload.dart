@@ -27,6 +27,8 @@ import 'dart:convert';
 class FileUploadWithDrop extends StatefulWidget {
   final FileType fileType;
   final String? remoteUrl;
+  final String remoteFileName;
+  final String remoteDirectory;
   final Function(UploadedFile) onComplete;
   final Function() onClear;
   final bool? isPublic;
@@ -35,13 +37,16 @@ class FileUploadWithDrop extends StatefulWidget {
       {required this.fileType,
       required this.onComplete,
       required this.onClear,
+      required this.remoteFileName,
+      required this.remoteDirectory,
       this.isPublic,
       this.remoteUrl,
       Key? key})
       : super(key: key);
 
   @override
-  _FileUploadWithDropState createState() => _FileUploadWithDropState(fileType);
+  _FileUploadWithDropState createState() =>
+      _FileUploadWithDropState(fileType, remoteFileName, remoteDirectory);
 }
 
 enum FileType { PICTURE, VIDEO, OTHER }
@@ -77,10 +82,13 @@ class _FileUploadWithDropState extends State<FileUploadWithDrop> {
   String? uploadedFileUrl;
   String? uploadedVideoAccessUrl;
   String? uploadMessage;
+  String remoteFileName;
+  String remoteDirectory;
   bool? dirty;
   bool uploadInProgress = false;
 
-  _FileUploadWithDropState(this.fileType);
+  _FileUploadWithDropState(
+      this.fileType, this.remoteFileName, this.remoteDirectory);
 
   @override
   void initState() {
@@ -215,10 +223,10 @@ class _FileUploadWithDropState extends State<FileUploadWithDrop> {
       message2 = '${ev.name} dropped';
     });
 
-    uploadFile(controller2, ev, url);
+    await uploadFile(controller2, ev, url);
   }
 
-  Future<void> uploadFile(
+  Future<String> uploadFile(
       DropzoneViewController controller, dynamic ev, String url) async {
     print("cozulecek dosya");
 
@@ -233,11 +241,10 @@ class _FileUploadWithDropState extends State<FileUploadWithDrop> {
         ? "contentpub-media174002-staging-public"
         : bucket;
 
-    String uploadDest = 'images';
+    String uploadDest = remoteDirectory;
 
     String extension = ev.name.substring(ev.name.lastIndexOf('.'));
-    String filename =
-        '${ev.name.replaceAll(RegExp('[^A-Za-z0-9]'), '')}${extension}';
+    String filename = '${remoteFileName}${extension}';
 
     String remoteFileUrl =
         'https://$bucket.s3.amazonaws.com/$uploadDest/${filename}';
@@ -255,7 +262,7 @@ class _FileUploadWithDropState extends State<FileUploadWithDrop> {
       localFile = url;
     });
 
-    await AwsS3.uploadFile(
+    String? result = await AwsS3.uploadFile(
         //acl: ,
         accessKey: "AKIAVCISBNGUGFQ4LAPR", // cognitoya cevir
         secretKey: "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",
@@ -268,6 +275,7 @@ class _FileUploadWithDropState extends State<FileUploadWithDrop> {
         region: "us-east-1");
 
     //make s3 resign call to access the video
+    print('result of upload: ${result}');
 
     UploadedFile uploadedFile = UploadedFile(
         remoteUrl: remoteFileUrl,
@@ -275,12 +283,14 @@ class _FileUploadWithDropState extends State<FileUploadWithDrop> {
         fileSize: fileSize,
         fileType: widget.fileType);
 
-    widget.onComplete(uploadedFile);
-
     setState(() {
       uploadInProgress = false;
       uploadedFileUrl = remoteFileUrl;
     });
+
+    widget.onComplete(uploadedFile);
+
+    return result ?? 'Unknown file upload result';
   }
 
   void printprogress(int bytes, int totalBytes) {
