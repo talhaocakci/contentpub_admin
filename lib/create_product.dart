@@ -47,19 +47,21 @@ class CreateProductWidget extends StatefulWidget {
 }
 
 class _CreateProductWidgetState extends State<CreateProductWidget> {
-  int _currentStep = 3;
+  int _currentStep = 1;
   StepperType stepperType = StepperType.horizontal;
 
   final contentTypes = ContentType.values.toList();
 
   EditableContent? editableContent;
 
+  final _formKey = GlobalKey<FormState>();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        title: Text('Content Creation'),
+        title: Text('Create Bundle to Sell Your Products'),
         centerTitle: true,
       ),
       body: Container(
@@ -75,88 +77,75 @@ class _CreateProductWidgetState extends State<CreateProductWidget> {
                 onStepCancel: cancel,
                 steps: <Step>[
                   Step(
-                    title: new Text('Content'),
-                    content: Column(
-                      children: <Widget>[
-                        SizedBox(
-                            width: 400,
-                            height: 300,
-                            child: GridView.builder(
-                              gridDelegate:
-                                  const SliverGridDelegateWithFixedCrossAxisCount(
-                                      crossAxisCount: 3),
-                              itemCount: contentTypes.length,
-                              itemBuilder: (context, index) {
-                                return InkWell(
-                                    onTap: () {
-                                      editableContent = EditableContent(
-                                          contentType:
-                                              contentTypes.elementAt(index));
-                                      setState(() {
-                                        _currentStep = 1;
-                                      });
-                                    },
-                                    child: Container(
-                                      decoration: BoxDecoration(
-                                          border:
-                                              Border.all(color: Colors.black)),
-                                      child: Text(
-                                          contentTypes.elementAt(index).name),
-                                    ));
+                    title: new Text('Bundle description'),
+                    content: Form(
+                        key: _formKey,
+                        child: Column(
+                          children: <Widget>[
+                            TextFormField(
+                              // The validator receives the text that the user has entered.
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return 'Please enter some text';
+                                }
+                                return null;
                               },
-                              scrollDirection: Axis.horizontal,
-                            ))
-                      ],
-                    ),
-                    isActive: _currentStep >= 0,
-                    state: _currentStep >= 0
-                        ? StepState.complete
-                        : StepState.disabled,
-                  ),
-                  Step(
-                    title: new Text('Prepare content'),
-                    content: Column(
-                      children: <Widget>[
-                        if (editableContent != null &&
-                            (editableContent!.contentType ==
-                                    ContentType.DOCUMENT ||
-                                editableContent!.contentType ==
-                                    ContentType.VIDEO ||
-                                editableContent!.contentType ==
-                                    ContentType.PHOTO ||
-                                editableContent!.contentType ==
-                                    ContentType.ARTICLE))
-                          SizedBox(
-                              width: 300,
-                              height: 300,
-                              child: FileUploadWithDrop(
-                                remoteDirectory:
-                                    editableContent!.id ?? 'unknown-content',
-                                remoteFileName:
-                                    '${editableContent?.id}-document',
-                                fileType: FileType.OTHER,
-                                onComplete: (uploadedFile) {
-                                  print(uploadedFile.remoteUrl);
-                                },
-                                onClear: () {
-                                  print('Clear the object here as well');
-                                },
-                              ))
-                      ],
-                    ),
-                    isActive: _currentStep >= 0,
+                            ),
+                            ElevatedButton(
+                              onPressed: () {
+                                // Validate returns true if the form is valid, or false otherwise.
+                                if (_formKey.currentState!.validate()) {
+                                  // If the form is valid, display a snackbar. In the real world,
+                                  // you'd often call a server or save the information in a database.
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(
+                                        content: Text('Processing Data')),
+                                  );
+                                }
+                              },
+                              child: const Text('Save product definition'),
+                            )
+                            // Add TextFormFields and ElevatedButton here.
+                          ],
+                        )),
+                    isActive: _currentStep >= 0 && editableContent != null,
                     state: _currentStep >= 1 &&
                             editableContent?.uploadedFileUrl != null
                         ? StepState.complete
                         : StepState.disabled,
                   ),
                   Step(
-                    title: new Text('Bundle'),
+                    title: new Text('Prices'),
                     content: Column(
-                      children: <Widget>[BundleManagementWidget()],
+                      children: <Widget>[
+                        ElevatedButton(
+                          onPressed: () {
+                            publishProduct();
+                          },
+                          child: Text('Publish'),
+                        ),
+                      ],
                     ),
                     isActive: _currentStep >= 0 && editableContent != null,
-                    state: _currentStep >= 1 &&
+                    state: _currentStep >= 2 &&
+                            editableContent?.uploadedFileUrl != null
+                        ? StepState.complete
+                        : StepState.disabled,
+                  ),
+                  Step(
+                    title: new Text('Contents'),
+                    content: Column(
+                      children: <Widget>[
+                        ElevatedButton(
+                          onPressed: () {
+                            publishProduct();
+                          },
+                          child: Text('Publish'),
+                        ),
+                      ],
+                    ),
+                    isActive: _currentStep >= 0 && editableContent != null,
+                    state: _currentStep >= 2 &&
                             editableContent?.uploadedFileUrl != null
                         ? StepState.complete
                         : StepState.disabled,

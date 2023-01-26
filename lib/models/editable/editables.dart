@@ -1,6 +1,11 @@
+import 'package:contentpub_admin/create_product.dart';
+import 'package:contentpub_admin/models/Bundle.dart';
 import 'package:contentpub_admin/models/Content.dart';
 import 'package:contentpub_admin/models/Course.dart';
 import 'package:contentpub_admin/models/Lesson.dart';
+import 'package:contentpub_admin/models/Price.dart';
+import 'package:contentpub_admin/models/PurchaseType.dart';
+import 'package:contentpub_admin/models/RecurrenceType.dart';
 import 'package:contentpub_admin/models/Section.dart';
 
 class EditableCourse {
@@ -160,5 +165,85 @@ class EditableLesson {
     editableLesson.dirty = false;
 
     return editableLesson;
+  }
+}
+
+class EditableBundle {
+  String id;
+  String? name;
+  String? description;
+  bool? isFree;
+  List<Content>? contents;
+  List<EditablePrice>? prices;
+  bool? isAllAccess;
+  String? stripeProductId;
+
+  EditableBundle({required this.id});
+
+  static EditableBundle toEditable(Bundle bundle) {
+    List<EditablePrice>? editablePrices = (bundle.prices != null)
+        ? bundle.prices?.map((e) => EditablePrice.toEditable(e)).toList()
+        : List.empty();
+
+    EditableBundle editable = EditableBundle(id: bundle.id);
+    editable.name = bundle.name;
+    editable.description = bundle.description;
+    editable.isFree = bundle.isFree;
+    editable.contents = bundle.contents;
+    editable.prices = editablePrices;
+    editable.isAllAccess = bundle.isAllAccess;
+    editable.stripeProductId = bundle.stripeProductId;
+
+    return editable;
+  }
+
+  static Bundle fromEditable(EditableBundle editable) {
+    List<Price>? prices = (editable.prices != null)
+        ? editable.prices?.map((e) => EditablePrice.fromEditable(e)).toList()
+        : List.empty();
+
+    return Bundle(
+        id: editable.id,
+        name: editable.name,
+        description: editable.description,
+        isFree: editable.isFree,
+        contents: editable.contents,
+        prices: prices,
+        isAllAccess: editable.isAllAccess,
+        stripeProductId: editable.stripeProductId);
+  }
+}
+
+class EditablePrice {
+  String id;
+  String? stripePriceId;
+  PurchaseType? purchaseType;
+  RecurrenceType? recurrenceType;
+  String? currency;
+  double? amount;
+  String? bundleID;
+
+  EditablePrice({required this.id});
+
+  static EditablePrice toEditable(Price price) {
+    EditablePrice editable = EditablePrice(id: price.id);
+    editable.stripePriceId = price.stripePriceId;
+    editable.purchaseType = price.purchaseType;
+    editable.recurrenceType = price.recurrenceType;
+    editable.currency = price.currency;
+    editable.amount = price.amount;
+    editable.bundleID = price.bundleID;
+    return editable;
+  }
+
+  static Price fromEditable(EditablePrice editable) {
+    return Price(
+        bundleID: editable.bundleID ?? 'unknown bundle id',
+        amount: editable.amount,
+        currency: editable.currency,
+        id: editable.id,
+        purchaseType: editable.purchaseType,
+        recurrenceType: editable.recurrenceType,
+        stripePriceId: editable.stripePriceId);
   }
 }
