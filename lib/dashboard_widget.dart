@@ -1,6 +1,5 @@
 import 'package:amplify_authenticator/amplify_authenticator.dart';
 import 'package:contentpub_admin/course/create_course.dart';
-import 'package:contentpub_admin/create_bundle.dart';
 import 'package:contentpub_admin/create_product.dart';
 import 'package:contentpub_admin/list_contents.dart';
 
@@ -685,7 +684,9 @@ class _DashboardWidgetState extends State<DashboardWidget> {
                                             context,
                                             MaterialPageRoute(
                                                 builder: (context) =>
-                                                    CreateProductWidget()));
+                                                    CreateProductWidget(
+                                                      bundleId: '',
+                                                    )));
                                       },
                                       child: Padding(
                                         padding: EdgeInsetsDirectional.fromSTEB(

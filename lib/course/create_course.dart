@@ -1,7 +1,6 @@
 import 'package:amplify_api/amplify_api.dart';
 import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:contentpub_admin/course/create_curriculum.dart';
-import 'package:contentpub_admin/create_bundle.dart';
 import 'package:contentpub_admin/create_product.dart';
 import 'package:contentpub_admin/file_upload.dart';
 import 'package:contentpub_admin/models/Content.dart';
@@ -632,8 +631,5 @@ class _CreateCourseWidgetState extends State<CreateCourseWidget> {
                 )));
   }
 
-  void goToProductPage() {
-    Navigator.push(context,
-        MaterialPageRoute(builder: (context) => BundleManagementWidget()));
-  }
+  void goToProductPage() {}
 }
