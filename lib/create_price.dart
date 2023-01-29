@@ -36,14 +36,16 @@ class _CreatePriceWidgetState extends State<CreatePriceWidget>
               child: Column(
                 children: <Widget>[
                   TextFormField(
-                      onChanged: (value) {
-                        if (value != '') {
-                          widget.price.amount = double.parse(value);
-                        }
-                      },
-                      decoration: const InputDecoration(
-                          labelText: 'Price',
-                          hintText: 'Numeric value as price')),
+                    decoration: InputDecoration(
+                      hintText: 'eg: 9.99 or 9 or 10.50',
+                      label: Text('Price as numeric value'),
+                    ),
+                    onChanged: (value) {
+                      if (value != '') {
+                        widget.price.amount = double.parse(value);
+                      }
+                    },
+                  ),
                   DropdownButtonFormField<String>(
                     value: 'USD',
                     items: const [

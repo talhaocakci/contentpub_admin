@@ -97,244 +97,268 @@ class _CreateProductWidgetState extends State<CreateProductWidget> {
         title: const Text('Create Bundle to Sell Your Contents'),
         centerTitle: true,
       ),
-      body: Container(
-        child: Column(
-          children: [
-            Expanded(
-              child: Stepper(
-                type: stepperType,
-                physics: const ScrollPhysics(),
-                currentStep: _currentStep,
-                onStepTapped: (step) => tapped(step),
-                onStepContinue: continued,
-                onStepCancel: cancel,
-                steps: <Step>[
-                  Step(
-                    title: new Text('Bundle description'),
-                    content: Form(
-                        key: _formKey,
-                        child: Column(
-                          children: <Widget>[
-                            TextFormField(
-                              onChanged: (newValue) {
-                                editableBundle!.name = newValue;
-                              },
+      body: Center(
+        child: SizedBox(
+            width: 600,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Expanded(
+                  child: Stepper(
+                    type: stepperType,
+                    physics: const ScrollPhysics(),
+                    currentStep: _currentStep,
+                    onStepTapped: (step) => tapped(step),
+                    onStepContinue: continued,
+                    onStepCancel: cancel,
+                    steps: <Step>[
+                      Step(
+                        title: new Text('Bundle description'),
+                        content: Form(
+                            key: _formKey,
+                            child: Column(
+                              children: <Widget>[
+                                TextFormField(
+                                  decoration: InputDecoration(
+                                    hintText:
+                                        'eg: All courses bundle, All X courses, My Single X course',
+                                    label: Text(
+                                        'What defines your product the best?'),
+                                  ),
+                                  onChanged: (newValue) {
+                                    editableBundle!.name = newValue;
+                                  },
 
-                              // The validator receives the text that the user has entered.
-                              validator: (value) {
-                                if (value == null || value.isEmpty) {
-                                  return 'Please enter the name';
-                                }
-                                return null;
-                              },
-                            ),
-                            TextFormField(
-                              onChanged: (newValue) {
-                                editableBundle!.description = newValue;
-                              },
+                                  // The validator receives the text that the user has entered.
+                                  validator: (value) {
+                                    if (value == null || value.isEmpty) {
+                                      return 'Please enter the name';
+                                    }
+                                    return null;
+                                  },
+                                ),
+                                TextFormField(
+                                  onChanged: (newValue) {
+                                    editableBundle!.description = newValue;
+                                  },
+                                  decoration: InputDecoration(
+                                    hintText:
+                                        'eg: Contains all video courses and 1 hour session per month',
+                                    label: Text(
+                                        'Describe your product. Shown to the customer before purchasing'),
+                                  ),
 
-                              // The validator receives the text that the user has entered.
-                              validator: (value) {
-                                if (value == null || value.isEmpty) {
-                                  return 'Please enter the description';
-                                }
-                                return null;
-                              },
-                            )
-                            // Add TextFormFields and ElevatedButton here.
-                          ],
-                        )),
-                    isActive: _currentStep >= 0 && editableBundle != null,
-                    state: _currentStep >= 1 && editableBundle?.name != null
-                        ? StepState.complete
-                        : StepState.disabled,
-                  ),
-                  Step(
-                    title: new Text('Prices'),
-                    content: SizedBox(
-                      height: 300,
-                      child: Column(
-                        mainAxisSize: MainAxisSize.max,
-                        children: [
-                          Expanded(
-                            child: DefaultTabController(
-                              length: 4,
-                              initialIndex: 0,
-                              child: Column(
-                                children: [
-                                  TabBar(
-                                    labelColor: FlutterFlowTheme.of(context)
-                                        .primaryColor,
-                                    labelStyle:
-                                        FlutterFlowTheme.of(context).bodyText1,
-                                    indicatorColor: FlutterFlowTheme.of(context)
-                                        .secondaryColor,
-                                    tabs: const [
-                                      Tab(
-                                        text: 'One time',
+                                  // The validator receives the text that the user has entered.
+                                  validator: (value) {
+                                    if (value == null || value.isEmpty) {
+                                      return 'Please enter the description';
+                                    }
+                                    return null;
+                                  },
+                                )
+                                // Add TextFormFields and ElevatedButton here.
+                              ],
+                            )),
+                        isActive: _currentStep >= 0 && editableBundle != null,
+                        state: _currentStep >= 1 && editableBundle?.name != null
+                            ? StepState.complete
+                            : StepState.disabled,
+                      ),
+                      Step(
+                        title: new Text('Prices'),
+                        content: SizedBox(
+                          height: 300,
+                          child: Column(
+                            mainAxisSize: MainAxisSize.max,
+                            children: [
+                              Expanded(
+                                child: DefaultTabController(
+                                  length: 4,
+                                  initialIndex: 0,
+                                  child: Column(
+                                    children: [
+                                      TabBar(
+                                        labelColor: FlutterFlowTheme.of(context)
+                                            .primaryColor,
+                                        labelStyle: FlutterFlowTheme.of(context)
+                                            .bodyText1,
+                                        indicatorColor:
+                                            FlutterFlowTheme.of(context)
+                                                .secondaryColor,
+                                        tabs: const [
+                                          Tab(
+                                            text: 'One time',
+                                          ),
+                                          Tab(
+                                            text: '1 month',
+                                          ),
+                                          Tab(
+                                            text: '3 months',
+                                          ),
+                                          Tab(
+                                            text: '1 year',
+                                          ),
+                                        ],
                                       ),
-                                      Tab(
-                                        text: '1 month',
-                                      ),
-                                      Tab(
-                                        text: '3 months',
-                                      ),
-                                      Tab(
-                                        text: '1 year',
+                                      Expanded(
+                                        child: TabBarView(
+                                          children: [
+                                            SizedBox(
+                                                width: 100,
+                                                child: CreatePriceWidget(
+                                                    bundleId: widget.bundleId,
+                                                    price: priceOneTime)),
+                                            SizedBox(
+                                                width: 100,
+                                                child: CreatePriceWidget(
+                                                    bundleId: widget.bundleId,
+                                                    price: priceOneMonth)),
+                                            SizedBox(
+                                                width: 100,
+                                                child: CreatePriceWidget(
+                                                    bundleId: widget.bundleId,
+                                                    price: priceThreeMonths)),
+                                            SizedBox(
+                                                width: 100,
+                                                child: CreatePriceWidget(
+                                                    bundleId: widget.bundleId,
+                                                    price: priceOneYear)),
+                                          ],
+                                        ),
                                       ),
                                     ],
                                   ),
-                                  Expanded(
-                                    child: TabBarView(
-                                      children: [
-                                        SizedBox(
-                                            width: 100,
-                                            child: CreatePriceWidget(
-                                                bundleId: widget.bundleId,
-                                                price: priceOneTime)),
-                                        SizedBox(
-                                            width: 100,
-                                            child: CreatePriceWidget(
-                                                bundleId: widget.bundleId,
-                                                price: priceOneMonth)),
-                                        SizedBox(
-                                            width: 100,
-                                            child: CreatePriceWidget(
-                                                bundleId: widget.bundleId,
-                                                price: priceThreeMonths)),
-                                        SizedBox(
-                                            width: 100,
-                                            child: CreatePriceWidget(
-                                                bundleId: widget.bundleId,
-                                                price: priceOneYear)),
-                                      ],
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          )
-                        ],
+                                ),
+                              )
+                            ],
+                          ),
+                        ),
+                        isActive: _currentStep >= 0 && editableBundle != null,
+                        state:
+                            _currentStep >= 2 && editableBundle?.prices != null
+                                ? StepState.complete
+                                : StepState.disabled,
                       ),
-                    ),
-                    isActive: _currentStep >= 0 && editableBundle != null,
-                    state: _currentStep >= 2 && editableBundle?.prices != null
-                        ? StepState.complete
-                        : StepState.disabled,
-                  ),
-                  Step(
-                    title: new Text('Contents'),
-                    content: SizedBox(
-                        height: 500,
-                        width: 200,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: <Widget>[
-                            Expanded(
-                                child: CheckboxListTile(
-                              title: Text("All courses"), //    <-- label
-                              value: false,
-                              onChanged: (newValue) {},
-                            )),
-                            Expanded(
-                                child: CheckboxListTile(
-                              title: Text("All documents"), //    <-- label
-                              value: false,
-                              onChanged: (newValue) {},
-                            )),
-                            Expanded(
-                                child: MultiSelectCheckList(
-                              //maxSelectableCount: 5,
-                              textStyles: const MultiSelectTextStyles(
-                                  selectedTextStyle: TextStyle(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold)),
-                              itemsDecoration: MultiSelectDecorations(
-                                  selectedDecoration: BoxDecoration(
-                                      color: Colors.indigo.withOpacity(0.8))),
-                              listViewSettings: ListViewSettings(
-                                  separatorBuilder: (context, index) =>
-                                      const Divider(
-                                        height: 0,
-                                      )),
-                              controller: _controller,
-                              items: List.generate(
-                                  availableContents!.length,
-                                  (index) => CheckListCard(
-                                      value: availableContents![index],
-                                      title: Text(
-                                          availableContents![index]?.name ??
-                                              'Name unknown'),
-                                      subtitle: Text(availableContents![index]
-                                              ?.type
-                                              .toString() ??
-                                          'Unknown type'),
-                                      selectedColor: Colors.white,
-                                      checkColor: Colors.indigo,
-                                      //selected: index == 3,
-                                      // enabled: !(index == 5),
-                                      checkBoxBorderSide:
-                                          const BorderSide(color: Colors.blue),
-                                      shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(5)))),
-                              onChange: (allSelectedItems, selectedItem) {
-                                editableBundle?.contents = List.empty();
-                                Bundle tempBundle = EditableBundle.fromEditable(
-                                    editableBundle!);
-
-                                editableBundle!.contents = allSelectedItems
-                                    .map((c) => BundleContent(
-                                        content: c as Content,
-                                        bundle: tempBundle))
-                                    .toList();
-
-                                setState(() {});
-                              },
-                              onMaximumSelected:
-                                  (allSelectedItems, selectedItem) {},
-                            )),
-                          ],
-                        )),
-                    isActive:
-                        _currentStep >= 0 && editableBundle!.contents != null,
-                    state: _currentStep >= 2 && editableBundle?.contents != null
-                        ? StepState.complete
-                        : StepState.disabled,
-                  ),
-                  Step(
-                    title: new Text('Publish'),
-                    content: bundleToPublish != null
-                        ? SizedBox(
-                            height: 300,
+                      Step(
+                        title: new Text('Contents'),
+                        content: SizedBox(
+                            height: 500,
+                            width: 200,
                             child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: <Widget>[
-                                const Text('Basic Information'),
-                                Text(bundleToPublish!.name ?? 'Unknown name'),
-                                Text(bundleToPublish!.description ??
-                                    'Unknown description'),
-                                Text('Prices'),
-                                for (var p
-                                    in bundleToPublish!.prices ?? List.empty())
-                                  Text(p.amount.toString()),
-                                Text('Contents'),
-                                for (var c in bundleToPublish!.contents ??
-                                    List.empty())
-                                  Text((c as BundleContent).content.name ??
-                                      'Unknown name')
+                                /*Expanded(
+                                    child: CheckboxListTile(
+                                  title: Text("All courses"), //    <-- label
+                                  value: false,
+                                  onChanged: (newValue) {},
+                                )),
+                                Expanded(
+                                    child: CheckboxListTile(
+                                  title: Text("All documents"), //    <-- label
+                                  value: false,
+                                  onChanged: (newValue) {},
+                                )),*/
+                                Expanded(
+                                    child: MultiSelectCheckList(
+                                  //maxSelectableCount: 5,
+                                  textStyles: const MultiSelectTextStyles(
+                                      selectedTextStyle: TextStyle(
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.bold)),
+                                  itemsDecoration: MultiSelectDecorations(
+                                      selectedDecoration: BoxDecoration(
+                                          color:
+                                              Colors.indigo.withOpacity(0.8))),
+                                  listViewSettings: ListViewSettings(
+                                      separatorBuilder: (context, index) =>
+                                          const Divider(
+                                            height: 0,
+                                          )),
+                                  controller: _controller,
+                                  items: List.generate(
+                                      availableContents!.length,
+                                      (index) => CheckListCard(
+                                          value: availableContents![index],
+                                          title: Text(
+                                              availableContents![index]?.name ??
+                                                  'Name unknown'),
+                                          subtitle: Text(
+                                              availableContents![index]
+                                                      ?.type
+                                                      .toString() ??
+                                                  'Unknown type'),
+                                          selectedColor: Colors.white,
+                                          checkColor: Colors.indigo,
+                                          //selected: index == 3,
+                                          // enabled: !(index == 5),
+                                          checkBoxBorderSide: const BorderSide(
+                                              color: Colors.blue),
+                                          shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(5)))),
+                                  onChange: (allSelectedItems, selectedItem) {
+                                    editableBundle?.contents = List.empty();
+                                    Bundle tempBundle =
+                                        EditableBundle.fromEditable(
+                                            editableBundle!);
+
+                                    editableBundle!.contents = allSelectedItems
+                                        .map((c) => BundleContent(
+                                            content: c as Content,
+                                            bundle: tempBundle))
+                                        .toList();
+
+                                    setState(() {});
+                                  },
+                                  onMaximumSelected:
+                                      (allSelectedItems, selectedItem) {},
+                                )),
                               ],
-                            ))
-                        : Text('Bundle is not ready'),
-                    isActive: _currentStep >= 0 && editableBundle != null,
-                    state: _currentStep >= 2 && editableBundle?.prices != null
-                        ? StepState.complete
-                        : StepState.disabled,
-                  )
-                ],
-              ),
-            ),
-          ],
-        ),
+                            )),
+                        isActive: _currentStep >= 0 &&
+                            editableBundle!.contents != null,
+                        state: _currentStep >= 2 &&
+                                editableBundle?.contents != null
+                            ? StepState.complete
+                            : StepState.disabled,
+                      ),
+                      Step(
+                        title: new Text('Publish'),
+                        content: bundleToPublish != null
+                            ? SizedBox(
+                                height: 300,
+                                child: Column(
+                                  children: <Widget>[
+                                    const Text('Basic Information'),
+                                    Text(bundleToPublish!.name ??
+                                        'Unknown name'),
+                                    Text(bundleToPublish!.description ??
+                                        'Unknown description'),
+                                    Text('Prices'),
+                                    for (var p in bundleToPublish!.prices ??
+                                        List.empty())
+                                      Text(p.amount.toString()),
+                                    Text('Contents'),
+                                    for (var c in bundleToPublish!.contents ??
+                                        List.empty())
+                                      Text((c as BundleContent).content.name ??
+                                          'Unknown name')
+                                  ],
+                                ))
+                            : Text('Bundle is not ready'),
+                        isActive: _currentStep >= 0 && editableBundle != null,
+                        state:
+                            _currentStep >= 2 && editableBundle?.prices != null
+                                ? StepState.complete
+                                : StepState.disabled,
+                      )
+                    ],
+                  ),
+                ),
+              ],
+            )),
       ),
       floatingActionButton: FloatingActionButton(
         child: const Icon(Icons.list),
