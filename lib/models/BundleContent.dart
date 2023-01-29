@@ -19,20 +19,18 @@
 
 // ignore_for_file: public_member_api_docs, annotate_overrides, dead_code, dead_codepublic_member_api_docs, depend_on_referenced_packages, file_names, library_private_types_in_public_api, no_leading_underscores_for_library_prefixes, no_leading_underscores_for_local_identifiers, non_constant_identifier_names, null_check_on_nullable_type_parameter, prefer_adjacent_string_concatenation, prefer_const_constructors, prefer_if_null_operators, prefer_interpolation_to_compose_strings, slash_for_doc_comments, sort_child_properties_last, unnecessary_const, unnecessary_constructor_name, unnecessary_late, unnecessary_new, unnecessary_null_aware_assignments, unnecessary_nullable_for_final_variable_declarations, unnecessary_string_interpolations, use_build_context_synchronously
 
+import 'ModelProvider.dart';
 import 'package:amplify_core/amplify_core.dart';
 import 'package:flutter/foundation.dart';
 
 
-/** This is an auto generated class representing the Lesson type in your schema. */
+/** This is an auto generated class representing the BundleContent type in your schema. */
 @immutable
-class Lesson extends Model {
-  static const classType = const _LessonModelType();
+class BundleContent extends Model {
+  static const classType = const _BundleContentModelType();
   final String id;
-  final String? _name;
-  final String? _description;
-  final String? _video;
-  final String? _sectionID;
-  final int? _order;
+  final Content? _content;
+  final Bundle? _bundle;
   final TemporalDateTime? _createdAt;
   final TemporalDateTime? _updatedAt;
 
@@ -43,27 +41,15 @@ class Lesson extends Model {
   @override
   String getId() => id;
   
-  LessonModelIdentifier get modelIdentifier {
-      return LessonModelIdentifier(
+  BundleContentModelIdentifier get modelIdentifier {
+      return BundleContentModelIdentifier(
         id: id
       );
   }
   
-  String? get name {
-    return _name;
-  }
-  
-  String? get description {
-    return _description;
-  }
-  
-  String? get video {
-    return _video;
-  }
-  
-  String get sectionID {
+  Content get content {
     try {
-      return _sectionID!;
+      return _content!;
     } catch(e) {
       throw new AmplifyCodeGenModelException(
           AmplifyExceptionMessages.codeGenRequiredFieldForceCastExceptionMessage,
@@ -74,8 +60,17 @@ class Lesson extends Model {
     }
   }
   
-  int? get order {
-    return _order;
+  Bundle get bundle {
+    try {
+      return _bundle!;
+    } catch(e) {
+      throw new AmplifyCodeGenModelException(
+          AmplifyExceptionMessages.codeGenRequiredFieldForceCastExceptionMessage,
+          recoverySuggestion:
+            AmplifyExceptionMessages.codeGenRequiredFieldForceCastRecoverySuggestion,
+          underlyingException: e.toString()
+          );
+    }
   }
   
   TemporalDateTime? get createdAt {
@@ -86,16 +81,13 @@ class Lesson extends Model {
     return _updatedAt;
   }
   
-  const Lesson._internal({required this.id, name, description, video, required sectionID, order, createdAt, updatedAt}): _name = name, _description = description, _video = video, _sectionID = sectionID, _order = order, _createdAt = createdAt, _updatedAt = updatedAt;
+  const BundleContent._internal({required this.id, required content, required bundle, createdAt, updatedAt}): _content = content, _bundle = bundle, _createdAt = createdAt, _updatedAt = updatedAt;
   
-  factory Lesson({String? id, String? name, String? description, String? video, required String sectionID, int? order}) {
-    return Lesson._internal(
+  factory BundleContent({String? id, required Content content, required Bundle bundle}) {
+    return BundleContent._internal(
       id: id == null ? UUID.getUUID() : id,
-      name: name,
-      description: description,
-      video: video,
-      sectionID: sectionID,
-      order: order);
+      content: content,
+      bundle: bundle);
   }
   
   bool equals(Object other) {
@@ -105,13 +97,10 @@ class Lesson extends Model {
   @override
   bool operator ==(Object other) {
     if (identical(other, this)) return true;
-    return other is Lesson &&
+    return other is BundleContent &&
       id == other.id &&
-      _name == other._name &&
-      _description == other._description &&
-      _video == other._video &&
-      _sectionID == other._sectionID &&
-      _order == other._order;
+      _content == other._content &&
+      _bundle == other._bundle;
   }
   
   @override
@@ -121,13 +110,10 @@ class Lesson extends Model {
   String toString() {
     var buffer = new StringBuffer();
     
-    buffer.write("Lesson {");
+    buffer.write("BundleContent {");
     buffer.write("id=" + "$id" + ", ");
-    buffer.write("name=" + "$_name" + ", ");
-    buffer.write("description=" + "$_description" + ", ");
-    buffer.write("video=" + "$_video" + ", ");
-    buffer.write("sectionID=" + "$_sectionID" + ", ");
-    buffer.write("order=" + (_order != null ? _order!.toString() : "null") + ", ");
+    buffer.write("content=" + (_content != null ? _content!.toString() : "null") + ", ");
+    buffer.write("bundle=" + (_bundle != null ? _bundle!.toString() : "null") + ", ");
     buffer.write("createdAt=" + (_createdAt != null ? _createdAt!.format() : "null") + ", ");
     buffer.write("updatedAt=" + (_updatedAt != null ? _updatedAt!.format() : "null"));
     buffer.write("}");
@@ -135,90 +121,63 @@ class Lesson extends Model {
     return buffer.toString();
   }
   
-  Lesson copyWith({String? name, String? description, String? video, String? sectionID, int? order}) {
-    return Lesson._internal(
+  BundleContent copyWith({Content? content, Bundle? bundle}) {
+    return BundleContent._internal(
       id: id,
-      name: name ?? this.name,
-      description: description ?? this.description,
-      video: video ?? this.video,
-      sectionID: sectionID ?? this.sectionID,
-      order: order ?? this.order);
+      content: content ?? this.content,
+      bundle: bundle ?? this.bundle);
   }
   
-  Lesson.fromJson(Map<String, dynamic> json)  
+  BundleContent.fromJson(Map<String, dynamic> json)  
     : id = json['id'],
-      _name = json['name'],
-      _description = json['description'],
-      _video = json['video'],
-      _sectionID = json['sectionID'],
-      _order = (json['order'] as num?)?.toInt(),
+      _content = json['content']?['serializedData'] != null
+        ? Content.fromJson(new Map<String, dynamic>.from(json['content']['serializedData']))
+        : null,
+      _bundle = json['bundle']?['serializedData'] != null
+        ? Bundle.fromJson(new Map<String, dynamic>.from(json['bundle']['serializedData']))
+        : null,
       _createdAt = json['createdAt'] != null ? TemporalDateTime.fromString(json['createdAt']) : null,
       _updatedAt = json['updatedAt'] != null ? TemporalDateTime.fromString(json['updatedAt']) : null;
   
   Map<String, dynamic> toJson() => {
-    'id': id, 'name': _name, 'description': _description, 'video': _video, 'sectionID': _sectionID, 'order': _order, 'createdAt': _createdAt?.format(), 'updatedAt': _updatedAt?.format()
+    'id': id, 'content': _content?.toJson(), 'bundle': _bundle?.toJson(), 'createdAt': _createdAt?.format(), 'updatedAt': _updatedAt?.format()
   };
   
   Map<String, Object?> toMap() => {
-    'id': id, 'name': _name, 'description': _description, 'video': _video, 'sectionID': _sectionID, 'order': _order, 'createdAt': _createdAt, 'updatedAt': _updatedAt
+    'id': id, 'content': _content, 'bundle': _bundle, 'createdAt': _createdAt, 'updatedAt': _updatedAt
   };
 
-  static final QueryModelIdentifier<LessonModelIdentifier> MODEL_IDENTIFIER = QueryModelIdentifier<LessonModelIdentifier>();
+  static final QueryModelIdentifier<BundleContentModelIdentifier> MODEL_IDENTIFIER = QueryModelIdentifier<BundleContentModelIdentifier>();
   static final QueryField ID = QueryField(fieldName: "id");
-  static final QueryField NAME = QueryField(fieldName: "name");
-  static final QueryField DESCRIPTION = QueryField(fieldName: "description");
-  static final QueryField VIDEO = QueryField(fieldName: "video");
-  static final QueryField SECTIONID = QueryField(fieldName: "sectionID");
-  static final QueryField ORDER = QueryField(fieldName: "order");
+  static final QueryField CONTENT = QueryField(
+    fieldName: "content",
+    fieldType: ModelFieldType(ModelFieldTypeEnum.model, ofModelName: 'Content'));
+  static final QueryField BUNDLE = QueryField(
+    fieldName: "bundle",
+    fieldType: ModelFieldType(ModelFieldTypeEnum.model, ofModelName: 'Bundle'));
   static var schema = Model.defineSchema(define: (ModelSchemaDefinition modelSchemaDefinition) {
-    modelSchemaDefinition.name = "Lesson";
-    modelSchemaDefinition.pluralName = "Lessons";
-    
-    modelSchemaDefinition.authRules = [
-      AuthRule(
-        authStrategy: AuthStrategy.PUBLIC,
-        operations: [
-          ModelOperation.CREATE,
-          ModelOperation.UPDATE,
-          ModelOperation.DELETE,
-          ModelOperation.READ
-        ])
-    ];
+    modelSchemaDefinition.name = "BundleContent";
+    modelSchemaDefinition.pluralName = "BundleContents";
     
     modelSchemaDefinition.indexes = [
-      ModelIndex(fields: const ["sectionID"], name: "bySection")
+      ModelIndex(fields: const ["contentId"], name: "byContent"),
+      ModelIndex(fields: const ["bundleId"], name: "byBundle")
     ];
     
     modelSchemaDefinition.addField(ModelFieldDefinition.id());
     
-    modelSchemaDefinition.addField(ModelFieldDefinition.field(
-      key: Lesson.NAME,
-      isRequired: false,
-      ofType: ModelFieldType(ModelFieldTypeEnum.string)
-    ));
-    
-    modelSchemaDefinition.addField(ModelFieldDefinition.field(
-      key: Lesson.DESCRIPTION,
-      isRequired: false,
-      ofType: ModelFieldType(ModelFieldTypeEnum.string)
-    ));
-    
-    modelSchemaDefinition.addField(ModelFieldDefinition.field(
-      key: Lesson.VIDEO,
-      isRequired: false,
-      ofType: ModelFieldType(ModelFieldTypeEnum.string)
-    ));
-    
-    modelSchemaDefinition.addField(ModelFieldDefinition.field(
-      key: Lesson.SECTIONID,
+    modelSchemaDefinition.addField(ModelFieldDefinition.belongsTo(
+      key: BundleContent.CONTENT,
       isRequired: true,
-      ofType: ModelFieldType(ModelFieldTypeEnum.string)
+      targetNames: ['contentId'],
+      ofModelName: 'Content'
     ));
     
-    modelSchemaDefinition.addField(ModelFieldDefinition.field(
-      key: Lesson.ORDER,
-      isRequired: false,
-      ofType: ModelFieldType(ModelFieldTypeEnum.int)
+    modelSchemaDefinition.addField(ModelFieldDefinition.belongsTo(
+      key: BundleContent.BUNDLE,
+      isRequired: true,
+      targetNames: ['bundleId'],
+      ofModelName: 'Bundle'
     ));
     
     modelSchemaDefinition.addField(ModelFieldDefinition.nonQueryField(
@@ -237,30 +196,30 @@ class Lesson extends Model {
   });
 }
 
-class _LessonModelType extends ModelType<Lesson> {
-  const _LessonModelType();
+class _BundleContentModelType extends ModelType<BundleContent> {
+  const _BundleContentModelType();
   
   @override
-  Lesson fromJson(Map<String, dynamic> jsonData) {
-    return Lesson.fromJson(jsonData);
+  BundleContent fromJson(Map<String, dynamic> jsonData) {
+    return BundleContent.fromJson(jsonData);
   }
   
   @override
   String modelName() {
-    return 'Lesson';
+    return 'BundleContent';
   }
 }
 
 /**
  * This is an auto generated class representing the model identifier
- * of [Lesson] in your schema.
+ * of [BundleContent] in your schema.
  */
 @immutable
-class LessonModelIdentifier implements ModelIdentifier<Lesson> {
+class BundleContentModelIdentifier implements ModelIdentifier<BundleContent> {
   final String id;
 
-  /** Create an instance of LessonModelIdentifier using [id] the primary key. */
-  const LessonModelIdentifier({
+  /** Create an instance of BundleContentModelIdentifier using [id] the primary key. */
+  const BundleContentModelIdentifier({
     required this.id});
   
   @override
@@ -278,7 +237,7 @@ class LessonModelIdentifier implements ModelIdentifier<Lesson> {
   String serializeAsString() => serializeAsMap().values.join('#');
   
   @override
-  String toString() => 'LessonModelIdentifier(id: $id)';
+  String toString() => 'BundleContentModelIdentifier(id: $id)';
   
   @override
   bool operator ==(Object other) {
@@ -286,7 +245,7 @@ class LessonModelIdentifier implements ModelIdentifier<Lesson> {
       return true;
     }
     
-    return other is LessonModelIdentifier &&
+    return other is BundleContentModelIdentifier &&
       id == other.id;
   }
   

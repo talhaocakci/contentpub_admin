@@ -1,4 +1,3 @@
-
 class PublishProductModel {
   Product? product;
 
@@ -59,28 +58,31 @@ class Product {
 }
 
 class ProductPrice {
+  String? id;
   String? stripePriceId;
   String? interval;
   int? intervalCount;
-  double? price;
+  double? amount;
   String? currency;
-  String? paymentType;
+  String? purchaseType;
 
   ProductPrice(
       {this.stripePriceId,
       this.interval,
       this.intervalCount,
-      this.price,
+      this.amount,
       this.currency,
-      this.paymentType});
+      required this.id,
+      this.purchaseType});
 
   ProductPrice.fromJson(Map<String, dynamic> json) {
     stripePriceId = json['stripePriceId'];
     interval = json['interval'];
     intervalCount = json['intervalCount'];
-    price = json['price'];
+    amount = json['amount'];
     currency = json['currency'];
-    paymentType = json['paymentType'];
+    purchaseType = json['purchaseType'];
+    id = json['id'];
   }
 
   Map<String, dynamic> toJson() {
@@ -88,9 +90,10 @@ class ProductPrice {
     data['stripePriceId'] = stripePriceId;
     data['interval'] = interval;
     data['intervalCount'] = intervalCount;
-    data['price'] = price;
+    data['amount'] = amount;
     data['currency'] = currency;
-    data['paymentType'] = paymentType;
+    data['purchaseType'] = purchaseType;
+    data['id'] = id;
     return data;
   }
 }

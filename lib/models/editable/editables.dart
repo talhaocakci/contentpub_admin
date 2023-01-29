@@ -3,6 +3,7 @@ import 'package:contentpub_admin/models/Bundle.dart';
 import 'package:contentpub_admin/models/Content.dart';
 import 'package:contentpub_admin/models/Course.dart';
 import 'package:contentpub_admin/models/Lesson.dart';
+import 'package:contentpub_admin/models/ModelProvider.dart';
 import 'package:contentpub_admin/models/Price.dart';
 import 'package:contentpub_admin/models/PurchaseType.dart';
 import 'package:contentpub_admin/models/RecurrenceType.dart';
@@ -173,7 +174,7 @@ class EditableBundle {
   String? name;
   String? description;
   bool? isFree;
-  List<Content>? contents;
+  List<BundleContent>? contents;
   List<EditablePrice>? prices;
   bool? isAllAccess;
   String? stripeProductId;
@@ -189,7 +190,7 @@ class EditableBundle {
     editable.name = bundle.name;
     editable.description = bundle.description;
     editable.isFree = bundle.isFree;
-    editable.contents = bundle.contents;
+    editable.contents = bundle.contents ?? List.empty();
     editable.prices = editablePrices;
     editable.isAllAccess = bundle.isAllAccess;
     editable.stripeProductId = bundle.stripeProductId;
@@ -202,7 +203,7 @@ class EditableBundle {
         ? editable.prices?.map((e) => EditablePrice.fromEditable(e)).toList()
         : List.empty();
 
-    return Bundle(
+    Bundle b = Bundle(
         id: editable.id,
         name: editable.name,
         description: editable.description,
@@ -211,6 +212,8 @@ class EditableBundle {
         prices: prices,
         isAllAccess: editable.isAllAccess,
         stripeProductId: editable.stripeProductId);
+
+    return b;
   }
 }
 
@@ -219,11 +222,16 @@ class EditablePrice {
   String? stripePriceId;
   PurchaseType? purchaseType;
   RecurrenceType? recurrenceType;
+  int? recurrenceInterval;
   String? currency;
   double? amount;
   String? bundleID;
 
-  EditablePrice({required this.id});
+  EditablePrice(
+      {required this.id,
+      this.purchaseType,
+      this.recurrenceType,
+      this.recurrenceInterval});
 
   static EditablePrice toEditable(Price price) {
     EditablePrice editable = EditablePrice(id: price.id);
@@ -233,6 +241,7 @@ class EditablePrice {
     editable.currency = price.currency;
     editable.amount = price.amount;
     editable.bundleID = price.bundleID;
+    editable.recurrenceInterval = price.recurrenceInterval;
     return editable;
   }
 
@@ -244,6 +253,7 @@ class EditablePrice {
         id: editable.id,
         purchaseType: editable.purchaseType,
         recurrenceType: editable.recurrenceType,
+        recurrenceInterval: editable.recurrenceInterval,
         stripePriceId: editable.stripePriceId);
   }
 }

@@ -33,10 +33,14 @@ class Bundle extends Model {
   final String? _name;
   final String? _description;
   final bool? _isFree;
-  final List<Content>? _contents;
+  final List<BundleContent>? _contents;
   final List<Price>? _prices;
   final bool? _isAllAccess;
   final String? _stripeProductId;
+  final bool? _isAllCourses;
+  final bool? _isAllDocuments;
+  final String? _isPublished;
+  final String? _isArchived;
   final TemporalDateTime? _createdAt;
   final TemporalDateTime? _updatedAt;
 
@@ -65,7 +69,7 @@ class Bundle extends Model {
     return _isFree;
   }
   
-  List<Content>? get contents {
+  List<BundleContent>? get contents {
     return _contents;
   }
   
@@ -81,6 +85,22 @@ class Bundle extends Model {
     return _stripeProductId;
   }
   
+  bool? get isAllCourses {
+    return _isAllCourses;
+  }
+  
+  bool? get isAllDocuments {
+    return _isAllDocuments;
+  }
+  
+  String? get isPublished {
+    return _isPublished;
+  }
+  
+  String? get isArchived {
+    return _isArchived;
+  }
+  
   TemporalDateTime? get createdAt {
     return _createdAt;
   }
@@ -89,18 +109,22 @@ class Bundle extends Model {
     return _updatedAt;
   }
   
-  const Bundle._internal({required this.id, name, description, isFree, contents, prices, isAllAccess, stripeProductId, createdAt, updatedAt}): _name = name, _description = description, _isFree = isFree, _contents = contents, _prices = prices, _isAllAccess = isAllAccess, _stripeProductId = stripeProductId, _createdAt = createdAt, _updatedAt = updatedAt;
+  const Bundle._internal({required this.id, name, description, isFree, contents, prices, isAllAccess, stripeProductId, isAllCourses, isAllDocuments, isPublished, isArchived, createdAt, updatedAt}): _name = name, _description = description, _isFree = isFree, _contents = contents, _prices = prices, _isAllAccess = isAllAccess, _stripeProductId = stripeProductId, _isAllCourses = isAllCourses, _isAllDocuments = isAllDocuments, _isPublished = isPublished, _isArchived = isArchived, _createdAt = createdAt, _updatedAt = updatedAt;
   
-  factory Bundle({String? id, String? name, String? description, bool? isFree, List<Content>? contents, List<Price>? prices, bool? isAllAccess, String? stripeProductId}) {
+  factory Bundle({String? id, String? name, String? description, bool? isFree, List<BundleContent>? contents, List<Price>? prices, bool? isAllAccess, String? stripeProductId, bool? isAllCourses, bool? isAllDocuments, String? isPublished, String? isArchived}) {
     return Bundle._internal(
       id: id == null ? UUID.getUUID() : id,
       name: name,
       description: description,
       isFree: isFree,
-      contents: contents != null ? List<Content>.unmodifiable(contents) : contents,
+      contents: contents != null ? List<BundleContent>.unmodifiable(contents) : contents,
       prices: prices != null ? List<Price>.unmodifiable(prices) : prices,
       isAllAccess: isAllAccess,
-      stripeProductId: stripeProductId);
+      stripeProductId: stripeProductId,
+      isAllCourses: isAllCourses,
+      isAllDocuments: isAllDocuments,
+      isPublished: isPublished,
+      isArchived: isArchived);
   }
   
   bool equals(Object other) {
@@ -118,7 +142,11 @@ class Bundle extends Model {
       DeepCollectionEquality().equals(_contents, other._contents) &&
       DeepCollectionEquality().equals(_prices, other._prices) &&
       _isAllAccess == other._isAllAccess &&
-      _stripeProductId == other._stripeProductId;
+      _stripeProductId == other._stripeProductId &&
+      _isAllCourses == other._isAllCourses &&
+      _isAllDocuments == other._isAllDocuments &&
+      _isPublished == other._isPublished &&
+      _isArchived == other._isArchived;
   }
   
   @override
@@ -135,6 +163,10 @@ class Bundle extends Model {
     buffer.write("isFree=" + (_isFree != null ? _isFree!.toString() : "null") + ", ");
     buffer.write("isAllAccess=" + (_isAllAccess != null ? _isAllAccess!.toString() : "null") + ", ");
     buffer.write("stripeProductId=" + "$_stripeProductId" + ", ");
+    buffer.write("isAllCourses=" + (_isAllCourses != null ? _isAllCourses!.toString() : "null") + ", ");
+    buffer.write("isAllDocuments=" + (_isAllDocuments != null ? _isAllDocuments!.toString() : "null") + ", ");
+    buffer.write("isPublished=" + "$_isPublished" + ", ");
+    buffer.write("isArchived=" + "$_isArchived" + ", ");
     buffer.write("createdAt=" + (_createdAt != null ? _createdAt!.format() : "null") + ", ");
     buffer.write("updatedAt=" + (_updatedAt != null ? _updatedAt!.format() : "null"));
     buffer.write("}");
@@ -142,7 +174,7 @@ class Bundle extends Model {
     return buffer.toString();
   }
   
-  Bundle copyWith({String? name, String? description, bool? isFree, List<Content>? contents, List<Price>? prices, bool? isAllAccess, String? stripeProductId}) {
+  Bundle copyWith({String? name, String? description, bool? isFree, List<BundleContent>? contents, List<Price>? prices, bool? isAllAccess, String? stripeProductId, bool? isAllCourses, bool? isAllDocuments, String? isPublished, String? isArchived}) {
     return Bundle._internal(
       id: id,
       name: name ?? this.name,
@@ -151,7 +183,11 @@ class Bundle extends Model {
       contents: contents ?? this.contents,
       prices: prices ?? this.prices,
       isAllAccess: isAllAccess ?? this.isAllAccess,
-      stripeProductId: stripeProductId ?? this.stripeProductId);
+      stripeProductId: stripeProductId ?? this.stripeProductId,
+      isAllCourses: isAllCourses ?? this.isAllCourses,
+      isAllDocuments: isAllDocuments ?? this.isAllDocuments,
+      isPublished: isPublished ?? this.isPublished,
+      isArchived: isArchived ?? this.isArchived);
   }
   
   Bundle.fromJson(Map<String, dynamic> json)  
@@ -162,7 +198,7 @@ class Bundle extends Model {
       _contents = json['contents'] is List
         ? (json['contents'] as List)
           .where((e) => e?['serializedData'] != null)
-          .map((e) => Content.fromJson(new Map<String, dynamic>.from(e['serializedData'])))
+          .map((e) => BundleContent.fromJson(new Map<String, dynamic>.from(e['serializedData'])))
           .toList()
         : null,
       _prices = json['prices'] is List
@@ -173,15 +209,19 @@ class Bundle extends Model {
         : null,
       _isAllAccess = json['isAllAccess'],
       _stripeProductId = json['stripeProductId'],
+      _isAllCourses = json['isAllCourses'],
+      _isAllDocuments = json['isAllDocuments'],
+      _isPublished = json['isPublished'],
+      _isArchived = json['isArchived'],
       _createdAt = json['createdAt'] != null ? TemporalDateTime.fromString(json['createdAt']) : null,
       _updatedAt = json['updatedAt'] != null ? TemporalDateTime.fromString(json['updatedAt']) : null;
   
   Map<String, dynamic> toJson() => {
-    'id': id, 'name': _name, 'description': _description, 'isFree': _isFree, 'contents': _contents?.map((Content? e) => e?.toJson()).toList(), 'prices': _prices?.map((Price? e) => e?.toJson()).toList(), 'isAllAccess': _isAllAccess, 'stripeProductId': _stripeProductId, 'createdAt': _createdAt?.format(), 'updatedAt': _updatedAt?.format()
+    'id': id, 'name': _name, 'description': _description, 'isFree': _isFree, 'contents': _contents?.map((BundleContent? e) => e?.toJson()).toList(), 'prices': _prices?.map((Price? e) => e?.toJson()).toList(), 'isAllAccess': _isAllAccess, 'stripeProductId': _stripeProductId, 'isAllCourses': _isAllCourses, 'isAllDocuments': _isAllDocuments, 'isPublished': _isPublished, 'isArchived': _isArchived, 'createdAt': _createdAt?.format(), 'updatedAt': _updatedAt?.format()
   };
   
   Map<String, Object?> toMap() => {
-    'id': id, 'name': _name, 'description': _description, 'isFree': _isFree, 'contents': _contents, 'prices': _prices, 'isAllAccess': _isAllAccess, 'stripeProductId': _stripeProductId, 'createdAt': _createdAt, 'updatedAt': _updatedAt
+    'id': id, 'name': _name, 'description': _description, 'isFree': _isFree, 'contents': _contents, 'prices': _prices, 'isAllAccess': _isAllAccess, 'stripeProductId': _stripeProductId, 'isAllCourses': _isAllCourses, 'isAllDocuments': _isAllDocuments, 'isPublished': _isPublished, 'isArchived': _isArchived, 'createdAt': _createdAt, 'updatedAt': _updatedAt
   };
 
   static final QueryModelIdentifier<BundleModelIdentifier> MODEL_IDENTIFIER = QueryModelIdentifier<BundleModelIdentifier>();
@@ -191,12 +231,16 @@ class Bundle extends Model {
   static final QueryField ISFREE = QueryField(fieldName: "isFree");
   static final QueryField CONTENTS = QueryField(
     fieldName: "contents",
-    fieldType: ModelFieldType(ModelFieldTypeEnum.model, ofModelName: (Content).toString()));
+    fieldType: ModelFieldType(ModelFieldTypeEnum.model, ofModelName: 'BundleContent'));
   static final QueryField PRICES = QueryField(
     fieldName: "prices",
-    fieldType: ModelFieldType(ModelFieldTypeEnum.model, ofModelName: (Price).toString()));
+    fieldType: ModelFieldType(ModelFieldTypeEnum.model, ofModelName: 'Price'));
   static final QueryField ISALLACCESS = QueryField(fieldName: "isAllAccess");
   static final QueryField STRIPEPRODUCTID = QueryField(fieldName: "stripeProductId");
+  static final QueryField ISALLCOURSES = QueryField(fieldName: "isAllCourses");
+  static final QueryField ISALLDOCUMENTS = QueryField(fieldName: "isAllDocuments");
+  static final QueryField ISPUBLISHED = QueryField(fieldName: "isPublished");
+  static final QueryField ISARCHIVED = QueryField(fieldName: "isArchived");
   static var schema = Model.defineSchema(define: (ModelSchemaDefinition modelSchemaDefinition) {
     modelSchemaDefinition.name = "Bundle";
     modelSchemaDefinition.pluralName = "Bundles";
@@ -235,14 +279,14 @@ class Bundle extends Model {
     modelSchemaDefinition.addField(ModelFieldDefinition.hasMany(
       key: Bundle.CONTENTS,
       isRequired: false,
-      ofModelName: (Content).toString(),
-      associatedKey: Content.BUNDLES
+      ofModelName: 'BundleContent',
+      associatedKey: BundleContent.BUNDLE
     ));
     
     modelSchemaDefinition.addField(ModelFieldDefinition.hasMany(
       key: Bundle.PRICES,
       isRequired: false,
-      ofModelName: (Price).toString(),
+      ofModelName: 'Price',
       associatedKey: Price.BUNDLEID
     ));
     
@@ -254,6 +298,30 @@ class Bundle extends Model {
     
     modelSchemaDefinition.addField(ModelFieldDefinition.field(
       key: Bundle.STRIPEPRODUCTID,
+      isRequired: false,
+      ofType: ModelFieldType(ModelFieldTypeEnum.string)
+    ));
+    
+    modelSchemaDefinition.addField(ModelFieldDefinition.field(
+      key: Bundle.ISALLCOURSES,
+      isRequired: false,
+      ofType: ModelFieldType(ModelFieldTypeEnum.bool)
+    ));
+    
+    modelSchemaDefinition.addField(ModelFieldDefinition.field(
+      key: Bundle.ISALLDOCUMENTS,
+      isRequired: false,
+      ofType: ModelFieldType(ModelFieldTypeEnum.bool)
+    ));
+    
+    modelSchemaDefinition.addField(ModelFieldDefinition.field(
+      key: Bundle.ISPUBLISHED,
+      isRequired: false,
+      ofType: ModelFieldType(ModelFieldTypeEnum.string)
+    ));
+    
+    modelSchemaDefinition.addField(ModelFieldDefinition.field(
+      key: Bundle.ISARCHIVED,
       isRequired: false,
       ofType: ModelFieldType(ModelFieldTypeEnum.string)
     ));
@@ -280,6 +348,11 @@ class _BundleModelType extends ModelType<Bundle> {
   @override
   Bundle fromJson(Map<String, dynamic> jsonData) {
     return Bundle.fromJson(jsonData);
+  }
+  
+  @override
+  String modelName() {
+    return 'Bundle';
   }
 }
 

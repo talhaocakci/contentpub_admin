@@ -192,10 +192,10 @@ class Tenant extends Model {
   static final QueryField NAME = QueryField(fieldName: "name");
   static final QueryField TESTINGCONFIGURATION = QueryField(
     fieldName: "testingConfiguration",
-    fieldType: ModelFieldType(ModelFieldTypeEnum.model, ofModelName: (TenantConfiguration).toString()));
+    fieldType: ModelFieldType(ModelFieldTypeEnum.model, ofModelName: 'TenantConfiguration'));
   static final QueryField PRODUCTIONCONFIGURATION = QueryField(
     fieldName: "productionConfiguration",
-    fieldType: ModelFieldType(ModelFieldTypeEnum.model, ofModelName: (TenantConfiguration).toString()));
+    fieldType: ModelFieldType(ModelFieldTypeEnum.model, ofModelName: 'TenantConfiguration'));
   static final QueryField COVERPHOTOURL = QueryField(fieldName: "coverPhotoUrl");
   static final QueryField PROMOVIDEOURL = QueryField(fieldName: "promoVideoUrl");
   static final QueryField DESCRIPTION = QueryField(fieldName: "description");
@@ -227,14 +227,14 @@ class Tenant extends Model {
     modelSchemaDefinition.addField(ModelFieldDefinition.hasOne(
       key: Tenant.TESTINGCONFIGURATION,
       isRequired: false,
-      ofModelName: (TenantConfiguration).toString(),
+      ofModelName: 'TenantConfiguration',
       associatedKey: TenantConfiguration.ID
     ));
     
     modelSchemaDefinition.addField(ModelFieldDefinition.hasOne(
       key: Tenant.PRODUCTIONCONFIGURATION,
       isRequired: false,
-      ofModelName: (TenantConfiguration).toString(),
+      ofModelName: 'TenantConfiguration',
       associatedKey: TenantConfiguration.ID
     ));
     
@@ -290,6 +290,11 @@ class _TenantModelType extends ModelType<Tenant> {
   @override
   Tenant fromJson(Map<String, dynamic> jsonData) {
     return Tenant.fromJson(jsonData);
+  }
+  
+  @override
+  String modelName() {
+    return 'Tenant';
   }
 }
 

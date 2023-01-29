@@ -36,8 +36,7 @@ class Content extends Model {
   final ContentType? _type;
   final String? _objectId;
   final String? _owner;
-  final Bundle? _bundles;
-  final List<ContentCoworker>? _coworkers;
+  final List<BundleContent>? _bundles;
   final TemporalDateTime? _createdAt;
   final TemporalDateTime? _updatedAt;
 
@@ -78,12 +77,8 @@ class Content extends Model {
     return _owner;
   }
   
-  Bundle? get bundles {
+  List<BundleContent>? get bundles {
     return _bundles;
-  }
-  
-  List<ContentCoworker>? get coworkers {
-    return _coworkers;
   }
   
   TemporalDateTime? get createdAt {
@@ -94,9 +89,9 @@ class Content extends Model {
     return _updatedAt;
   }
   
-  const Content._internal({required this.id, name, description, s3Url, type, objectId, owner, bundles, coworkers, createdAt, updatedAt}): _name = name, _description = description, _s3Url = s3Url, _type = type, _objectId = objectId, _owner = owner, _bundles = bundles, _coworkers = coworkers, _createdAt = createdAt, _updatedAt = updatedAt;
+  const Content._internal({required this.id, name, description, s3Url, type, objectId, owner, bundles, createdAt, updatedAt}): _name = name, _description = description, _s3Url = s3Url, _type = type, _objectId = objectId, _owner = owner, _bundles = bundles, _createdAt = createdAt, _updatedAt = updatedAt;
   
-  factory Content({String? id, String? name, String? description, String? s3Url, ContentType? type, String? objectId, String? owner, Bundle? bundles, List<ContentCoworker>? coworkers}) {
+  factory Content({String? id, String? name, String? description, String? s3Url, ContentType? type, String? objectId, String? owner, List<BundleContent>? bundles}) {
     return Content._internal(
       id: id == null ? UUID.getUUID() : id,
       name: name,
@@ -105,8 +100,7 @@ class Content extends Model {
       type: type,
       objectId: objectId,
       owner: owner,
-      bundles: bundles,
-      coworkers: coworkers != null ? List<ContentCoworker>.unmodifiable(coworkers) : coworkers);
+      bundles: bundles != null ? List<BundleContent>.unmodifiable(bundles) : bundles);
   }
   
   bool equals(Object other) {
@@ -124,8 +118,7 @@ class Content extends Model {
       _type == other._type &&
       _objectId == other._objectId &&
       _owner == other._owner &&
-      _bundles == other._bundles &&
-      DeepCollectionEquality().equals(_coworkers, other._coworkers);
+      DeepCollectionEquality().equals(_bundles, other._bundles);
   }
   
   @override
@@ -143,7 +136,6 @@ class Content extends Model {
     buffer.write("type=" + (_type != null ? enumToString(_type)! : "null") + ", ");
     buffer.write("objectId=" + "$_objectId" + ", ");
     buffer.write("owner=" + "$_owner" + ", ");
-    buffer.write("bundles=" + (_bundles != null ? _bundles!.toString() : "null") + ", ");
     buffer.write("createdAt=" + (_createdAt != null ? _createdAt!.format() : "null") + ", ");
     buffer.write("updatedAt=" + (_updatedAt != null ? _updatedAt!.format() : "null"));
     buffer.write("}");
@@ -151,7 +143,7 @@ class Content extends Model {
     return buffer.toString();
   }
   
-  Content copyWith({String? name, String? description, String? s3Url, ContentType? type, String? objectId, String? owner, Bundle? bundles, List<ContentCoworker>? coworkers}) {
+  Content copyWith({String? name, String? description, String? s3Url, ContentType? type, String? objectId, String? owner, List<BundleContent>? bundles}) {
     return Content._internal(
       id: id,
       name: name ?? this.name,
@@ -160,8 +152,7 @@ class Content extends Model {
       type: type ?? this.type,
       objectId: objectId ?? this.objectId,
       owner: owner ?? this.owner,
-      bundles: bundles ?? this.bundles,
-      coworkers: coworkers ?? this.coworkers);
+      bundles: bundles ?? this.bundles);
   }
   
   Content.fromJson(Map<String, dynamic> json)  
@@ -172,24 +163,21 @@ class Content extends Model {
       _type = enumFromString<ContentType>(json['type'], ContentType.values),
       _objectId = json['objectId'],
       _owner = json['owner'],
-      _bundles = json['bundles']?['serializedData'] != null
-        ? Bundle.fromJson(new Map<String, dynamic>.from(json['bundles']['serializedData']))
-        : null,
-      _coworkers = json['coworkers'] is List
-        ? (json['coworkers'] as List)
+      _bundles = json['bundles'] is List
+        ? (json['bundles'] as List)
           .where((e) => e?['serializedData'] != null)
-          .map((e) => ContentCoworker.fromJson(new Map<String, dynamic>.from(e['serializedData'])))
+          .map((e) => BundleContent.fromJson(new Map<String, dynamic>.from(e['serializedData'])))
           .toList()
         : null,
       _createdAt = json['createdAt'] != null ? TemporalDateTime.fromString(json['createdAt']) : null,
       _updatedAt = json['updatedAt'] != null ? TemporalDateTime.fromString(json['updatedAt']) : null;
   
   Map<String, dynamic> toJson() => {
-    'id': id, 'name': _name, 'description': _description, 's3Url': _s3Url, 'type': enumToString(_type), 'objectId': _objectId, 'owner': _owner, 'bundles': _bundles?.toJson(), 'coworkers': _coworkers?.map((ContentCoworker? e) => e?.toJson()).toList(), 'createdAt': _createdAt?.format(), 'updatedAt': _updatedAt?.format()
+    'id': id, 'name': _name, 'description': _description, 's3Url': _s3Url, 'type': enumToString(_type), 'objectId': _objectId, 'owner': _owner, 'bundles': _bundles?.map((BundleContent? e) => e?.toJson()).toList(), 'createdAt': _createdAt?.format(), 'updatedAt': _updatedAt?.format()
   };
   
   Map<String, Object?> toMap() => {
-    'id': id, 'name': _name, 'description': _description, 's3Url': _s3Url, 'type': _type, 'objectId': _objectId, 'owner': _owner, 'bundles': _bundles, 'coworkers': _coworkers, 'createdAt': _createdAt, 'updatedAt': _updatedAt
+    'id': id, 'name': _name, 'description': _description, 's3Url': _s3Url, 'type': _type, 'objectId': _objectId, 'owner': _owner, 'bundles': _bundles, 'createdAt': _createdAt, 'updatedAt': _updatedAt
   };
 
   static final QueryModelIdentifier<ContentModelIdentifier> MODEL_IDENTIFIER = QueryModelIdentifier<ContentModelIdentifier>();
@@ -202,10 +190,7 @@ class Content extends Model {
   static final QueryField OWNER = QueryField(fieldName: "owner");
   static final QueryField BUNDLES = QueryField(
     fieldName: "bundles",
-    fieldType: ModelFieldType(ModelFieldTypeEnum.model, ofModelName: (Bundle).toString()));
-  static final QueryField COWORKERS = QueryField(
-    fieldName: "coworkers",
-    fieldType: ModelFieldType(ModelFieldTypeEnum.model, ofModelName: (ContentCoworker).toString()));
+    fieldType: ModelFieldType(ModelFieldTypeEnum.model, ofModelName: 'BundleContent'));
   static var schema = Model.defineSchema(define: (ModelSchemaDefinition modelSchemaDefinition) {
     modelSchemaDefinition.name = "Content";
     modelSchemaDefinition.pluralName = "Contents";
@@ -259,18 +244,11 @@ class Content extends Model {
       ofType: ModelFieldType(ModelFieldTypeEnum.string)
     ));
     
-    modelSchemaDefinition.addField(ModelFieldDefinition.belongsTo(
+    modelSchemaDefinition.addField(ModelFieldDefinition.hasMany(
       key: Content.BUNDLES,
       isRequired: false,
-      targetNames: ["bundleContentsId"],
-      ofModelName: (Bundle).toString()
-    ));
-    
-    modelSchemaDefinition.addField(ModelFieldDefinition.hasMany(
-      key: Content.COWORKERS,
-      isRequired: false,
-      ofModelName: (ContentCoworker).toString(),
-      associatedKey: ContentCoworker.CONTENT
+      ofModelName: 'BundleContent',
+      associatedKey: BundleContent.CONTENT
     ));
     
     modelSchemaDefinition.addField(ModelFieldDefinition.nonQueryField(
@@ -295,6 +273,11 @@ class _ContentModelType extends ModelType<Content> {
   @override
   Content fromJson(Map<String, dynamic> jsonData) {
     return Content.fromJson(jsonData);
+  }
+  
+  @override
+  String modelName() {
+    return 'Content';
   }
 }
 

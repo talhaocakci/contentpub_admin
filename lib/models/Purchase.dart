@@ -247,11 +247,11 @@ class Purchase extends Model {
   static final QueryField CUSTOMERID = QueryField(fieldName: "customerID");
   static final QueryField BUNDLE = QueryField(
     fieldName: "bundle",
-    fieldType: ModelFieldType(ModelFieldTypeEnum.model, ofModelName: (Bundle).toString()));
+    fieldType: ModelFieldType(ModelFieldTypeEnum.model, ofModelName: 'Bundle'));
   static final QueryField STRIPEPRODUCTID = QueryField(fieldName: "stripeProductId");
   static final QueryField TENANT = QueryField(
     fieldName: "tenant",
-    fieldType: ModelFieldType(ModelFieldTypeEnum.model, ofModelName: (TenantConfiguration).toString()));
+    fieldType: ModelFieldType(ModelFieldTypeEnum.model, ofModelName: 'TenantConfiguration'));
   static final QueryField PURCHASEBUNDLEID = QueryField(fieldName: "purchaseBundleId");
   static final QueryField PURCHASETENANTID = QueryField(fieldName: "purchaseTenantId");
   static var schema = Model.defineSchema(define: (ModelSchemaDefinition modelSchemaDefinition) {
@@ -320,7 +320,7 @@ class Purchase extends Model {
     modelSchemaDefinition.addField(ModelFieldDefinition.hasOne(
       key: Purchase.BUNDLE,
       isRequired: false,
-      ofModelName: (Bundle).toString(),
+      ofModelName: 'Bundle',
       associatedKey: Bundle.ID
     ));
     
@@ -333,7 +333,7 @@ class Purchase extends Model {
     modelSchemaDefinition.addField(ModelFieldDefinition.hasOne(
       key: Purchase.TENANT,
       isRequired: false,
-      ofModelName: (TenantConfiguration).toString(),
+      ofModelName: 'TenantConfiguration',
       associatedKey: TenantConfiguration.ID
     ));
     
@@ -371,6 +371,11 @@ class _PurchaseModelType extends ModelType<Purchase> {
   @override
   Purchase fromJson(Map<String, dynamic> jsonData) {
     return Purchase.fromJson(jsonData);
+  }
+  
+  @override
+  String modelName() {
+    return 'Purchase';
   }
 }
 

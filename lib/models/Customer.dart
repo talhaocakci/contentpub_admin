@@ -167,7 +167,7 @@ class Customer extends Model {
   static final QueryField CREATEDATE = QueryField(fieldName: "createDate");
   static final QueryField PURCHASES = QueryField(
     fieldName: "purchases",
-    fieldType: ModelFieldType(ModelFieldTypeEnum.model, ofModelName: (Purchase).toString()));
+    fieldType: ModelFieldType(ModelFieldTypeEnum.model, ofModelName: 'Purchase'));
   static final QueryField EMAIL = QueryField(fieldName: "email");
   static var schema = Model.defineSchema(define: (ModelSchemaDefinition modelSchemaDefinition) {
     modelSchemaDefinition.name = "Customer";
@@ -207,7 +207,7 @@ class Customer extends Model {
     modelSchemaDefinition.addField(ModelFieldDefinition.hasMany(
       key: Customer.PURCHASES,
       isRequired: false,
-      ofModelName: (Purchase).toString(),
+      ofModelName: 'Purchase',
       associatedKey: Purchase.CUSTOMERID
     ));
     
@@ -239,6 +239,11 @@ class _CustomerModelType extends ModelType<Customer> {
   @override
   Customer fromJson(Map<String, dynamic> jsonData) {
     return Customer.fromJson(jsonData);
+  }
+  
+  @override
+  String modelName() {
+    return 'Customer';
   }
 }
 

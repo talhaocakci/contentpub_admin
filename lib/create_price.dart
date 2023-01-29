@@ -17,6 +17,15 @@ class CreatePriceWidget extends StatefulWidget {
 class _CreatePriceWidgetState extends State<CreatePriceWidget>
     with AutomaticKeepAliveClientMixin {
   @override
+  void initState() {
+    if (widget.price.currency == null) {
+      widget.price.currency = 'USD';
+    }
+
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
@@ -29,10 +38,10 @@ class _CreatePriceWidgetState extends State<CreatePriceWidget>
                   TextFormField(
                       onChanged: (value) {
                         if (value != '') {
-                          widget.price.amount = double.parse(value!);
+                          widget.price.amount = double.parse(value);
                         }
                       },
-                      decoration: InputDecoration(
+                      decoration: const InputDecoration(
                           labelText: 'Price',
                           hintText: 'Numeric value as price')),
                   DropdownButtonFormField<String>(

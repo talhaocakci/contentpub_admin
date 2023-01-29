@@ -219,10 +219,10 @@ class Course extends Model {
   static final QueryField STRIPEPRODUCT = QueryField(fieldName: "stripeProduct");
   static final QueryField SECTIONS = QueryField(
     fieldName: "Sections",
-    fieldType: ModelFieldType(ModelFieldTypeEnum.model, ofModelName: (Section).toString()));
+    fieldType: ModelFieldType(ModelFieldTypeEnum.model, ofModelName: 'Section'));
   static final QueryField CONTENT = QueryField(
     fieldName: "content",
-    fieldType: ModelFieldType(ModelFieldTypeEnum.model, ofModelName: (Content).toString()));
+    fieldType: ModelFieldType(ModelFieldTypeEnum.model, ofModelName: 'Content'));
   static final QueryField COVERPHOTOURL = QueryField(fieldName: "coverPhotoUrl");
   static final QueryField PROMOVIDEOURL = QueryField(fieldName: "promoVideoUrl");
   static final QueryField SUBTITLE = QueryField(fieldName: "subtitle");
@@ -271,14 +271,14 @@ class Course extends Model {
     modelSchemaDefinition.addField(ModelFieldDefinition.hasMany(
       key: Course.SECTIONS,
       isRequired: false,
-      ofModelName: (Section).toString(),
+      ofModelName: 'Section',
       associatedKey: Section.COURSEID
     ));
     
     modelSchemaDefinition.addField(ModelFieldDefinition.hasOne(
       key: Course.CONTENT,
       isRequired: false,
-      ofModelName: (Content).toString(),
+      ofModelName: 'Content',
       associatedKey: Content.ID
     ));
     
@@ -328,6 +328,11 @@ class _CourseModelType extends ModelType<Course> {
   @override
   Course fromJson(Map<String, dynamic> jsonData) {
     return Course.fromJson(jsonData);
+  }
+  
+  @override
+  String modelName() {
+    return 'Course';
   }
 }
 

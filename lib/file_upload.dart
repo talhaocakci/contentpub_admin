@@ -1,4 +1,3 @@
-import 'package:contentpub_admin/create_product.dart';
 import 'package:contentpub_admin/flutter_flow/flutter_flow_icon_button.dart';
 import 'package:contentpub_admin/models/ContentType.dart';
 import 'package:contentpub_admin/video_player.dart';

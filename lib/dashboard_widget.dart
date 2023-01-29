@@ -612,7 +612,7 @@ class _DashboardWidgetState extends State<DashboardWidget> {
                                 ),
                                 Container(
                                   width: 160,
-                                  height: 100,
+                                  height: 150,
                                   decoration: BoxDecoration(
                                     color: FlutterFlowTheme.of(context)
                                         .primaryText,
@@ -665,7 +665,7 @@ class _DashboardWidgetState extends State<DashboardWidget> {
                                 ),
                                 Container(
                                   width: 160,
-                                  height: 100,
+                                  height: 150,
                                   decoration: BoxDecoration(
                                     color: FlutterFlowTheme.of(context)
                                         .primaryText,

@@ -182,19 +182,6 @@ class StateContainerState extends State<StateContainer> {
     } else {
       customer = customerList.elementAt(0)!;
     }
-
-    List<Purchase>? purchases = customer.purchases;
-
-    List<Bundle?>? bundles = purchases
-        ?.where((element) => element.bundle != null)
-        .map((purchase) => purchase.bundle)
-        .toList();
-
-    Set<Content> contents = Set();
-
-    bundles?.forEach((bundle) => contents.addAll(bundle!.contents!));
-
-    // setCustomer(customer, contents);
   }
 
   void processAuthEvents(HubEvent hubEvent) async {
@@ -240,23 +227,6 @@ class StateContainerState extends State<StateContainer> {
           stripePriceId
           stripeProductId
           validTill
-          bundle {
-            id
-            isAllAccess
-            isFree
-            name
-            contents {
-              items {
-                id
-                name
-                objectId
-                owner
-                s3Url
-                type
-                createdAt
-              }
-            }
-          }
         }
       }
     }

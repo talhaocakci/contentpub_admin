@@ -186,7 +186,7 @@ class Section extends Model {
   static final QueryField COURSEID = QueryField(fieldName: "courseID");
   static final QueryField LESSONS = QueryField(
     fieldName: "Lessons",
-    fieldType: ModelFieldType(ModelFieldTypeEnum.model, ofModelName: (Lesson).toString()));
+    fieldType: ModelFieldType(ModelFieldTypeEnum.model, ofModelName: 'Lesson'));
   static final QueryField SUBTITLE = QueryField(fieldName: "subtitle");
   static final QueryField ORDER = QueryField(fieldName: "order");
   static var schema = Model.defineSchema(define: (ModelSchemaDefinition modelSchemaDefinition) {
@@ -231,7 +231,7 @@ class Section extends Model {
     modelSchemaDefinition.addField(ModelFieldDefinition.hasMany(
       key: Section.LESSONS,
       isRequired: false,
-      ofModelName: (Lesson).toString(),
+      ofModelName: 'Lesson',
       associatedKey: Lesson.SECTIONID
     ));
     
@@ -269,6 +269,11 @@ class _SectionModelType extends ModelType<Section> {
   @override
   Section fromJson(Map<String, dynamic> jsonData) {
     return Section.fromJson(jsonData);
+  }
+  
+  @override
+  String modelName() {
+    return 'Section';
   }
 }
 

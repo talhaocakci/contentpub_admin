@@ -8,11 +8,14 @@ import 'package:contentpub_admin/flutter_flow/flutter_flow_theme.dart';
 import 'package:contentpub_admin/models/Bundle.dart';
 import 'package:contentpub_admin/models/Content.dart';
 import 'package:contentpub_admin/models/ContentType.dart';
+import 'package:contentpub_admin/models/ModelProvider.dart';
 import 'package:contentpub_admin/models/Price.dart';
 import 'package:contentpub_admin/models/PublishProductModel.dart';
 import 'package:contentpub_admin/models/PurchaseType.dart';
+import 'package:contentpub_admin/models/RecurrenceType.dart';
 import 'package:contentpub_admin/models/editable/editables.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_multi_select_items/flutter_multi_select_items.dart';
 
 import 'dart:html' as html;
 import 'package:http/http.dart' as http;
@@ -37,25 +40,49 @@ class _CreateProductWidgetState extends State<CreateProductWidget> {
   int _currentStep = 0;
   StepperType stepperType = StepperType.horizontal;
 
+  List<Content?>? availableContents;
+
   late EditablePrice priceOneTime;
   late EditablePrice priceOneMonth;
   late EditablePrice priceThreeMonths;
   late EditablePrice priceOneYear;
 
+  Bundle? bundleToPublish;
+
   final contentTypes = ContentType.values.toList();
 
   EditableBundle? editableBundle;
+
+  final MultiSelectController<Content?> _controller = MultiSelectController();
 
   @override
   void initState() {
     editableBundle = EditableBundle(id: widget.bundleId);
 
     if (widget.bundleId == '') {
-      priceOneTime = EditablePrice(id: '');
-      priceOneMonth = EditablePrice(id: '');
-      priceThreeMonths = EditablePrice(id: '');
-      priceOneYear = EditablePrice(id: '');
+      priceOneTime = EditablePrice(
+        id: '',
+        purchaseType: PurchaseType.ONE_TIME,
+        recurrenceInterval: 0,
+      );
+      priceOneMonth = EditablePrice(
+          id: '',
+          recurrenceType: RecurrenceType.MONTHLY,
+          recurrenceInterval: 1,
+          purchaseType: PurchaseType.SUBSCRIPTION);
+      priceThreeMonths = EditablePrice(
+          id: '',
+          recurrenceType: RecurrenceType.MONTHLY,
+          recurrenceInterval: 3,
+          purchaseType: PurchaseType.SUBSCRIPTION);
+      priceOneYear = EditablePrice(
+          id: '',
+          recurrenceType: RecurrenceType.ANNUAL,
+          recurrenceInterval: 1,
+          purchaseType: PurchaseType.SUBSCRIPTION);
     }
+
+    getAvailableContents();
 
     super.initState();
   }
@@ -67,7 +94,7 @@ class _CreateProductWidgetState extends State<CreateProductWidget> {
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        title: const Text('Create Bundle to Sell Your Products'),
+        title: const Text('Create Bundle to Sell Your Contents'),
         centerTitle: true,
       ),
       body: Container(
@@ -89,7 +116,7 @@ class _CreateProductWidgetState extends State<CreateProductWidget> {
                         child: Column(
                           children: <Widget>[
                             TextFormField(
-                              onSaved: (newValue) {
+                              onChanged: (newValue) {
                                 editableBundle!.name = newValue;
                               },
 
@@ -102,7 +129,7 @@ class _CreateProductWidgetState extends State<CreateProductWidget> {
                               },
                             ),
                             TextFormField(
-                              onSaved: (newValue) {
+                              onChanged: (newValue) {
                                 editableBundle!.description = newValue;
                               },
 
@@ -113,36 +140,6 @@ class _CreateProductWidgetState extends State<CreateProductWidget> {
                                 }
                                 return null;
                               },
-                            ),
-                            ElevatedButton(
-                              onPressed: () {
-                                // Validate returns true if the form is valid, or false otherwise.
-                                if (_formKey.currentState!.validate()) {
-                                  // If the form is valid, display a snackbar. In the real world,
-                                  // you'd often call a server or save the information in a database.
-
-                                  Bundle bundle = EditableBundle.fromEditable(
-                                      editableBundle!);
-
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    const SnackBar(
-                                        content: Text('Saving the product')),
-                                  );
-
-                                  saveBundle(bundle);
-
-                                  _currentStep++;
-
-                                  setState(() {
-                                    _currentStep = _currentStep;
-                                  });
-
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    const SnackBar(content: Text('Saved')),
-                                  );
-                                }
-                              },
-                              child: const Text('Save product definition'),
                             )
                             // Add TextFormFields and ElevatedButton here.
                           ],
@@ -216,12 +213,7 @@ class _CreateProductWidgetState extends State<CreateProductWidget> {
                                 ],
                               ),
                             ),
-                          ),
-                          ElevatedButton(
-                              onPressed: () {
-                                savePrices();
-                              },
-                              child: const Text('Save prices'))
+                          )
                         ],
                       ),
                     ),
@@ -232,16 +224,78 @@ class _CreateProductWidgetState extends State<CreateProductWidget> {
                   ),
                   Step(
                     title: new Text('Contents'),
-                    content: Column(
-                      children: <Widget>[
-                        ElevatedButton(
-                          onPressed: () {
-                            publishProduct();
-                          },
-                          child: const Text('Contents'),
-                        ),
-                      ],
-                    ),
+                    content: SizedBox(
+                        height: 500,
+                        width: 200,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            Expanded(
+                                child: CheckboxListTile(
+                              title: Text("All courses"), //    <-- label
+                              value: false,
+                              onChanged: (newValue) {},
+                            )),
+                            Expanded(
+                                child: CheckboxListTile(
+                              title: Text("All documents"), //    <-- label
+                              value: false,
+                              onChanged: (newValue) {},
+                            )),
+                            Expanded(
+                                child: MultiSelectCheckList(
+                              //maxSelectableCount: 5,
+                              textStyles: const MultiSelectTextStyles(
+                                  selectedTextStyle: TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold)),
+                              itemsDecoration: MultiSelectDecorations(
+                                  selectedDecoration: BoxDecoration(
+                                      color: Colors.indigo.withOpacity(0.8))),
+                              listViewSettings: ListViewSettings(
+                                  separatorBuilder: (context, index) =>
+                                      const Divider(
+                                        height: 0,
+                                      )),
+                              controller: _controller,
+                              items: List.generate(
+                                  availableContents!.length,
+                                  (index) => CheckListCard(
+                                      value: availableContents![index],
+                                      title: Text(
+                                          availableContents![index]?.name ??
+                                              'Name unknown'),
+                                      subtitle: Text(availableContents![index]
+                                              ?.type
+                                              .toString() ??
+                                          'Unknown type'),
+                                      selectedColor: Colors.white,
+                                      checkColor: Colors.indigo,
+                                      //selected: index == 3,
+                                      // enabled: !(index == 5),
+                                      checkBoxBorderSide:
+                                          const BorderSide(color: Colors.blue),
+                                      shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(5)))),
+                              onChange: (allSelectedItems, selectedItem) {
+                                editableBundle?.contents = List.empty();
+                                Bundle tempBundle = EditableBundle.fromEditable(
+                                    editableBundle!);
+
+                                editableBundle!.contents = allSelectedItems
+                                    .map((c) => BundleContent(
+                                        content: c as Content,
+                                        bundle: tempBundle))
+                                    .toList();
+
+                                setState(() {});
+                              },
+                              onMaximumSelected:
+                                  (allSelectedItems, selectedItem) {},
+                            )),
+                          ],
+                        )),
                     isActive:
                         _currentStep >= 0 && editableBundle!.contents != null,
                     state: _currentStep >= 2 && editableBundle?.contents != null
@@ -250,16 +304,27 @@ class _CreateProductWidgetState extends State<CreateProductWidget> {
                   ),
                   Step(
                     title: new Text('Publish'),
-                    content: Column(
-                      children: <Widget>[
-                        ElevatedButton(
-                          onPressed: () {
-                            publishProduct();
-                          },
-                          child: const Text('Publish'),
-                        ),
-                      ],
-                    ),
+                    content: bundleToPublish != null
+                        ? SizedBox(
+                            height: 300,
+                            child: Column(
+                              children: <Widget>[
+                                const Text('Basic Information'),
+                                Text(bundleToPublish!.name ?? 'Unknown name'),
+                                Text(bundleToPublish!.description ??
+                                    'Unknown description'),
+                                Text('Prices'),
+                                for (var p
+                                    in bundleToPublish!.prices ?? List.empty())
+                                  Text(p.amount.toString()),
+                                Text('Contents'),
+                                for (var c in bundleToPublish!.contents ??
+                                    List.empty())
+                                  Text((c as BundleContent).content.name ??
+                                      'Unknown name')
+                              ],
+                            ))
+                        : Text('Bundle is not ready'),
                     isActive: _currentStep >= 0 && editableBundle != null,
                     state: _currentStep >= 2 && editableBundle?.prices != null
                         ? StepState.complete
@@ -278,6 +343,64 @@ class _CreateProductWidgetState extends State<CreateProductWidget> {
     );
   }
 
+  Future<Bundle> getBundle(String bundleId) async {
+    const getBundle = 'getBundle';
+
+    String graphQLQuery = '''query GetBundle {
+            getBundle(id: "${bundleId}") {
+              
+              id
+              isAllAccess
+              isFree
+              name
+              stripeProductId
+              description
+              contents {
+                  items {
+                    contentId
+                    id
+                    content {
+                      id
+                      name
+                    }
+                  }
+                }
+              prices {
+                items {
+                  amount
+                  bundleID
+                  currency
+                  id
+                  purchaseType
+                  recurrenceType
+                  stripePriceId
+                  recurrenceInterval
+                }
+              }
+            }
+          }
+    ''';
+
+    final request = GraphQLRequest(
+        document: graphQLQuery,
+        modelType: Bundle.classType,
+        variables: <String, String>{},
+        decodePath: getBundle);
+
+    try {
+      var response = await Amplify.API.query(request: request).response;
+      print(response.errors);
+      print(response.data);
+      Bundle result = response.data;
+      bundleToPublish = result;
+      return bundleToPublish!;
+    } catch (e) {
+      print(e);
+    }
+
+    return Bundle();
+  }
+
   switchStepsType() {
     setState(() => stepperType == StepperType.vertical
         ? stepperType = StepperType.horizontal
@@ -288,17 +411,102 @@ class _CreateProductWidgetState extends State<CreateProductWidget> {
     setState(() => _currentStep = step);
   }
 
-  continued() {
-    _currentStep < 2 ? setState(() => _currentStep += 1) : null;
+  continued() async {
+    if (_currentStep == 0) {
+      if (_formKey.currentState!.validate()) {
+        // If the form is valid, display a snackbar. In the real world,
+        // you'd often call a server or save the information in a database.
+
+        Bundle bundle = EditableBundle.fromEditable(editableBundle!);
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Saving the bundle')),
+        );
+
+        saveBundle(editableBundle!);
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Saved')),
+        );
+      }
+    }
+
+    if (_currentStep == 1) {
+      savePrices();
+    }
+
+    if (_currentStep == 2) {
+      await saveBundle(editableBundle!);
+
+      // to check if we saved everything correctly, we are not using the
+      // editableBundle but the actual one persisted into DB
+      bundleToPublish = await getBundle(editableBundle!.id);
+    }
+
+    if (_currentStep == 3) {
+      publishProduct();
+    }
+
+    _currentStep < 3 ? setState(() => _currentStep += 1) : null;
+
+    setState(() {
+      _currentStep = _currentStep;
+      availableContents = availableContents;
+    });
   }
 
   cancel() {
     _currentStep > 0 ? setState(() => _currentStep -= 1) : null;
   }
 
+  Future<void> getAvailableContents() async {
+    const listContents = 'listContents';
+
+    String graphQLQuery = '''query GetContents {
+              listContents {
+                items {
+                  id
+                  name
+                  objectId
+                  owner
+                  s3Url
+                  description
+                  type
+                  createdAt
+                  updatedAt
+
+                }
+              }
+            }
+    ''';
+
+    final request = GraphQLRequest(
+        document: graphQLQuery,
+        modelType: const PaginatedModelType(Content.classType),
+        variables: <String, String>{},
+        decodePath: listContents);
+
+    try {
+      var response = await Amplify.API.query(request: request).response;
+      PaginatedResult<Content> result = response.data;
+      var retrievedContents = result.items.toList();
+      for (var content in retrievedContents) {
+        print(content);
+      }
+      availableContents = retrievedContents;
+
+      setState(() {
+        availableContents = retrievedContents;
+      });
+    } catch (e) {
+      print(e);
+    }
+  }
+
   savePrice(EditablePrice editablePrice) async {
     Price price;
     if (editablePrice.amount != null) {
+      editablePrice.bundleID = editableBundle!.id;
       if (editablePrice.id == '') {
         editablePrice.id = uuid.v4();
         price = EditablePrice.fromEditable(editablePrice);
@@ -321,13 +529,57 @@ class _CreateProductWidgetState extends State<CreateProductWidget> {
     }
   }
 
+  Future<void> saveBundle(EditableBundle editable) async {
+    if (editable.id == '') {
+      editable.id = uuid.v4();
+    }
+
+    final Bundle b = EditableBundle.fromEditable(editable);
+
+    final bundleSaveRequest = ModelMutations.create(b);
+    await Amplify.API.mutate(request: bundleSaveRequest);
+
+    if (b.contents != null) {
+      for (BundleContent contentBundle in b.contents ?? List.empty()) {
+        if (contentBundle.createdAt == null) {
+          String graphQLQuery = ''' mutation MyMutation {
+              createBundleContent(input: 
+                            {
+                              bundleId: "${contentBundle.bundle.id}", 
+                              contentId: "${contentBundle.content.id}",
+                              id: "${contentBundle.id}"}) { id  }}
+                  ''';
+
+          final request = GraphQLRequest(
+              document: graphQLQuery,
+              //modelType: const PaginatedModelType(Content.classType),
+              variables: <String, String>{},
+              decodePath: 'createBundleContent');
+
+          final response = await Amplify.API.query(request: request).response;
+
+          print(response.errors);
+          print(response.data);
+        } else {
+          final saveRequest = ModelMutations.update(contentBundle);
+          var response =
+              await Amplify.API.mutate(request: saveRequest).response;
+          print(response.errors);
+          print(response.data);
+        }
+        print(contentBundle.id);
+      }
+    }
+
+    print(b.id);
+  }
+
   savePrices() async {
     savePrice(priceOneTime);
     savePrice(priceOneMonth);
     savePrice(priceThreeMonths);
     savePrice(priceOneYear);
 
-    _currentStep++;
     setState(() {});
   }
 
@@ -338,23 +590,20 @@ class _CreateProductWidgetState extends State<CreateProductWidget> {
         "https://zaacxi1w85.execute-api.us-east-1.amazonaws.com/testing/product/publish");
 
     Product product = Product();
+    product.id = bundleToPublish!.id;
+    product.name = bundleToPublish!.name;
+    product.description = bundleToPublish!.description;
 
-    ProductPrice productPriceOnetime =
-        ProductPrice(price: 30, currency: 'USD', paymentType: 'ONE_TIME');
+    product.priceList = bundleToPublish!.prices!.map((price) {
+      ProductPrice productPrice = ProductPrice(id: price.id);
+      productPrice.currency = price.currency;
+      productPrice.amount = price.amount;
+      productPrice.intervalCount = price.recurrenceInterval;
+      productPrice.interval = price.recurrenceType?.name ?? '';
+      productPrice.purchaseType = price.purchaseType?.name ?? '';
 
-    ProductPrice productPriceSubscription = ProductPrice(
-        price: 2.57,
-        currency: 'USD',
-        interval: 'month',
-        intervalCount: 1,
-        paymentType: 'RECURRING');
-
-    var priceList = [productPriceOnetime, productPriceSubscription];
-
-    product.priceList = priceList;
-
-    product.name = 'Test';
-    product.description = 'Test';
+      return productPrice;
+    }).toList();
 
     PublishProductModel publishProductModel =
         PublishProductModel(product: product);
@@ -376,68 +625,11 @@ class _CreateProductWidgetState extends State<CreateProductWidget> {
     var p = Product.fromJson(jsonDecode(initResponse.body));
 
     print(p.stripeProductId);
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+          content:
+              Text('Product is published, we wish you a successful product!')),
+    );
   }
 }
-
-saveBundle(Bundle bundle) async {
-  final bundleSaveRequest = ModelMutations.create(bundle);
-  await Amplify.API.mutate(request: bundleSaveRequest);
-
-  print(bundle.id);
-}
-
-
-Future<List<Content>?> getContents() async {
-    const listContents = 'listContents';
-
-    String graphQLQuery = '''query GetContents {
-              listContents {
-                items {
-                  id
-                  name
-                  objectId
-                  owner
-                  s3Url
-                  description
-                  type
-                  createdAt
-                  updatedAt
-                  coworkers {
-                    items {
-                      id
-                      coworkerId
-                    }
-                  }
-                }
-              }
-            }
-    ''';
-
-    final request = GraphQLRequest(
-        document: graphQLQuery,
-        modelType: const PaginatedModelType(Content.classType),
-        variables: <String, String>{},
-        decodePath: listContents);
-
-    try {
-      var response = await Amplify.API.query(request: request).response;
-      PaginatedResult<Content> result = response.data;
-      var retrievedContents = result.items;
-      for (var content in contents) {
-        print(content);
-      }
-
-      retrievedContents.sort((a, b) =>
-          (b!.updatedAt ?? TemporalDateTime(DateTime.now()))
-              .compareTo(a!.updatedAt ?? TemporalDateTime(DateTime.now())));
-
-      retrievedContents.forEach((element) {
-        print(element!.updatedAt);
-      });
-
-      setState(() {
-        contents = retrievedContents;
-      });
-    } catch (e) {
-      print(e);
-    }

@@ -4,7 +4,6 @@ type Coworker @model @auth(rules: [{allow: public}]) {
   displayName: String
   photoUrl: String
   description: String
-  contents: [Content] @manyToMany(relationName: "ContentCoworker")
 }
 
 type TenantConfiguration @model @auth(rules: [{allow: public}]) {
@@ -23,6 +22,7 @@ type Price @model @auth(rules: [{allow: public}]) {
   currency: String
   amount: Float
   bundleID: ID! @index(name: "byBundle")
+  recurrenceInterval: Int
 }
 
 type Section @model @auth(rules: [{allow: public}]) {
@@ -53,8 +53,7 @@ type Content @model @auth(rules: [{allow: public}]) {
   type: ContentType
   objectId: String
   owner: String
-  bundles: Bundle @belongsTo
-  coworkers: [Coworker] @manyToMany(relationName: "ContentCoworker")
+  bundles: [Bundle] @manyToMany(relationName: "BundleContent")
 }
 
 type Bundle @model @auth(rules: [{allow: public}]) {
@@ -62,10 +61,14 @@ type Bundle @model @auth(rules: [{allow: public}]) {
   name: String
   description: String
   isFree: Boolean
-  contents: [Content] @hasMany
+  contents: [Content] @manyToMany(relationName: "BundleContent")
   prices: [Price] @hasMany(indexName: "byBundle", fields: ["id"])
   isAllAccess: Boolean
   stripeProductId: String
+  isAllCourses: Boolean
+  isAllDocuments: Boolean
+  isPublished: String
+  isArchived: String
 }
 
 enum RecurrenceType {

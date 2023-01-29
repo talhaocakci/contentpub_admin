@@ -43,6 +43,7 @@ dependencies:
   webview_flutter: ^4.0.1
   markdown_editable_textinput: ^2.2.0
   flutter_form_builder: ^7.7.0
+  flutter_multi_select_items: ^0.4.2
   
 
 

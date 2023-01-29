@@ -214,6 +214,11 @@ class _TenantConfigurationModelType extends ModelType<TenantConfiguration> {
   TenantConfiguration fromJson(Map<String, dynamic> jsonData) {
     return TenantConfiguration.fromJson(jsonData);
   }
+  
+  @override
+  String modelName() {
+    return 'TenantConfiguration';
+  }
 }
 
 /**
