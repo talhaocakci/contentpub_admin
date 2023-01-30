@@ -1,7 +1,6 @@
 import 'package:amplify_api/amplify_api.dart';
 import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:contentpub_admin/course/create_curriculum.dart';
-import 'package:contentpub_admin/create_product.dart';
 import 'package:contentpub_admin/file_upload.dart';
 import 'package:contentpub_admin/models/Content.dart';
 import 'package:contentpub_admin/models/ContentType.dart';
@@ -9,15 +8,12 @@ import 'package:contentpub_admin/models/Course.dart';
 import 'package:contentpub_admin/models/Lesson.dart';
 import 'package:contentpub_admin/models/Section.dart';
 import 'package:contentpub_admin/models/editable/editables.dart';
+import 'package:flutter/material.dart';
+import 'package:uuid/uuid.dart';
 
 import '../flutter_flow/flutter_flow_icon_button.dart';
 import '../flutter_flow/flutter_flow_theme.dart';
-import '../flutter_flow/flutter_flow_util.dart';
 import '../flutter_flow/flutter_flow_widgets.dart';
-import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
-
-import 'package:uuid/uuid.dart';
 
 class CreateCourseWidget extends StatefulWidget {
   final String courseId;

@@ -37,8 +37,11 @@ class _DashboardWidgetState extends State<DashboardWidget> {
                 // theme: theme,
                 builder: Authenticator.builder(),
                 home: Scaffold(
-                  body: // display progress indicator
-                      Column(
+                    body: // display progress indicator
+                        Center(
+                            child: SizedBox(
+                  width: 600,
+                  child: Column(
                     mainAxisSize: MainAxisSize.max,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -51,7 +54,7 @@ class _DashboardWidgetState extends State<DashboardWidget> {
                           image: DecorationImage(
                             fit: BoxFit.cover,
                             image: CachedNetworkImageProvider(
-                              'https://images.unsplash.com/photo-1504297050568-910d24c426d3?ixlib=rb-1.2.1&ixid=MnwxMjA3fDF8MHxlZGl0b3JpYWwtZmVlZHwxfHx8ZW58MHx8fHw%3D&auto=format&fit=crop&w=900&q=60',
+                              'https://images.unsplash.com/photo-1504297050568-910d24c426d3?ixlib=rb-1.2.1&ixid=MnwxMjA3fDF8MHxlZGl0b3JpYWwtZmVlZHwxfHx8ZW58MHx8fHw%3D&auto=format&fit=crop&w=600&q=60',
                             ),
                           ),
                         ),
@@ -483,7 +486,7 @@ class _DashboardWidgetState extends State<DashboardWidget> {
                                               ),
                                             ),
                                             Text(
-                                              'Edit your contents',
+                                              'Your contents',
                                               style:
                                                   FlutterFlowTheme.of(context)
                                                       .bodyText2
@@ -735,6 +738,6 @@ class _DashboardWidgetState extends State<DashboardWidget> {
                       ),
                     ],
                   ),
-                ))));
+                ))))));
   }
 }

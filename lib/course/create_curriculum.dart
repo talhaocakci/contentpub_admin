@@ -1,21 +1,10 @@
 import 'package:amplify_api/amplify_api.dart';
-import 'package:contentpub_admin/aws_s3.dart';
-import 'package:contentpub_admin/create_product.dart';
+import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:contentpub_admin/file_upload.dart';
-import 'package:contentpub_admin/models/ContentType.dart';
 import 'package:contentpub_admin/models/Course.dart';
-import 'package:contentpub_admin/models/Lesson.dart';
-import 'package:contentpub_admin/models/Section.dart';
 import 'package:contentpub_admin/models/editable/editables.dart';
 import 'package:flutter/material.dart';
-
-import 'package:flutter/material.dart';
-
-import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
-
-import 'package:video_player/video_player.dart';
-
 import 'package:uuid/uuid.dart';
 
 var uuid = Uuid();

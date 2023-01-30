@@ -1,12 +1,10 @@
-import 'dart:io';
 import 'package:amazon_cognito_identity_dart_2/sig_v4.dart';
-import 'utils.dart';
 import 'package:http/http.dart' as http;
-import 'package:path/path.dart' as path;
 
-import 'policy.dart';
 import 'acl.dart';
 import 'multipart_request.dart';
+import 'policy.dart';
+import 'utils.dart';
 
 /// Convenience class for uploading files to AWS S3
 class AwsS3 {

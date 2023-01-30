@@ -1,16 +1,8 @@
 import 'dart:async';
-import 'dart:convert';
 
 import 'package:contentpub_admin/flutter_flow/flutter_flow_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
-
-import 'package:amplify_flutter/amplify_flutter.dart';
-import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
-
-import 'package:logger/logger.dart';
-
-import 'package:http/http.dart' as http;
 
 class VideoPlayerScreen extends StatefulWidget {
   final String videoUrl;

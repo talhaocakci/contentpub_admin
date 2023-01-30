@@ -1,9 +1,7 @@
+import 'dart:html' as html;
+
 import 'package:amplify_authenticator/amplify_authenticator.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
-
-import 'dart:html' as html;
 
 class ShowFileWidget extends StatefulWidget {
   String url;

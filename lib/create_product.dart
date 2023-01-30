@@ -1,25 +1,15 @@
-import 'dart:math';
+import 'dart:convert';
 
 import 'package:amplify_api/amplify_api.dart';
 import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:contentpub_admin/create_price.dart';
-import 'package:contentpub_admin/file_upload.dart';
 import 'package:contentpub_admin/flutter_flow/flutter_flow_theme.dart';
-import 'package:contentpub_admin/models/Bundle.dart';
-import 'package:contentpub_admin/models/Content.dart';
-import 'package:contentpub_admin/models/ContentType.dart';
 import 'package:contentpub_admin/models/ModelProvider.dart';
-import 'package:contentpub_admin/models/Price.dart';
 import 'package:contentpub_admin/models/PublishProductModel.dart';
-import 'package:contentpub_admin/models/PurchaseType.dart';
-import 'package:contentpub_admin/models/RecurrenceType.dart';
 import 'package:contentpub_admin/models/editable/editables.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_multi_select_items/flutter_multi_select_items.dart';
-
-import 'dart:html' as html;
 import 'package:http/http.dart' as http;
-import 'dart:convert';
 import 'package:uuid/uuid.dart';
 
 var uuid = Uuid();

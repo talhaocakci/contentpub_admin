@@ -1,27 +1,11 @@
+import 'dart:html' as html;
+
+import 'package:amplify_flutter/amplify_flutter.dart';
+import 'package:contentpub_admin/aws_s3.dart';
 import 'package:contentpub_admin/flutter_flow/flutter_flow_icon_button.dart';
-import 'package:contentpub_admin/models/ContentType.dart';
 import 'package:contentpub_admin/video_player.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dropzone/flutter_dropzone.dart';
-import 'package:amplify_api/amplify_api.dart';
-import 'package:contentpub_admin/aws_s3.dart';
-import 'package:contentpub_admin/models/Lesson.dart';
-import 'package:contentpub_admin/models/Section.dart';
-import 'package:flutter/material.dart';
-
-import 'package:flutter/material.dart';
-
-import 'package:amplify_flutter/amplify_flutter.dart';
-
-import 'file_upload.dart';
-
-import 'models/Course.dart';
-
-import 'package:video_player/video_player.dart';
-
-import 'dart:html' as html;
-
-import 'dart:convert';
 
 class FileUploadWithDrop extends StatefulWidget {
   final FileType fileType;
