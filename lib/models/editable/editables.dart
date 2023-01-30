@@ -257,3 +257,56 @@ class EditablePrice {
         stripePriceId: editable.stripePriceId);
   }
 }
+
+class EditableContent {
+  String id;
+  String? name;
+  String? description;
+  String? s3Url;
+  ContentType type;
+  String? objectId;
+  String? owner;
+  String? photoUrl;
+  String? promoVideoUrl;
+  bool? isPublished = false;
+  bool? isArchived = false;
+
+  bool dirty = false;
+  bool? newItem = false;
+
+  EditableContent({required this.id, required this.type, this.newItem});
+
+  static EditableContent toEditable(Content content) {
+    EditableContent editable = EditableContent(
+        id: content.id, type: content.type ?? ContentType.DOCUMENT);
+
+    editable.name = content.name;
+    editable.description = content.description;
+    editable.objectId = content.objectId;
+    editable.owner = content.owner;
+    editable.s3Url = content.s3Url;
+    editable.photoUrl = content.photoUrl;
+    editable.promoVideoUrl = content.promoVideoUrl;
+    editable.isPublished = content.isPublished;
+    editable.isArchived = content.isArchived;
+
+    return editable;
+  }
+
+  static Content fromEditable(EditableContent editable) {
+    Content content = Content(
+        id: editable.id,
+        type: editable.type,
+        name: editable.name,
+        description: editable.description,
+        objectId: editable.objectId,
+        owner: editable.owner,
+        s3Url: editable.s3Url,
+        photoUrl: editable.photoUrl,
+        promoVideoUrl: editable.promoVideoUrl,
+        isPublished: editable.isPublished,
+        isArchived: editable.isArchived);
+
+    return content;
+  }
+}

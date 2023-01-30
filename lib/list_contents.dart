@@ -172,7 +172,8 @@ class _ListContentsWidgetState extends State<ListContentsWidget> {
                                             context,
                                             MaterialPageRoute(
                                                 builder: (context) =>
-                                                    CreateDocumentWidget()));
+                                                    CreateDocumentWidget(
+                                                        contentId: '')));
                                       },
                                       child: Container(
                                         width: 48,
@@ -444,6 +445,15 @@ class _ListContentsWidgetState extends State<ListContentsWidget> {
                                                               courseId: content!
                                                                       .objectId ??
                                                                   '',
+                                                            )));
+                                              } else {
+                                                Navigator.push(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                        builder: (context) =>
+                                                            CreateDocumentWidget(
+                                                              contentId:
+                                                                  content!.id,
                                                             )));
                                               }
                                             },

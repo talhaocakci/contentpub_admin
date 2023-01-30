@@ -54,6 +54,10 @@ type Content @model @auth(rules: [{allow: public}]) {
   objectId: String
   owner: String
   bundles: [Bundle] @manyToMany(relationName: "BundleContent")
+  photoUrl: String
+  promoVideoUrl: String
+  isPublished: Boolean
+  isArchived: Boolean
 }
 
 type Bundle @model @auth(rules: [{allow: public}]) {
@@ -67,8 +71,8 @@ type Bundle @model @auth(rules: [{allow: public}]) {
   stripeProductId: String
   isAllCourses: Boolean
   isAllDocuments: Boolean
-  isPublished: String
-  isArchived: String
+  isPublished: Boolean
+  isArchived: Boolean
 }
 
 enum RecurrenceType {

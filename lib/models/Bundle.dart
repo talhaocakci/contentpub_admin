@@ -39,8 +39,8 @@ class Bundle extends Model {
   final String? _stripeProductId;
   final bool? _isAllCourses;
   final bool? _isAllDocuments;
-  final String? _isPublished;
-  final String? _isArchived;
+  final bool? _isPublished;
+  final bool? _isArchived;
   final TemporalDateTime? _createdAt;
   final TemporalDateTime? _updatedAt;
 
@@ -93,11 +93,11 @@ class Bundle extends Model {
     return _isAllDocuments;
   }
   
-  String? get isPublished {
+  bool? get isPublished {
     return _isPublished;
   }
   
-  String? get isArchived {
+  bool? get isArchived {
     return _isArchived;
   }
   
@@ -111,7 +111,7 @@ class Bundle extends Model {
   
   const Bundle._internal({required this.id, name, description, isFree, contents, prices, isAllAccess, stripeProductId, isAllCourses, isAllDocuments, isPublished, isArchived, createdAt, updatedAt}): _name = name, _description = description, _isFree = isFree, _contents = contents, _prices = prices, _isAllAccess = isAllAccess, _stripeProductId = stripeProductId, _isAllCourses = isAllCourses, _isAllDocuments = isAllDocuments, _isPublished = isPublished, _isArchived = isArchived, _createdAt = createdAt, _updatedAt = updatedAt;
   
-  factory Bundle({String? id, String? name, String? description, bool? isFree, List<BundleContent>? contents, List<Price>? prices, bool? isAllAccess, String? stripeProductId, bool? isAllCourses, bool? isAllDocuments, String? isPublished, String? isArchived}) {
+  factory Bundle({String? id, String? name, String? description, bool? isFree, List<BundleContent>? contents, List<Price>? prices, bool? isAllAccess, String? stripeProductId, bool? isAllCourses, bool? isAllDocuments, bool? isPublished, bool? isArchived}) {
     return Bundle._internal(
       id: id == null ? UUID.getUUID() : id,
       name: name,
@@ -165,8 +165,8 @@ class Bundle extends Model {
     buffer.write("stripeProductId=" + "$_stripeProductId" + ", ");
     buffer.write("isAllCourses=" + (_isAllCourses != null ? _isAllCourses!.toString() : "null") + ", ");
     buffer.write("isAllDocuments=" + (_isAllDocuments != null ? _isAllDocuments!.toString() : "null") + ", ");
-    buffer.write("isPublished=" + "$_isPublished" + ", ");
-    buffer.write("isArchived=" + "$_isArchived" + ", ");
+    buffer.write("isPublished=" + (_isPublished != null ? _isPublished!.toString() : "null") + ", ");
+    buffer.write("isArchived=" + (_isArchived != null ? _isArchived!.toString() : "null") + ", ");
     buffer.write("createdAt=" + (_createdAt != null ? _createdAt!.format() : "null") + ", ");
     buffer.write("updatedAt=" + (_updatedAt != null ? _updatedAt!.format() : "null"));
     buffer.write("}");
@@ -174,7 +174,7 @@ class Bundle extends Model {
     return buffer.toString();
   }
   
-  Bundle copyWith({String? name, String? description, bool? isFree, List<BundleContent>? contents, List<Price>? prices, bool? isAllAccess, String? stripeProductId, bool? isAllCourses, bool? isAllDocuments, String? isPublished, String? isArchived}) {
+  Bundle copyWith({String? name, String? description, bool? isFree, List<BundleContent>? contents, List<Price>? prices, bool? isAllAccess, String? stripeProductId, bool? isAllCourses, bool? isAllDocuments, bool? isPublished, bool? isArchived}) {
     return Bundle._internal(
       id: id,
       name: name ?? this.name,
@@ -317,13 +317,13 @@ class Bundle extends Model {
     modelSchemaDefinition.addField(ModelFieldDefinition.field(
       key: Bundle.ISPUBLISHED,
       isRequired: false,
-      ofType: ModelFieldType(ModelFieldTypeEnum.string)
+      ofType: ModelFieldType(ModelFieldTypeEnum.bool)
     ));
     
     modelSchemaDefinition.addField(ModelFieldDefinition.field(
       key: Bundle.ISARCHIVED,
       isRequired: false,
-      ofType: ModelFieldType(ModelFieldTypeEnum.string)
+      ofType: ModelFieldType(ModelFieldTypeEnum.bool)
     ));
     
     modelSchemaDefinition.addField(ModelFieldDefinition.nonQueryField(
