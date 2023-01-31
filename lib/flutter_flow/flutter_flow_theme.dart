@@ -16,6 +16,7 @@ abstract class FlutterFlowTheme {
   late Color secondaryBackground;
   late Color primaryText;
   late Color secondaryText;
+  late Color buttonColor;
 
   late Color primaryBtnText;
   late Color lineColor;
@@ -50,6 +51,7 @@ class LightModeTheme extends FlutterFlowTheme {
 
   late Color primaryBtnText = Color(0xFF6E6E6E);
   late Color lineColor = Color(0xFF9E9E9E);
+  late Color buttonColor = const Color(0xFF4B39EF);
 }
 
 abstract class Typography {

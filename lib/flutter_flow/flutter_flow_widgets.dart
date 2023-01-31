@@ -1,3 +1,4 @@
+import 'package:contentpub_admin/flutter_flow/flutter_flow_theme.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:auto_size_text/auto_size_text.dart';
@@ -45,13 +46,13 @@ class FFButtonOptions {
 }
 
 class FFButtonWidget extends StatefulWidget {
-  const FFButtonWidget({
+  FFButtonWidget({
     Key? key,
     required this.text,
     required this.onPressed,
     this.icon,
     this.iconData,
-    required this.options,
+    this.options,
     this.showLoadingIndicator = true,
   }) : super(key: key);
 
@@ -59,7 +60,7 @@ class FFButtonWidget extends StatefulWidget {
   final Widget? icon;
   final IconData? iconData;
   final Function()? onPressed;
-  final FFButtonOptions options;
+  FFButtonOptions? options;
   final bool showLoadingIndicator;
 
   @override
@@ -71,6 +72,23 @@ class _FFButtonWidgetState extends State<FFButtonWidget> {
 
   @override
   Widget build(BuildContext context) {
+    widget.options ??= FFButtonOptions(
+      width: 200,
+      height: 50,
+      color: FlutterFlowTheme.of(context).buttonColor,
+      textStyle: FlutterFlowTheme.of(context).bodyText2.override(
+            fontFamily: 'Lexend Deca',
+            color: Colors.white,
+            fontSize: 14,
+            fontWeight: FontWeight.normal,
+          ),
+      elevation: 3,
+      borderSide: const BorderSide(
+        color: Colors.transparent,
+        width: 1,
+      ),
+    );
+
     Widget textWidget = loading
         ? Center(
             child: Container(
@@ -78,14 +96,14 @@ class _FFButtonWidgetState extends State<FFButtonWidget> {
               height: 23,
               child: CircularProgressIndicator(
                 valueColor: AlwaysStoppedAnimation<Color>(
-                  widget.options.textStyle!.color ?? Colors.white,
+                  widget.options!.textStyle!.color ?? Colors.white,
                 ),
               ),
             ),
           )
         : AutoSizeText(
             widget.text,
-            style: widget.options.textStyle?.withoutColor(),
+            style: widget.options!.textStyle?.withoutColor(),
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
           );
@@ -112,76 +130,76 @@ class _FFButtonWidgetState extends State<FFButtonWidget> {
       shape: MaterialStateProperty.resolveWith<OutlinedBorder>(
         (states) {
           if (states.contains(MaterialState.hovered) &&
-              widget.options.hoverBorderSide != null) {
+              widget.options!.hoverBorderSide != null) {
             return RoundedRectangleBorder(
               borderRadius:
-                  widget.options.borderRadius ?? BorderRadius.circular(8),
-              side: widget.options.hoverBorderSide!,
+                  widget.options!.borderRadius ?? BorderRadius.circular(8),
+              side: widget.options!.hoverBorderSide!,
             );
           }
           return RoundedRectangleBorder(
             borderRadius:
-                widget.options.borderRadius ?? BorderRadius.circular(8),
-            side: widget.options.borderSide ?? BorderSide.none,
+                widget.options!.borderRadius ?? BorderRadius.circular(8),
+            side: widget.options!.borderSide ?? BorderSide.none,
           );
         },
       ),
       foregroundColor: MaterialStateProperty.resolveWith<Color?>(
         (states) {
           if (states.contains(MaterialState.disabled)) {
-            return widget.options.disabledTextColor ?? Colors.white;
+            return widget.options!.disabledTextColor ?? Colors.white;
           }
           if (states.contains(MaterialState.hovered) &&
-              widget.options.hoverTextColor != null) {
-            return widget.options.hoverTextColor;
+              widget.options!.hoverTextColor != null) {
+            return widget.options!.hoverTextColor;
           }
-          return widget.options.textStyle?.color ?? Colors.white;
+          return widget.options!.textStyle?.color ?? Colors.white;
         },
       ),
       backgroundColor: MaterialStateProperty.resolveWith<Color?>(
         (states) {
           if (states.contains(MaterialState.disabled)) {
-            return widget.options.disabledColor;
+            return widget.options!.disabledColor;
           }
           if (states.contains(MaterialState.hovered) &&
-              widget.options.hoverColor != null) {
-            return widget.options.hoverColor;
+              widget.options!.hoverColor != null) {
+            return widget.options!.hoverColor;
           }
-          return widget.options.color;
+          return widget.options!.color;
         },
       ),
       overlayColor: MaterialStateProperty.resolveWith<Color?>((states) {
         if (states.contains(MaterialState.pressed)) {
-          return widget.options.splashColor;
+          return widget.options!.splashColor;
         }
         return null;
       }),
-      padding: MaterialStateProperty.all(widget.options.padding ??
+      padding: MaterialStateProperty.all(widget.options!.padding ??
           const EdgeInsets.symmetric(horizontal: 12.0, vertical: 4.0)),
       elevation: MaterialStateProperty.resolveWith<double>(
         (states) {
           if (states.contains(MaterialState.hovered) &&
-              widget.options.hoverElevation != null) {
-            return widget.options.hoverElevation!;
+              widget.options!.hoverElevation != null) {
+            return widget.options!.hoverElevation!;
           }
-          return widget.options.elevation ?? 2.0;
+          return widget.options!.elevation ?? 2.0;
         },
       ),
     );
 
     if (widget.icon != null || widget.iconData != null) {
       return Container(
-        height: widget.options.height,
-        width: widget.options.width,
+        height: widget.options!.height,
+        width: widget.options!.width,
         child: ElevatedButton.icon(
           icon: Padding(
-            padding: widget.options.iconPadding ?? EdgeInsets.zero,
+            padding: widget.options!.iconPadding ?? EdgeInsets.zero,
             child: widget.icon ??
                 FaIcon(
                   widget.iconData,
-                  size: widget.options.iconSize,
-                  color: widget.options.iconColor ??
-                      widget.options.textStyle!.color,
+                  size: widget.options!.iconSize,
+                  color: widget.options!.iconColor ??
+                      widget.options!.textStyle!.color,
                 ),
           ),
           label: textWidget,
@@ -192,8 +210,8 @@ class _FFButtonWidgetState extends State<FFButtonWidget> {
     }
 
     return Container(
-      height: widget.options.height,
-      width: widget.options.width,
+      height: widget.options!.height,
+      width: widget.options!.width,
       child: ElevatedButton(
         onPressed: onPressed,
         style: style,

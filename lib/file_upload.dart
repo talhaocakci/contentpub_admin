@@ -3,6 +3,7 @@ import 'dart:html' as html;
 import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:contentpub_admin/aws_s3.dart';
 import 'package:contentpub_admin/flutter_flow/flutter_flow_icon_button.dart';
+import 'package:contentpub_admin/flutter_flow/flutter_flow_theme.dart';
 import 'package:contentpub_admin/video_player.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dropzone/flutter_dropzone.dart';
@@ -183,19 +184,21 @@ class _FileUploadWithDropState extends State<FileUploadWithDrop> {
 
   Widget buildZone2(BuildContext context) => Builder(
         builder: (context) => Container(
+            decoration: BoxDecoration(
+                color: FlutterFlowTheme.of(context).buttonColor.withAlpha(20)),
             child: DropzoneView(
-          operation: DragOperation.move,
-          onCreated: (ctrl) => controller2 = ctrl,
-          onLoaded: () => print('Zone 2 loaded'),
-          onError: (ev) => print('Zone 2 error: $ev'),
-          onLeave: () => print('Zone 2 left'),
-          onDrop: (ev) {
-            onDrop(controller2, ev);
-          },
-          onDropMultiple: (ev) async {
-            print('Zone 2 drop multiple: $ev');
-          },
-        )),
+              operation: DragOperation.move,
+              onCreated: (ctrl) => controller2 = ctrl,
+              onLoaded: () => print('Zone 2 loaded'),
+              onError: (ev) => print('Zone 2 error: $ev'),
+              onLeave: () => print('Zone 2 left'),
+              onDrop: (ev) {
+                onDrop(controller2, ev);
+              },
+              onDropMultiple: (ev) async {
+                print('Zone 2 drop multiple: $ev');
+              },
+            )),
       );
 
   void onDrop(DropzoneViewController controller, dynamic ev) async {
@@ -254,37 +257,37 @@ class _FileUploadWithDropState extends State<FileUploadWithDrop> {
         destination: uploadDest,
         filename: filename, //degistri, laf olsun diye koyduk
         bucket: bucket,
-        onProgress: (bytes, totalBytes) => printprogress(bytes, totalBytes),
+        onProgress: (bytes, totalBytes) =>
+            printprogress(bytes, totalBytes, remoteFileUrl),
         region: "us-east-1");
-
-    //make s3 resign call to access the video
-    print('result of upload: ${result}');
-
-    UploadedFile uploadedFile = UploadedFile(
-        remoteUrl: remoteFileUrl,
-        localFileName: localFile,
-        fileSize: fileSize,
-        fileType: widget.fileType);
-
-    setState(() {
-      uploadInProgress = false;
-      uploadedFileUrl = remoteFileUrl;
-    });
-
-    widget.onComplete(uploadedFile);
 
     return result ?? 'Unknown file upload result';
   }
 
-  void printprogress(int bytes, int totalBytes) {
+  void printprogress(int bytes, int totalBytes, String remoteFileUrl) {
     setState(() {
       uploadMessage = 'uploaded ${bytes} of ${totalBytes}';
-
-      if (bytes == totalBytes) {
-        uploadInProgress = false;
-        // widget.editableLesson.uploadedVideo =
-      }
     });
+
+    if (bytes == totalBytes) {
+      uploadInProgress = false;
+      //make s3 resign call to access the video
+
+      UploadedFile uploadedFile = UploadedFile(
+          remoteUrl: remoteFileUrl,
+          localFileName: localFile,
+          fileSize: totalBytes,
+          fileType: widget.fileType);
+
+      print('result of upload: ${uploadedFile}');
+
+      setState(() {
+        uploadInProgress = false;
+        uploadedFileUrl = remoteFileUrl;
+      });
+
+      widget.onComplete(uploadedFile);
+    }
   }
 }
 
