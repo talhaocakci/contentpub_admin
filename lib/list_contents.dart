@@ -479,6 +479,47 @@ class _ListContentsWidgetState extends State<ListContentsWidget> {
                                               ),
                                             ),
                                           ),
+                                          FFButtonWidget(
+                                            onPressed: () {
+                                              print(
+                                                  'before action isPublished: ${content!.isPublished}');
+                                              // publish the content
+                                              if ((content!.isPublished ??
+                                                      false) ==
+                                                  false) {
+                                                publishTheContent(
+                                                    content.id, true, false);
+                                              } else {
+                                                publishTheContent(
+                                                    content.id, false, true);
+                                              }
+
+                                              setState(() {});
+                                            },
+                                            text: content!.isPublished ?? false
+                                                ? 'Archive'
+                                                : 'Publish',
+                                            icon: const Icon(
+                                              Icons.add_rounded,
+                                              color: Colors.white,
+                                              size: 15,
+                                            ),
+                                            options: FFButtonOptions(
+                                              width: 120,
+                                              height: 40,
+                                              color: const Color(0xFF39D2C0),
+                                              textStyle: GoogleFonts.getFont(
+                                                'Lexend Deca',
+                                                color: Colors.white,
+                                                fontSize: 14,
+                                              ),
+                                              elevation: 3,
+                                              borderSide: const BorderSide(
+                                                color: Colors.transparent,
+                                                width: 1,
+                                              ),
+                                            ),
+                                          )
                                         ],
                                       ),
                                     ],
@@ -497,6 +538,33 @@ class _ListContentsWidgetState extends State<ListContentsWidget> {
         )));
   }
 
+  Future<void> publishTheContent(
+      String id, bool isPublished, isArchived) async {
+    String updateQuery = '''
+     mutation MyMutation {
+      updateContent(input: {id: "$id", isPublished: $isPublished, isArchived: $isArchived}) {
+        id
+        isArchived
+        isPublished
+      }
+    }
+      ''';
+
+    final request = GraphQLRequest(
+      document: updateQuery,
+      modelType: Content.classType,
+      decodePath: 'updateContent',
+      variables: <String, String>{},
+    );
+
+    var response = await Amplify.API.mutate(request: request).response;
+    print(response.data);
+    print(response.errors);
+    Content result = response.data;
+    print('${result.id} is published: ${result.isPublished}');
+    print('${result.id} is archived: ${result.isArchived}');
+  }
+
   Future<List<Content>?> getContents() async {
     const listContents = 'listContents';
 
@@ -512,6 +580,8 @@ class _ListContentsWidgetState extends State<ListContentsWidget> {
                   type
                   createdAt
                   updatedAt
+                  isPublished
+                  isArchived
                  
                 }
               }

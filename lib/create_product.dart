@@ -477,7 +477,7 @@ class _CreateProductWidgetState extends State<CreateProductWidget> {
     const listContents = 'listContents';
 
     String graphQLQuery = '''query GetContents {
-              listContents {
+              listContents(filter: {isPublished: {eq: true}}) {             
                 items {
                   id
                   name
