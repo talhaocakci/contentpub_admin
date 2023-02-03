@@ -36,6 +36,7 @@ class Price extends Model {
   final double? _amount;
   final String? _bundleID;
   final int? _recurrenceInterval;
+  final int? _trialPeriod;
   final TemporalDateTime? _createdAt;
   final TemporalDateTime? _updatedAt;
 
@@ -89,6 +90,10 @@ class Price extends Model {
     return _recurrenceInterval;
   }
   
+  int? get trialPeriod {
+    return _trialPeriod;
+  }
+  
   TemporalDateTime? get createdAt {
     return _createdAt;
   }
@@ -97,9 +102,9 @@ class Price extends Model {
     return _updatedAt;
   }
   
-  const Price._internal({required this.id, stripePriceId, purchaseType, recurrenceType, currency, amount, required bundleID, recurrenceInterval, createdAt, updatedAt}): _stripePriceId = stripePriceId, _purchaseType = purchaseType, _recurrenceType = recurrenceType, _currency = currency, _amount = amount, _bundleID = bundleID, _recurrenceInterval = recurrenceInterval, _createdAt = createdAt, _updatedAt = updatedAt;
+  const Price._internal({required this.id, stripePriceId, purchaseType, recurrenceType, currency, amount, required bundleID, recurrenceInterval, trialPeriod, createdAt, updatedAt}): _stripePriceId = stripePriceId, _purchaseType = purchaseType, _recurrenceType = recurrenceType, _currency = currency, _amount = amount, _bundleID = bundleID, _recurrenceInterval = recurrenceInterval, _trialPeriod = trialPeriod, _createdAt = createdAt, _updatedAt = updatedAt;
   
-  factory Price({String? id, String? stripePriceId, PurchaseType? purchaseType, RecurrenceType? recurrenceType, String? currency, double? amount, required String bundleID, int? recurrenceInterval}) {
+  factory Price({String? id, String? stripePriceId, PurchaseType? purchaseType, RecurrenceType? recurrenceType, String? currency, double? amount, required String bundleID, int? recurrenceInterval, int? trialPeriod}) {
     return Price._internal(
       id: id == null ? UUID.getUUID() : id,
       stripePriceId: stripePriceId,
@@ -108,7 +113,8 @@ class Price extends Model {
       currency: currency,
       amount: amount,
       bundleID: bundleID,
-      recurrenceInterval: recurrenceInterval);
+      recurrenceInterval: recurrenceInterval,
+      trialPeriod: trialPeriod);
   }
   
   bool equals(Object other) {
@@ -126,7 +132,8 @@ class Price extends Model {
       _currency == other._currency &&
       _amount == other._amount &&
       _bundleID == other._bundleID &&
-      _recurrenceInterval == other._recurrenceInterval;
+      _recurrenceInterval == other._recurrenceInterval &&
+      _trialPeriod == other._trialPeriod;
   }
   
   @override
@@ -145,6 +152,7 @@ class Price extends Model {
     buffer.write("amount=" + (_amount != null ? _amount!.toString() : "null") + ", ");
     buffer.write("bundleID=" + "$_bundleID" + ", ");
     buffer.write("recurrenceInterval=" + (_recurrenceInterval != null ? _recurrenceInterval!.toString() : "null") + ", ");
+    buffer.write("trialPeriod=" + (_trialPeriod != null ? _trialPeriod!.toString() : "null") + ", ");
     buffer.write("createdAt=" + (_createdAt != null ? _createdAt!.format() : "null") + ", ");
     buffer.write("updatedAt=" + (_updatedAt != null ? _updatedAt!.format() : "null"));
     buffer.write("}");
@@ -152,7 +160,7 @@ class Price extends Model {
     return buffer.toString();
   }
   
-  Price copyWith({String? stripePriceId, PurchaseType? purchaseType, RecurrenceType? recurrenceType, String? currency, double? amount, String? bundleID, int? recurrenceInterval}) {
+  Price copyWith({String? stripePriceId, PurchaseType? purchaseType, RecurrenceType? recurrenceType, String? currency, double? amount, String? bundleID, int? recurrenceInterval, int? trialPeriod}) {
     return Price._internal(
       id: id,
       stripePriceId: stripePriceId ?? this.stripePriceId,
@@ -161,7 +169,8 @@ class Price extends Model {
       currency: currency ?? this.currency,
       amount: amount ?? this.amount,
       bundleID: bundleID ?? this.bundleID,
-      recurrenceInterval: recurrenceInterval ?? this.recurrenceInterval);
+      recurrenceInterval: recurrenceInterval ?? this.recurrenceInterval,
+      trialPeriod: trialPeriod ?? this.trialPeriod);
   }
   
   Price.fromJson(Map<String, dynamic> json)  
@@ -173,15 +182,16 @@ class Price extends Model {
       _amount = (json['amount'] as num?)?.toDouble(),
       _bundleID = json['bundleID'],
       _recurrenceInterval = (json['recurrenceInterval'] as num?)?.toInt(),
+      _trialPeriod = (json['trialPeriod'] as num?)?.toInt(),
       _createdAt = json['createdAt'] != null ? TemporalDateTime.fromString(json['createdAt']) : null,
       _updatedAt = json['updatedAt'] != null ? TemporalDateTime.fromString(json['updatedAt']) : null;
   
   Map<String, dynamic> toJson() => {
-    'id': id, 'stripePriceId': _stripePriceId, 'purchaseType': enumToString(_purchaseType), 'recurrenceType': enumToString(_recurrenceType), 'currency': _currency, 'amount': _amount, 'bundleID': _bundleID, 'recurrenceInterval': _recurrenceInterval, 'createdAt': _createdAt?.format(), 'updatedAt': _updatedAt?.format()
+    'id': id, 'stripePriceId': _stripePriceId, 'purchaseType': enumToString(_purchaseType), 'recurrenceType': enumToString(_recurrenceType), 'currency': _currency, 'amount': _amount, 'bundleID': _bundleID, 'recurrenceInterval': _recurrenceInterval, 'trialPeriod': _trialPeriod, 'createdAt': _createdAt?.format(), 'updatedAt': _updatedAt?.format()
   };
   
   Map<String, Object?> toMap() => {
-    'id': id, 'stripePriceId': _stripePriceId, 'purchaseType': _purchaseType, 'recurrenceType': _recurrenceType, 'currency': _currency, 'amount': _amount, 'bundleID': _bundleID, 'recurrenceInterval': _recurrenceInterval, 'createdAt': _createdAt, 'updatedAt': _updatedAt
+    'id': id, 'stripePriceId': _stripePriceId, 'purchaseType': _purchaseType, 'recurrenceType': _recurrenceType, 'currency': _currency, 'amount': _amount, 'bundleID': _bundleID, 'recurrenceInterval': _recurrenceInterval, 'trialPeriod': _trialPeriod, 'createdAt': _createdAt, 'updatedAt': _updatedAt
   };
 
   static final QueryModelIdentifier<PriceModelIdentifier> MODEL_IDENTIFIER = QueryModelIdentifier<PriceModelIdentifier>();
@@ -193,6 +203,7 @@ class Price extends Model {
   static final QueryField AMOUNT = QueryField(fieldName: "amount");
   static final QueryField BUNDLEID = QueryField(fieldName: "bundleID");
   static final QueryField RECURRENCEINTERVAL = QueryField(fieldName: "recurrenceInterval");
+  static final QueryField TRIALPERIOD = QueryField(fieldName: "trialPeriod");
   static var schema = Model.defineSchema(define: (ModelSchemaDefinition modelSchemaDefinition) {
     modelSchemaDefinition.name = "Price";
     modelSchemaDefinition.pluralName = "Prices";
@@ -252,6 +263,12 @@ class Price extends Model {
     
     modelSchemaDefinition.addField(ModelFieldDefinition.field(
       key: Price.RECURRENCEINTERVAL,
+      isRequired: false,
+      ofType: ModelFieldType(ModelFieldTypeEnum.int)
+    ));
+    
+    modelSchemaDefinition.addField(ModelFieldDefinition.field(
+      key: Price.TRIALPERIOD,
       isRequired: false,
       ofType: ModelFieldType(ModelFieldTypeEnum.int)
     ));

@@ -1,5 +1,6 @@
 import 'package:amplify_authenticator/amplify_authenticator.dart';
 import 'package:contentpub_admin/course/create_course.dart';
+import 'package:contentpub_admin/create_coworker.dart';
 import 'package:contentpub_admin/create_product.dart';
 import 'package:contentpub_admin/list_contents.dart';
 
@@ -47,14 +48,14 @@ class _DashboardWidgetState extends State<DashboardWidget> {
                     children: [
                       Container(
                         width: double.infinity,
-                        height: 400,
+                        height: 100,
                         decoration: BoxDecoration(
                           color:
                               FlutterFlowTheme.of(context).secondaryBackground,
                           image: DecorationImage(
                             fit: BoxFit.cover,
                             image: CachedNetworkImageProvider(
-                              'https://images.unsplash.com/photo-1504297050568-910d24c426d3?ixlib=rb-1.2.1&ixid=MnwxMjA3fDF8MHxlZGl0b3JpYWwtZmVlZHwxfHx8ZW58MHx8fHw%3D&auto=format&fit=crop&w=600&q=60',
+                              'https://images.unsplash.com/photo-1504297050568-910d24c426d3?ixlib=rb-1.2.1&ixid=MnwxMjA3fDF8MHxlZGl0b3JpYWwtZmVlZHwxfHx8ZW58MHx8fHw%3D&auto=format&fit=crop&w=200&q=60',
                             ),
                           ),
                         ),
@@ -573,8 +574,8 @@ class _DashboardWidgetState extends State<DashboardWidget> {
                                             context,
                                             MaterialPageRoute(
                                                 builder: (context) =>
-                                                    CreateCourseWidget(
-                                                      courseId: '',
+                                                    CreateAuthorWidget(
+                                                      coworkerId: '',
                                                     )));
                                       },
                                       child: Padding(
@@ -597,7 +598,7 @@ class _DashboardWidgetState extends State<DashboardWidget> {
                                               ),
                                             ),
                                             Text(
-                                              'Create a course',
+                                              'Create an author',
                                               style:
                                                   FlutterFlowTheme.of(context)
                                                       .bodyText2

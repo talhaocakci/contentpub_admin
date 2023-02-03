@@ -91,32 +91,31 @@ class _FileUploadWithDropState extends State<FileUploadWithDrop> {
         decoration: BoxDecoration(border: Border.all(color: Colors.black)),
         child: Center(
             child: uploadedFileUrl == null
-                ? Column(children: [
-                    Row(
-                      children: [
-                        const Expanded(child: Text('Drop file below or')),
-                        ElevatedButton(
-                          onPressed: () async {
-                            print(await controller2.pickFiles());
-                          },
-                          child: FlutterFlowIconButton(
-                            borderColor: Colors.transparent,
-                            borderRadius: 30,
-                            buttonSize: 48,
-                            icon: const Icon(
-                              Icons.photo_camera,
-                              color: Colors.white,
-                              size: 20,
-                            ),
-                            onPressed: () {
-                              print('IconButton pressed ...');
-                            },
-                          ),
-                        )
-                      ],
-                    ),
+                ? Expanded(
+                    child: Stack(children: [
                     SizedBox(height: 150, child: buildZone2(context)),
-                  ])
+                    Container(
+                        alignment: Alignment.center,
+                        child: const Expanded(child: Text('Drop file here'))),
+                    Container(
+                        alignment: Alignment.topRight,
+                        child: FlutterFlowIconButton(
+                          fillColor: Colors.black54,
+                          borderColor: Colors.transparent,
+                          borderRadius: 30,
+                          buttonSize: 48,
+                          icon: const Icon(
+                            Icons.photo_camera,
+                            color: Colors.white,
+                            size: 20,
+                          ),
+                          onPressed: () async {
+                            print('IconButton pressed ...');
+                            var ev = await controller2.pickFiles();
+                            onDrop(controller2, (ev as List).elementAt(0));
+                          },
+                        )),
+                  ]))
                 : Column(
                     children: (uploadInProgress == false &&
                             uploadedFileUrl != null)
@@ -279,7 +278,7 @@ class _FileUploadWithDropState extends State<FileUploadWithDrop> {
           fileSize: totalBytes,
           fileType: widget.fileType);
 
-      print('result of upload: ${uploadedFile}');
+      print('result of upload: ${uploadedFile.remoteUrl}');
 
       setState(() {
         uploadInProgress = false;

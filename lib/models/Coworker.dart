@@ -19,7 +19,9 @@
 
 // ignore_for_file: public_member_api_docs, annotate_overrides, dead_code, dead_codepublic_member_api_docs, depend_on_referenced_packages, file_names, library_private_types_in_public_api, no_leading_underscores_for_library_prefixes, no_leading_underscores_for_local_identifiers, non_constant_identifier_names, null_check_on_nullable_type_parameter, prefer_adjacent_string_concatenation, prefer_const_constructors, prefer_if_null_operators, prefer_interpolation_to_compose_strings, slash_for_doc_comments, sort_child_properties_last, unnecessary_const, unnecessary_constructor_name, unnecessary_late, unnecessary_new, unnecessary_null_aware_assignments, unnecessary_nullable_for_final_variable_declarations, unnecessary_string_interpolations, use_build_context_synchronously
 
+import 'ModelProvider.dart';
 import 'package:amplify_core/amplify_core.dart';
+import 'package:collection/collection.dart';
 import 'package:flutter/foundation.dart';
 
 
@@ -32,6 +34,7 @@ class Coworker extends Model {
   final String? _displayName;
   final String? _photoUrl;
   final String? _description;
+  final List<ContentCoworker>? _contents;
   final TemporalDateTime? _createdAt;
   final TemporalDateTime? _updatedAt;
 
@@ -64,6 +67,10 @@ class Coworker extends Model {
     return _description;
   }
   
+  List<ContentCoworker>? get contents {
+    return _contents;
+  }
+  
   TemporalDateTime? get createdAt {
     return _createdAt;
   }
@@ -72,15 +79,16 @@ class Coworker extends Model {
     return _updatedAt;
   }
   
-  const Coworker._internal({required this.id, email, displayName, photoUrl, description, createdAt, updatedAt}): _email = email, _displayName = displayName, _photoUrl = photoUrl, _description = description, _createdAt = createdAt, _updatedAt = updatedAt;
+  const Coworker._internal({required this.id, email, displayName, photoUrl, description, contents, createdAt, updatedAt}): _email = email, _displayName = displayName, _photoUrl = photoUrl, _description = description, _contents = contents, _createdAt = createdAt, _updatedAt = updatedAt;
   
-  factory Coworker({String? id, String? email, String? displayName, String? photoUrl, String? description}) {
+  factory Coworker({String? id, String? email, String? displayName, String? photoUrl, String? description, List<ContentCoworker>? contents}) {
     return Coworker._internal(
       id: id == null ? UUID.getUUID() : id,
       email: email,
       displayName: displayName,
       photoUrl: photoUrl,
-      description: description);
+      description: description,
+      contents: contents != null ? List<ContentCoworker>.unmodifiable(contents) : contents);
   }
   
   bool equals(Object other) {
@@ -95,7 +103,8 @@ class Coworker extends Model {
       _email == other._email &&
       _displayName == other._displayName &&
       _photoUrl == other._photoUrl &&
-      _description == other._description;
+      _description == other._description &&
+      DeepCollectionEquality().equals(_contents, other._contents);
   }
   
   @override
@@ -118,13 +127,14 @@ class Coworker extends Model {
     return buffer.toString();
   }
   
-  Coworker copyWith({String? email, String? displayName, String? photoUrl, String? description}) {
+  Coworker copyWith({String? email, String? displayName, String? photoUrl, String? description, List<ContentCoworker>? contents}) {
     return Coworker._internal(
       id: id,
       email: email ?? this.email,
       displayName: displayName ?? this.displayName,
       photoUrl: photoUrl ?? this.photoUrl,
-      description: description ?? this.description);
+      description: description ?? this.description,
+      contents: contents ?? this.contents);
   }
   
   Coworker.fromJson(Map<String, dynamic> json)  
@@ -133,15 +143,21 @@ class Coworker extends Model {
       _displayName = json['displayName'],
       _photoUrl = json['photoUrl'],
       _description = json['description'],
+      _contents = json['contents'] is List
+        ? (json['contents'] as List)
+          .where((e) => e?['serializedData'] != null)
+          .map((e) => ContentCoworker.fromJson(new Map<String, dynamic>.from(e['serializedData'])))
+          .toList()
+        : null,
       _createdAt = json['createdAt'] != null ? TemporalDateTime.fromString(json['createdAt']) : null,
       _updatedAt = json['updatedAt'] != null ? TemporalDateTime.fromString(json['updatedAt']) : null;
   
   Map<String, dynamic> toJson() => {
-    'id': id, 'email': _email, 'displayName': _displayName, 'photoUrl': _photoUrl, 'description': _description, 'createdAt': _createdAt?.format(), 'updatedAt': _updatedAt?.format()
+    'id': id, 'email': _email, 'displayName': _displayName, 'photoUrl': _photoUrl, 'description': _description, 'contents': _contents?.map((ContentCoworker? e) => e?.toJson()).toList(), 'createdAt': _createdAt?.format(), 'updatedAt': _updatedAt?.format()
   };
   
   Map<String, Object?> toMap() => {
-    'id': id, 'email': _email, 'displayName': _displayName, 'photoUrl': _photoUrl, 'description': _description, 'createdAt': _createdAt, 'updatedAt': _updatedAt
+    'id': id, 'email': _email, 'displayName': _displayName, 'photoUrl': _photoUrl, 'description': _description, 'contents': _contents, 'createdAt': _createdAt, 'updatedAt': _updatedAt
   };
 
   static final QueryModelIdentifier<CoworkerModelIdentifier> MODEL_IDENTIFIER = QueryModelIdentifier<CoworkerModelIdentifier>();
@@ -150,6 +166,9 @@ class Coworker extends Model {
   static final QueryField DISPLAYNAME = QueryField(fieldName: "displayName");
   static final QueryField PHOTOURL = QueryField(fieldName: "photoUrl");
   static final QueryField DESCRIPTION = QueryField(fieldName: "description");
+  static final QueryField CONTENTS = QueryField(
+    fieldName: "contents",
+    fieldType: ModelFieldType(ModelFieldTypeEnum.model, ofModelName: 'ContentCoworker'));
   static var schema = Model.defineSchema(define: (ModelSchemaDefinition modelSchemaDefinition) {
     modelSchemaDefinition.name = "Coworker";
     modelSchemaDefinition.pluralName = "Coworkers";
@@ -189,6 +208,13 @@ class Coworker extends Model {
       key: Coworker.DESCRIPTION,
       isRequired: false,
       ofType: ModelFieldType(ModelFieldTypeEnum.string)
+    ));
+    
+    modelSchemaDefinition.addField(ModelFieldDefinition.hasMany(
+      key: Coworker.CONTENTS,
+      isRequired: false,
+      ofModelName: 'ContentCoworker',
+      associatedKey: ContentCoworker.COWORKER
     ));
     
     modelSchemaDefinition.addField(ModelFieldDefinition.nonQueryField(

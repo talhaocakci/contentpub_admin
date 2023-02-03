@@ -151,10 +151,10 @@ class ContentCoworker extends Model {
   static final QueryField ID = QueryField(fieldName: "id");
   static final QueryField COWORKER = QueryField(
     fieldName: "coworker",
-    fieldType: ModelFieldType(ModelFieldTypeEnum.model, ofModelName: (Coworker).toString()));
+    fieldType: ModelFieldType(ModelFieldTypeEnum.model, ofModelName: 'Coworker'));
   static final QueryField CONTENT = QueryField(
     fieldName: "content",
-    fieldType: ModelFieldType(ModelFieldTypeEnum.model, ofModelName: (Content).toString()));
+    fieldType: ModelFieldType(ModelFieldTypeEnum.model, ofModelName: 'Content'));
   static var schema = Model.defineSchema(define: (ModelSchemaDefinition modelSchemaDefinition) {
     modelSchemaDefinition.name = "ContentCoworker";
     modelSchemaDefinition.pluralName = "ContentCoworkers";
@@ -169,15 +169,15 @@ class ContentCoworker extends Model {
     modelSchemaDefinition.addField(ModelFieldDefinition.belongsTo(
       key: ContentCoworker.COWORKER,
       isRequired: true,
-      targetNames: ["coworkerId"],
-      ofModelName: (Coworker).toString()
+      targetNames: ['coworkerId'],
+      ofModelName: 'Coworker'
     ));
     
     modelSchemaDefinition.addField(ModelFieldDefinition.belongsTo(
       key: ContentCoworker.CONTENT,
       isRequired: true,
-      targetNames: ["contentId"],
-      ofModelName: (Content).toString()
+      targetNames: ['contentId'],
+      ofModelName: 'Content'
     ));
     
     modelSchemaDefinition.addField(ModelFieldDefinition.nonQueryField(
@@ -202,6 +202,11 @@ class _ContentCoworkerModelType extends ModelType<ContentCoworker> {
   @override
   ContentCoworker fromJson(Map<String, dynamic> jsonData) {
     return ContentCoworker.fromJson(jsonData);
+  }
+  
+  @override
+  String modelName() {
+    return 'ContentCoworker';
   }
 }
 

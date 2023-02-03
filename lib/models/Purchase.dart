@@ -39,6 +39,8 @@ class Purchase extends Model {
   final Bundle? _bundle;
   final String? _stripeProductId;
   final TenantConfiguration? _tenant;
+  final bool? _isActive;
+  final TemporalDate? _cancellationDate;
   final TemporalDateTime? _createdAt;
   final TemporalDateTime? _updatedAt;
   final String? _purchaseBundleId;
@@ -106,6 +108,14 @@ class Purchase extends Model {
     return _tenant;
   }
   
+  bool? get isActive {
+    return _isActive;
+  }
+  
+  TemporalDate? get cancellationDate {
+    return _cancellationDate;
+  }
+  
   TemporalDateTime? get createdAt {
     return _createdAt;
   }
@@ -122,9 +132,9 @@ class Purchase extends Model {
     return _purchaseTenantId;
   }
   
-  const Purchase._internal({required this.id, purchaseTime, validTill, source, stripePaymentIntentId, stripePriceId, purchaseType, required customerID, bundle, stripeProductId, tenant, createdAt, updatedAt, purchaseBundleId, purchaseTenantId}): _purchaseTime = purchaseTime, _validTill = validTill, _source = source, _stripePaymentIntentId = stripePaymentIntentId, _stripePriceId = stripePriceId, _purchaseType = purchaseType, _customerID = customerID, _bundle = bundle, _stripeProductId = stripeProductId, _tenant = tenant, _createdAt = createdAt, _updatedAt = updatedAt, _purchaseBundleId = purchaseBundleId, _purchaseTenantId = purchaseTenantId;
+  const Purchase._internal({required this.id, purchaseTime, validTill, source, stripePaymentIntentId, stripePriceId, purchaseType, required customerID, bundle, stripeProductId, tenant, isActive, cancellationDate, createdAt, updatedAt, purchaseBundleId, purchaseTenantId}): _purchaseTime = purchaseTime, _validTill = validTill, _source = source, _stripePaymentIntentId = stripePaymentIntentId, _stripePriceId = stripePriceId, _purchaseType = purchaseType, _customerID = customerID, _bundle = bundle, _stripeProductId = stripeProductId, _tenant = tenant, _isActive = isActive, _cancellationDate = cancellationDate, _createdAt = createdAt, _updatedAt = updatedAt, _purchaseBundleId = purchaseBundleId, _purchaseTenantId = purchaseTenantId;
   
-  factory Purchase({String? id, TemporalDate? purchaseTime, TemporalDate? validTill, Source? source, String? stripePaymentIntentId, String? stripePriceId, PurchaseType? purchaseType, required String customerID, Bundle? bundle, String? stripeProductId, TenantConfiguration? tenant, String? purchaseBundleId, String? purchaseTenantId}) {
+  factory Purchase({String? id, TemporalDate? purchaseTime, TemporalDate? validTill, Source? source, String? stripePaymentIntentId, String? stripePriceId, PurchaseType? purchaseType, required String customerID, Bundle? bundle, String? stripeProductId, TenantConfiguration? tenant, bool? isActive, TemporalDate? cancellationDate, String? purchaseBundleId, String? purchaseTenantId}) {
     return Purchase._internal(
       id: id == null ? UUID.getUUID() : id,
       purchaseTime: purchaseTime,
@@ -137,6 +147,8 @@ class Purchase extends Model {
       bundle: bundle,
       stripeProductId: stripeProductId,
       tenant: tenant,
+      isActive: isActive,
+      cancellationDate: cancellationDate,
       purchaseBundleId: purchaseBundleId,
       purchaseTenantId: purchaseTenantId);
   }
@@ -160,6 +172,8 @@ class Purchase extends Model {
       _bundle == other._bundle &&
       _stripeProductId == other._stripeProductId &&
       _tenant == other._tenant &&
+      _isActive == other._isActive &&
+      _cancellationDate == other._cancellationDate &&
       _purchaseBundleId == other._purchaseBundleId &&
       _purchaseTenantId == other._purchaseTenantId;
   }
@@ -181,6 +195,8 @@ class Purchase extends Model {
     buffer.write("purchaseType=" + (_purchaseType != null ? enumToString(_purchaseType)! : "null") + ", ");
     buffer.write("customerID=" + "$_customerID" + ", ");
     buffer.write("stripeProductId=" + "$_stripeProductId" + ", ");
+    buffer.write("isActive=" + (_isActive != null ? _isActive!.toString() : "null") + ", ");
+    buffer.write("cancellationDate=" + (_cancellationDate != null ? _cancellationDate!.format() : "null") + ", ");
     buffer.write("createdAt=" + (_createdAt != null ? _createdAt!.format() : "null") + ", ");
     buffer.write("updatedAt=" + (_updatedAt != null ? _updatedAt!.format() : "null") + ", ");
     buffer.write("purchaseBundleId=" + "$_purchaseBundleId" + ", ");
@@ -190,7 +206,7 @@ class Purchase extends Model {
     return buffer.toString();
   }
   
-  Purchase copyWith({TemporalDate? purchaseTime, TemporalDate? validTill, Source? source, String? stripePaymentIntentId, String? stripePriceId, PurchaseType? purchaseType, String? customerID, Bundle? bundle, String? stripeProductId, TenantConfiguration? tenant, String? purchaseBundleId, String? purchaseTenantId}) {
+  Purchase copyWith({TemporalDate? purchaseTime, TemporalDate? validTill, Source? source, String? stripePaymentIntentId, String? stripePriceId, PurchaseType? purchaseType, String? customerID, Bundle? bundle, String? stripeProductId, TenantConfiguration? tenant, bool? isActive, TemporalDate? cancellationDate, String? purchaseBundleId, String? purchaseTenantId}) {
     return Purchase._internal(
       id: id,
       purchaseTime: purchaseTime ?? this.purchaseTime,
@@ -203,6 +219,8 @@ class Purchase extends Model {
       bundle: bundle ?? this.bundle,
       stripeProductId: stripeProductId ?? this.stripeProductId,
       tenant: tenant ?? this.tenant,
+      isActive: isActive ?? this.isActive,
+      cancellationDate: cancellationDate ?? this.cancellationDate,
       purchaseBundleId: purchaseBundleId ?? this.purchaseBundleId,
       purchaseTenantId: purchaseTenantId ?? this.purchaseTenantId);
   }
@@ -223,17 +241,19 @@ class Purchase extends Model {
       _tenant = json['tenant']?['serializedData'] != null
         ? TenantConfiguration.fromJson(new Map<String, dynamic>.from(json['tenant']['serializedData']))
         : null,
+      _isActive = json['isActive'],
+      _cancellationDate = json['cancellationDate'] != null ? TemporalDate.fromString(json['cancellationDate']) : null,
       _createdAt = json['createdAt'] != null ? TemporalDateTime.fromString(json['createdAt']) : null,
       _updatedAt = json['updatedAt'] != null ? TemporalDateTime.fromString(json['updatedAt']) : null,
       _purchaseBundleId = json['purchaseBundleId'],
       _purchaseTenantId = json['purchaseTenantId'];
   
   Map<String, dynamic> toJson() => {
-    'id': id, 'purchaseTime': _purchaseTime?.format(), 'validTill': _validTill?.format(), 'source': enumToString(_source), 'stripePaymentIntentId': _stripePaymentIntentId, 'stripePriceId': _stripePriceId, 'purchaseType': enumToString(_purchaseType), 'customerID': _customerID, 'bundle': _bundle?.toJson(), 'stripeProductId': _stripeProductId, 'tenant': _tenant?.toJson(), 'createdAt': _createdAt?.format(), 'updatedAt': _updatedAt?.format(), 'purchaseBundleId': _purchaseBundleId, 'purchaseTenantId': _purchaseTenantId
+    'id': id, 'purchaseTime': _purchaseTime?.format(), 'validTill': _validTill?.format(), 'source': enumToString(_source), 'stripePaymentIntentId': _stripePaymentIntentId, 'stripePriceId': _stripePriceId, 'purchaseType': enumToString(_purchaseType), 'customerID': _customerID, 'bundle': _bundle?.toJson(), 'stripeProductId': _stripeProductId, 'tenant': _tenant?.toJson(), 'isActive': _isActive, 'cancellationDate': _cancellationDate?.format(), 'createdAt': _createdAt?.format(), 'updatedAt': _updatedAt?.format(), 'purchaseBundleId': _purchaseBundleId, 'purchaseTenantId': _purchaseTenantId
   };
   
   Map<String, Object?> toMap() => {
-    'id': id, 'purchaseTime': _purchaseTime, 'validTill': _validTill, 'source': _source, 'stripePaymentIntentId': _stripePaymentIntentId, 'stripePriceId': _stripePriceId, 'purchaseType': _purchaseType, 'customerID': _customerID, 'bundle': _bundle, 'stripeProductId': _stripeProductId, 'tenant': _tenant, 'createdAt': _createdAt, 'updatedAt': _updatedAt, 'purchaseBundleId': _purchaseBundleId, 'purchaseTenantId': _purchaseTenantId
+    'id': id, 'purchaseTime': _purchaseTime, 'validTill': _validTill, 'source': _source, 'stripePaymentIntentId': _stripePaymentIntentId, 'stripePriceId': _stripePriceId, 'purchaseType': _purchaseType, 'customerID': _customerID, 'bundle': _bundle, 'stripeProductId': _stripeProductId, 'tenant': _tenant, 'isActive': _isActive, 'cancellationDate': _cancellationDate, 'createdAt': _createdAt, 'updatedAt': _updatedAt, 'purchaseBundleId': _purchaseBundleId, 'purchaseTenantId': _purchaseTenantId
   };
 
   static final QueryModelIdentifier<PurchaseModelIdentifier> MODEL_IDENTIFIER = QueryModelIdentifier<PurchaseModelIdentifier>();
@@ -252,6 +272,8 @@ class Purchase extends Model {
   static final QueryField TENANT = QueryField(
     fieldName: "tenant",
     fieldType: ModelFieldType(ModelFieldTypeEnum.model, ofModelName: 'TenantConfiguration'));
+  static final QueryField ISACTIVE = QueryField(fieldName: "isActive");
+  static final QueryField CANCELLATIONDATE = QueryField(fieldName: "cancellationDate");
   static final QueryField PURCHASEBUNDLEID = QueryField(fieldName: "purchaseBundleId");
   static final QueryField PURCHASETENANTID = QueryField(fieldName: "purchaseTenantId");
   static var schema = Model.defineSchema(define: (ModelSchemaDefinition modelSchemaDefinition) {
@@ -335,6 +357,18 @@ class Purchase extends Model {
       isRequired: false,
       ofModelName: 'TenantConfiguration',
       associatedKey: TenantConfiguration.ID
+    ));
+    
+    modelSchemaDefinition.addField(ModelFieldDefinition.field(
+      key: Purchase.ISACTIVE,
+      isRequired: false,
+      ofType: ModelFieldType(ModelFieldTypeEnum.bool)
+    ));
+    
+    modelSchemaDefinition.addField(ModelFieldDefinition.field(
+      key: Purchase.CANCELLATIONDATE,
+      isRequired: false,
+      ofType: ModelFieldType(ModelFieldTypeEnum.date)
     ));
     
     modelSchemaDefinition.addField(ModelFieldDefinition.nonQueryField(

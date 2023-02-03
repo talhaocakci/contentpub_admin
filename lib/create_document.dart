@@ -6,6 +6,7 @@ import 'package:contentpub_admin/models/Content.dart';
 import 'package:contentpub_admin/models/ContentType.dart';
 import 'package:contentpub_admin/models/Course.dart';
 import 'package:contentpub_admin/models/Lesson.dart';
+import 'package:contentpub_admin/models/ModelProvider.dart';
 import 'package:contentpub_admin/models/Section.dart';
 import 'package:contentpub_admin/models/editable/editables.dart';
 import 'package:flutter/material.dart';
@@ -35,8 +36,14 @@ class _CreateDocumentWidgetState extends State<CreateDocumentWidget> {
   Content? content;
   EditableContent? editableContent;
 
+  List<Coworker?>? coworkers;
+
+  String? coworkerId;
+
   @override
   void initState() {
+    getCoworkers();
+    initContent();
     super.initState();
   }
 
@@ -50,19 +57,18 @@ class _CreateDocumentWidgetState extends State<CreateDocumentWidget> {
     }
 
     content = await getContent(widget.contentId);
-    print('in initCourse: ${content}');
+    editableContent = EditableContent.toEditable(content!);
+    print('in init content: ${content}');
 
-    editableContent = content != null
-        ? EditableContent.toEditable(content!)
-        : EditableContent(
-            id: content!.id,
-            type: content!.type ?? ContentType.DOCUMENT,
-            newItem: true);
+    setState(() {});
 
-    print('editable course : ${editableContent!.name}');
+    return initPage();
+  }
 
-    return editableContent ??
-        EditableContent(id: '', type: ContentType.DOCUMENT);
+  Future<EditableContent> initPage() async {
+    print('editable content : ${editableContent!.name}');
+
+    return editableContent!;
   }
 
   @override
@@ -106,7 +112,7 @@ class _CreateDocumentWidgetState extends State<CreateDocumentWidget> {
         elevation: 0,
       ),
       body: FutureBuilder(
-        future: initContent(),
+        future: initPage(),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             return Center(
@@ -140,70 +146,6 @@ class _CreateDocumentWidgetState extends State<CreateDocumentWidget> {
                         child: Column(
                           mainAxisSize: MainAxisSize.max,
                           children: [
-                            Row(
-                              mainAxisSize: MainAxisSize.max,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Expanded(
-                                  child: Stack(
-                                    children: [
-                                      Align(
-                                        alignment: AlignmentDirectional(0, 0),
-                                        child: Image.network(
-                                          'https://images.unsplash.com/photo-1626544827763-d516dce335e2?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MTc1fHxwcm9kdWN0fGVufDB8fDB8fA%3D%3D&auto=format&fit=crop&w=800&q=60',
-                                          width:
-                                              MediaQuery.of(context).size.width,
-                                          height: 130,
-                                          fit: BoxFit.cover,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            ),
-                            Text('Cover photo:'),
-                            Row(
-                              mainAxisSize: MainAxisSize.max,
-                              children: [
-                                Expanded(
-                                  child: FileUploadWithDrop(
-                                      remoteDirectory: content!.id,
-                                      remoteFileName: 'photo',
-                                      isPublic: true,
-                                      remoteUrl: editableContent?.photoUrl,
-                                      fileType: FileType.PICTURE,
-                                      onComplete: (uploadedFile) {
-                                        editableContent?.photoUrl =
-                                            uploadedFile.remoteUrl;
-                                      },
-                                      onClear: () {
-                                        print('Clear the object here as well');
-                                      }),
-                                ),
-                              ],
-                            ),
-                            Text('Promo video :'),
-                            Row(
-                              mainAxisSize: MainAxisSize.max,
-                              children: [
-                                Expanded(
-                                  child: FileUploadWithDrop(
-                                      remoteDirectory: editableContent!.id,
-                                      remoteFileName: 'promo-video',
-                                      isPublic: true,
-                                      fileType: FileType.VIDEO,
-                                      remoteUrl: editableContent?.promoVideoUrl,
-                                      onComplete: (uploadedFile) {
-                                        editableContent?.promoVideoUrl =
-                                            uploadedFile.remoteUrl;
-                                      },
-                                      onClear: () {
-                                        print('Clear the object here as well');
-                                      }),
-                                ),
-                              ],
-                            ),
                             Padding(
                               padding:
                                   EdgeInsetsDirectional.fromSTEB(8, 8, 8, 8),
@@ -333,8 +275,8 @@ class _CreateDocumentWidgetState extends State<CreateDocumentWidget> {
                               children: [
                                 Expanded(
                                   child: FileUploadWithDrop(
-                                      remoteDirectory: content!.id,
-                                      remoteFileName: 'file',
+                                      remoteDirectory: 'files',
+                                      remoteFileName: editableContent!.id,
                                       isPublic: true,
                                       remoteUrl: editableContent?.s3Url,
                                       fileType: FileType.OTHER,
@@ -346,6 +288,79 @@ class _CreateDocumentWidgetState extends State<CreateDocumentWidget> {
                                         print('Clear the object here as well');
                                       }),
                                 ),
+                              ],
+                            ),
+                            Text('Cover photo:'),
+                            Row(
+                              mainAxisSize: MainAxisSize.max,
+                              children: [
+                                Expanded(
+                                  child: FileUploadWithDrop(
+                                      remoteDirectory: content!.id,
+                                      remoteFileName: 'photo',
+                                      isPublic: true,
+                                      remoteUrl: editableContent?.photoUrl,
+                                      fileType: FileType.PICTURE,
+                                      onComplete: (uploadedFile) {
+                                        editableContent?.photoUrl =
+                                            uploadedFile.remoteUrl;
+                                      },
+                                      onClear: () {
+                                        print('Clear the object here as well');
+                                      }),
+                                ),
+                              ],
+                            ),
+                            Text('Promo video :'),
+                            Row(
+                              mainAxisSize: MainAxisSize.max,
+                              children: [
+                                Expanded(
+                                  child: FileUploadWithDrop(
+                                      remoteDirectory: editableContent!.id,
+                                      remoteFileName: 'promo-video',
+                                      isPublic: true,
+                                      fileType: FileType.VIDEO,
+                                      remoteUrl: editableContent?.promoVideoUrl,
+                                      onComplete: (uploadedFile) {
+                                        editableContent?.promoVideoUrl =
+                                            uploadedFile.remoteUrl;
+                                      },
+                                      onClear: () {
+                                        print('Clear the object here as well');
+                                      }),
+                                ),
+                              ],
+                            ),
+                            Text('Authors'),
+                            Row(
+                              children: [
+                                for (var contentCoworker
+                                    in content!.Coworkers ?? List.empty())
+                                  Expanded(
+                                      child: DropdownButtonFormField<Coworker>(
+                                    value: contentCoworker!.coworker,
+                                    items: [
+                                      for (var coworker in coworkers!)
+                                        DropdownMenuItem(
+                                            value: coworker,
+                                            child: Text(coworker!.displayName ??
+                                                'Unknown author')),
+                                    ],
+                                    onChanged: (value) {
+                                      print(
+                                          'author selection changed ${value}');
+
+                                      ContentCoworker cc = ContentCoworker(
+                                          id: '${content!.id}--${value!.id}}',
+                                          coworker: value,
+                                          content: content!);
+
+                                      editableContent!.coworkerRelations =
+                                          List.from([cc]);
+                                      print(value);
+                                    },
+                                  ))
                               ],
                             ),
                             Row(children: [
@@ -412,6 +427,18 @@ class _CreateDocumentWidgetState extends State<CreateDocumentWidget> {
                 s3Url
                 type
                 description
+                 Coworkers {
+                  items {
+                    contentId
+                    coworkerId
+                    id
+                    coworker {
+                      id
+                      displayName
+                      description
+                    }
+                  }
+                }
               }
             }
     ''';
@@ -434,42 +461,126 @@ class _CreateDocumentWidgetState extends State<CreateDocumentWidget> {
     return Content();
   }
 
-  Future<void> saveContent() async {
-    var uuid = Uuid();
+  Future<void> getCoworkers() async {
+    String graphQLQuery = '''query MyQuery2 {
+        listCoworkers {
+          items {
+            createdAt
+            description
+            displayName
+            id
+            photoUrl
+            updatedAt
+            email
+          }
+        }
+      }
+    ''';
 
-    String contentId = (widget.contentId != '') ? widget.contentId : uuid.v4();
+    final request = GraphQLRequest(
+        document: graphQLQuery,
+        modelType: const PaginatedModelType(Coworker.classType),
+        decodePath: 'listCoworkers');
+
+    try {
+      var response = await Amplify.API.query(request: request).response;
+      PaginatedResult<Coworker> result = response.data;
+
+      coworkers = result.items.toList();
+
+      setState(() {});
+
+      //print('Retrieved course: ${mycourse}');
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  Future<void> deleteExistingCoworkerRelations(Content content) async {
+    for (var coworker in content.Coworkers ?? List.empty()) {
+      deleteCoworkerRelation('${content.id}--${coworker.id}');
+    }
+  }
+
+  Future<void> deleteCoworkerRelation(String id) async {
+    String query = ''' mutation MyMutation {
+        deleteContentCoworker(input: {id: "$id"})
+      }
+      ''';
+
+    final request = GraphQLRequest(
+        document: query,
+        //modelType: const PaginatedModelType(Content.classType),
+        variables: <String, String>{},
+        decodePath: 'createContentCoworker');
+
+    final response = await Amplify.API.query(request: request).response;
+
+    if (!response.hasErrors) {
+      print('content author relation deleted $id');
+    }
+  }
+
+  Future<void> saveContent() async {
+    String contentId = editableContent!.id;
 
     print('saving content with id ${editableContent!.id}');
 
-    Content content = Content(
-        id: contentId,
-        name: editableContent!.name,
-        type: editableContent!.type,
-        isPublished: editableContent!.isPublished,
-        isArchived: editableContent!.isArchived,
-        photoUrl: editableContent?.photoUrl,
-        promoVideoUrl: editableContent?.promoVideoUrl,
-        s3Url: editableContent?.s3Url,
-        owner: editableContent?.owner,
-        description: editableContent!.description);
+    String id = editableContent!.id;
 
     print('editableContent new ${editableContent!.newItem}');
 
-    if (editableContent!.newItem ?? false) {
-      final contentSaveRequest = ModelMutations.create(content);
+    if (editableContent!.newItem == true) {
+      content = EditableContent.fromEditable(editableContent!);
+      final contentSaveRequest = ModelMutations.create(content!);
 
       var response =
           await Amplify.API.mutate(request: contentSaveRequest).response;
       print(response.data);
       print(response.errors);
+
+      editableContent = EditableContent.toEditable(content!);
+      editableContent!.newItem = false;
     } else {
-      final contentSaveRequest = ModelMutations.update(content);
+      content = EditableContent.fromEditable(editableContent!);
+
+      final contentSaveRequest = ModelMutations.update(content!);
 
       var response =
           await Amplify.API.mutate(request: contentSaveRequest).response;
 
       print(response.data);
       print(response.errors);
+
+      deleteExistingCoworkerRelations(content!);
+    }
+
+    if (content!.Coworkers != null) {
+      for (ContentCoworker contentCoworker
+          in content!.Coworkers ?? List.empty()) {
+        String graphQLQuery = ''' mutation MyMutation {
+              createContentCoworker(
+                input: {
+                  contentId: "${content!.id}", 
+                  coworkerId: "${contentCoworker.coworker.id}",
+                  id: "${contentCoworker.id}"}) {
+                    id
+                    }
+              }
+          ''';
+
+        final request = GraphQLRequest(
+            document: graphQLQuery,
+            //modelType: const PaginatedModelType(Content.classType),
+            variables: <String, String>{},
+            decodePath: 'createContentCoworker');
+
+        final response = await Amplify.API.query(request: request).response;
+
+        print(response.errors);
+        print(response.data);
+        print('Content author relation created ${contentCoworker.id}');
+      }
     }
 
     setState(() {

@@ -4,6 +4,7 @@ type Coworker @model @auth(rules: [{allow: public}]) {
   displayName: String
   photoUrl: String
   description: String
+  contents: [Content] @manyToMany(relationName: "ContentCoworker")
 }
 
 type TenantConfiguration @model @auth(rules: [{allow: public}]) {
@@ -23,6 +24,7 @@ type Price @model @auth(rules: [{allow: public}]) {
   amount: Float
   bundleID: ID! @index(name: "byBundle")
   recurrenceInterval: Int
+  trialPeriod: Int
 }
 
 type Section @model @auth(rules: [{allow: public}]) {
@@ -58,6 +60,7 @@ type Content @model @auth(rules: [{allow: public}]) {
   promoVideoUrl: String
   isPublished: Boolean
   isArchived: Boolean
+  Coworkers: [Coworker] @manyToMany(relationName: "ContentCoworker")
 }
 
 type Bundle @model @auth(rules: [{allow: public}]) {
@@ -121,6 +124,8 @@ type Purchase @model @auth(rules: [{allow: public}]) {
   bundle: Bundle @hasOne
   stripeProductId: String
   tenant: TenantConfiguration @hasOne
+  isActive: Boolean
+  cancellationDate: AWSDate
 }
 
 type Lesson @model @auth(rules: [{allow: public}]) {

@@ -41,6 +41,7 @@ class Content extends Model {
   final String? _promoVideoUrl;
   final bool? _isPublished;
   final bool? _isArchived;
+  final List<ContentCoworker>? _Coworkers;
   final TemporalDateTime? _createdAt;
   final TemporalDateTime? _updatedAt;
 
@@ -101,6 +102,10 @@ class Content extends Model {
     return _isArchived;
   }
   
+  List<ContentCoworker>? get Coworkers {
+    return _Coworkers;
+  }
+  
   TemporalDateTime? get createdAt {
     return _createdAt;
   }
@@ -109,9 +114,9 @@ class Content extends Model {
     return _updatedAt;
   }
   
-  const Content._internal({required this.id, name, description, s3Url, type, objectId, owner, bundles, photoUrl, promoVideoUrl, isPublished, isArchived, createdAt, updatedAt}): _name = name, _description = description, _s3Url = s3Url, _type = type, _objectId = objectId, _owner = owner, _bundles = bundles, _photoUrl = photoUrl, _promoVideoUrl = promoVideoUrl, _isPublished = isPublished, _isArchived = isArchived, _createdAt = createdAt, _updatedAt = updatedAt;
+  const Content._internal({required this.id, name, description, s3Url, type, objectId, owner, bundles, photoUrl, promoVideoUrl, isPublished, isArchived, Coworkers, createdAt, updatedAt}): _name = name, _description = description, _s3Url = s3Url, _type = type, _objectId = objectId, _owner = owner, _bundles = bundles, _photoUrl = photoUrl, _promoVideoUrl = promoVideoUrl, _isPublished = isPublished, _isArchived = isArchived, _Coworkers = Coworkers, _createdAt = createdAt, _updatedAt = updatedAt;
   
-  factory Content({String? id, String? name, String? description, String? s3Url, ContentType? type, String? objectId, String? owner, List<BundleContent>? bundles, String? photoUrl, String? promoVideoUrl, bool? isPublished, bool? isArchived}) {
+  factory Content({String? id, String? name, String? description, String? s3Url, ContentType? type, String? objectId, String? owner, List<BundleContent>? bundles, String? photoUrl, String? promoVideoUrl, bool? isPublished, bool? isArchived, List<ContentCoworker>? Coworkers}) {
     return Content._internal(
       id: id == null ? UUID.getUUID() : id,
       name: name,
@@ -124,7 +129,8 @@ class Content extends Model {
       photoUrl: photoUrl,
       promoVideoUrl: promoVideoUrl,
       isPublished: isPublished,
-      isArchived: isArchived);
+      isArchived: isArchived,
+      Coworkers: Coworkers != null ? List<ContentCoworker>.unmodifiable(Coworkers) : Coworkers);
   }
   
   bool equals(Object other) {
@@ -146,7 +152,8 @@ class Content extends Model {
       _photoUrl == other._photoUrl &&
       _promoVideoUrl == other._promoVideoUrl &&
       _isPublished == other._isPublished &&
-      _isArchived == other._isArchived;
+      _isArchived == other._isArchived &&
+      DeepCollectionEquality().equals(_Coworkers, other._Coworkers);
   }
   
   @override
@@ -175,7 +182,7 @@ class Content extends Model {
     return buffer.toString();
   }
   
-  Content copyWith({String? name, String? description, String? s3Url, ContentType? type, String? objectId, String? owner, List<BundleContent>? bundles, String? photoUrl, String? promoVideoUrl, bool? isPublished, bool? isArchived}) {
+  Content copyWith({String? name, String? description, String? s3Url, ContentType? type, String? objectId, String? owner, List<BundleContent>? bundles, String? photoUrl, String? promoVideoUrl, bool? isPublished, bool? isArchived, List<ContentCoworker>? Coworkers}) {
     return Content._internal(
       id: id,
       name: name ?? this.name,
@@ -188,7 +195,8 @@ class Content extends Model {
       photoUrl: photoUrl ?? this.photoUrl,
       promoVideoUrl: promoVideoUrl ?? this.promoVideoUrl,
       isPublished: isPublished ?? this.isPublished,
-      isArchived: isArchived ?? this.isArchived);
+      isArchived: isArchived ?? this.isArchived,
+      Coworkers: Coworkers ?? this.Coworkers);
   }
   
   Content.fromJson(Map<String, dynamic> json)  
@@ -209,15 +217,21 @@ class Content extends Model {
       _promoVideoUrl = json['promoVideoUrl'],
       _isPublished = json['isPublished'],
       _isArchived = json['isArchived'],
+      _Coworkers = json['Coworkers'] is List
+        ? (json['Coworkers'] as List)
+          .where((e) => e?['serializedData'] != null)
+          .map((e) => ContentCoworker.fromJson(new Map<String, dynamic>.from(e['serializedData'])))
+          .toList()
+        : null,
       _createdAt = json['createdAt'] != null ? TemporalDateTime.fromString(json['createdAt']) : null,
       _updatedAt = json['updatedAt'] != null ? TemporalDateTime.fromString(json['updatedAt']) : null;
   
   Map<String, dynamic> toJson() => {
-    'id': id, 'name': _name, 'description': _description, 's3Url': _s3Url, 'type': enumToString(_type), 'objectId': _objectId, 'owner': _owner, 'bundles': _bundles?.map((BundleContent? e) => e?.toJson()).toList(), 'photoUrl': _photoUrl, 'promoVideoUrl': _promoVideoUrl, 'isPublished': _isPublished, 'isArchived': _isArchived, 'createdAt': _createdAt?.format(), 'updatedAt': _updatedAt?.format()
+    'id': id, 'name': _name, 'description': _description, 's3Url': _s3Url, 'type': enumToString(_type), 'objectId': _objectId, 'owner': _owner, 'bundles': _bundles?.map((BundleContent? e) => e?.toJson()).toList(), 'photoUrl': _photoUrl, 'promoVideoUrl': _promoVideoUrl, 'isPublished': _isPublished, 'isArchived': _isArchived, 'Coworkers': _Coworkers?.map((ContentCoworker? e) => e?.toJson()).toList(), 'createdAt': _createdAt?.format(), 'updatedAt': _updatedAt?.format()
   };
   
   Map<String, Object?> toMap() => {
-    'id': id, 'name': _name, 'description': _description, 's3Url': _s3Url, 'type': _type, 'objectId': _objectId, 'owner': _owner, 'bundles': _bundles, 'photoUrl': _photoUrl, 'promoVideoUrl': _promoVideoUrl, 'isPublished': _isPublished, 'isArchived': _isArchived, 'createdAt': _createdAt, 'updatedAt': _updatedAt
+    'id': id, 'name': _name, 'description': _description, 's3Url': _s3Url, 'type': _type, 'objectId': _objectId, 'owner': _owner, 'bundles': _bundles, 'photoUrl': _photoUrl, 'promoVideoUrl': _promoVideoUrl, 'isPublished': _isPublished, 'isArchived': _isArchived, 'Coworkers': _Coworkers, 'createdAt': _createdAt, 'updatedAt': _updatedAt
   };
 
   static final QueryModelIdentifier<ContentModelIdentifier> MODEL_IDENTIFIER = QueryModelIdentifier<ContentModelIdentifier>();
@@ -235,6 +249,9 @@ class Content extends Model {
   static final QueryField PROMOVIDEOURL = QueryField(fieldName: "promoVideoUrl");
   static final QueryField ISPUBLISHED = QueryField(fieldName: "isPublished");
   static final QueryField ISARCHIVED = QueryField(fieldName: "isArchived");
+  static final QueryField COWORKERS = QueryField(
+    fieldName: "Coworkers",
+    fieldType: ModelFieldType(ModelFieldTypeEnum.model, ofModelName: 'ContentCoworker'));
   static var schema = Model.defineSchema(define: (ModelSchemaDefinition modelSchemaDefinition) {
     modelSchemaDefinition.name = "Content";
     modelSchemaDefinition.pluralName = "Contents";
@@ -317,6 +334,13 @@ class Content extends Model {
       key: Content.ISARCHIVED,
       isRequired: false,
       ofType: ModelFieldType(ModelFieldTypeEnum.bool)
+    ));
+    
+    modelSchemaDefinition.addField(ModelFieldDefinition.hasMany(
+      key: Content.COWORKERS,
+      isRequired: false,
+      ofModelName: 'ContentCoworker',
+      associatedKey: ContentCoworker.CONTENT
     ));
     
     modelSchemaDefinition.addField(ModelFieldDefinition.nonQueryField(

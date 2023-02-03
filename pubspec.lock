@@ -974,18 +974,18 @@ packages:
     dependency: transitive
     description:
       name: sqflite
-      sha256: "067ab48dbc66bae05e18073a604443baa35957101bd3905b94f65e764c6d0688"
+      sha256: "78324387dc81df14f78df06019175a86a2ee0437624166c382e145d0a7fd9a4f"
       url: "https://pub.dev"
     source: hosted
-    version: "2.2.3"
+    version: "2.2.4+1"
   sqflite_common:
     dependency: transitive
     description:
       name: sqflite_common
-      sha256: b2ed22d1d62c944ec0dac5cc687ae99cb3331c3ebe146d726ed24704634b5ccd
+      sha256: bfd6973aaeeb93475bc0d875ac9aefddf7965ef22ce09790eb963992ffc5183f
       url: "https://pub.dev"
     source: hosted
-    version: "2.4.1"
+    version: "2.4.2+2"
   sqlite3:
     dependency: transitive
     description:
@@ -1278,34 +1278,34 @@ packages:
     dependency: "direct main"
     description:
       name: webview_flutter
-      sha256: "2f6d1bfa619a5126cc060f55b78e1703ed3ce0b707bc037bfe5000812764fc12"
+      sha256: f7ec234830f86d0ef2bd664e8460b0038b8c1a83ff076035cad74ac70273753c
       url: "https://pub.dev"
     source: hosted
-    version: "4.0.1"
+    version: "4.0.2"
   webview_flutter_android:
     dependency: transitive
     description:
       name: webview_flutter_android
-      sha256: d761501c5701ff60a48590511d24061a5fab3286a77cf18c01b028b815be64cd
+      sha256: "5f49a6e5fc59e21fcec5e1bbcd401afbee9792a24a4f3d9cef9b5bb0cd1e3767"
       url: "https://pub.dev"
     source: hosted
-    version: "3.1.1"
+    version: "3.2.4"
   webview_flutter_platform_interface:
     dependency: transitive
     description:
       name: webview_flutter_platform_interface
-      sha256: "461c4b749048761f8677f529e0841e634e987bd2251c83a9d9b066216818fc7c"
+      sha256: "8b2262dda5d26eabc600a7282a8c16a9473a0c765526afb0ffc33eef912f7968"
       url: "https://pub.dev"
     source: hosted
-    version: "2.0.0"
+    version: "2.0.1"
   webview_flutter_wkwebview:
     dependency: transitive
     description:
       name: webview_flutter_wkwebview
-      sha256: efc8f193635f4c33f9099613db80db8b7fa752f70352bef2404f79e8ab68e649
+      sha256: "92e7e7fa468f1df597fb9d37bcf1f303175cbe147c4dbdf06ecc323d950116eb"
       url: "https://pub.dev"
     source: hosted
-    version: "3.0.1"
+    version: "3.0.5"
   win32:
     dependency: transitive
     description:

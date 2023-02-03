@@ -3,6 +3,7 @@ import 'package:contentpub_admin/models/Bundle.dart';
 import 'package:contentpub_admin/models/Content.dart';
 import 'package:contentpub_admin/models/Course.dart';
 import 'package:contentpub_admin/models/Lesson.dart';
+import 'package:contentpub_admin/models/Coworker.dart';
 import 'package:contentpub_admin/models/ModelProvider.dart';
 import 'package:contentpub_admin/models/Price.dart';
 import 'package:contentpub_admin/models/PurchaseType.dart';
@@ -268,6 +269,7 @@ class EditableContent {
   String? owner;
   String? photoUrl;
   String? promoVideoUrl;
+  List<ContentCoworker>? coworkerRelations;
   bool? isPublished = false;
   bool? isArchived = false;
 
@@ -289,6 +291,7 @@ class EditableContent {
     editable.promoVideoUrl = content.promoVideoUrl;
     editable.isPublished = content.isPublished;
     editable.isArchived = content.isArchived;
+    editable.coworkerRelations = content.Coworkers;
 
     return editable;
   }
@@ -305,8 +308,45 @@ class EditableContent {
         photoUrl: editable.photoUrl,
         promoVideoUrl: editable.promoVideoUrl,
         isPublished: editable.isPublished,
+        Coworkers: editable.coworkerRelations!,
         isArchived: editable.isArchived);
 
     return content;
+  }
+}
+
+class EditableCoworker {
+  String id;
+  String? email;
+  String? displayName;
+  String? photoUrl;
+  String? description;
+  bool dirty = false;
+  bool newItem = false;
+
+  EditableCoworker(
+      {required this.id,
+      this.email,
+      this.displayName,
+      this.photoUrl,
+      this.description});
+
+  static Coworker fromEditable(EditableCoworker editable) {
+    return Coworker(
+        id: editable.id,
+        displayName: editable.displayName,
+        description: editable.description,
+        photoUrl: editable.photoUrl,
+        email: editable.email);
+  }
+
+  static EditableCoworker toEditable(Coworker coworker) {
+    EditableCoworker editable = EditableCoworker(id: coworker.id);
+    editable.email = coworker.email;
+    editable.description = coworker.description;
+    editable.displayName = coworker.displayName;
+    editable.photoUrl = coworker.photoUrl;
+
+    return editable;
   }
 }

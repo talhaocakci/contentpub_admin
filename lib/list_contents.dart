@@ -142,13 +142,6 @@ class _ListContentsWidgetState extends State<ListContentsWidget> {
                                           'https://images.unsplash.com/photo-1635863786408-69e343062dbc?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MTI2fHx3b3Jrb3V0fGVufDB8fDB8fA%3D%3D&auto=format&fit=crop&w=800&q=60',
                                         ).image,
                                       ),
-                                      boxShadow: [
-                                        const BoxShadow(
-                                          blurRadius: 3,
-                                          color: Color(0x33000000),
-                                          offset: Offset(0, 2),
-                                        )
-                                      ],
                                       borderRadius: BorderRadius.circular(8),
                                     ),
                                     child: Padding(
@@ -161,12 +154,6 @@ class _ListContentsWidgetState extends State<ListContentsWidget> {
                                         decoration: BoxDecoration(
                                           color: FlutterFlowTheme.of(context)
                                               .secondaryBackground,
-                                          borderRadius: const BorderRadius.only(
-                                            bottomLeft: Radius.circular(8),
-                                            bottomRight: Radius.circular(8),
-                                            topLeft: Radius.circular(0),
-                                            topRight: Radius.circular(0),
-                                          ),
                                         ),
                                         child: Padding(
                                           padding: const EdgeInsetsDirectional
@@ -189,7 +176,7 @@ class _ListContentsWidgetState extends State<ListContentsWidget> {
                                                       style:
                                                           FlutterFlowTheme.of(
                                                                   context)
-                                                              .title2,
+                                                              .title1,
                                                     ),
                                                     Text(
                                                       content?.type?.name ??
@@ -280,17 +267,19 @@ class _ListContentsWidgetState extends State<ListContentsWidget> {
                                                               false) ==
                                                           false) {
                                                         publishTheContent(
-                                                            content.id,
+                                                            content!,
                                                             true,
                                                             false);
                                                       } else {
                                                         publishTheContent(
-                                                            content.id,
+                                                            content!,
                                                             false,
                                                             true);
                                                       }
-
-                                                      setState(() {});
+                                                      getContents();
+                                                      setState(() {
+                                                        contents = contents;
+                                                      });
                                                     },
                                                     text:
                                                         content!.isPublished ??
@@ -343,10 +332,10 @@ class _ListContentsWidgetState extends State<ListContentsWidget> {
   }
 
   Future<void> publishTheContent(
-      String id, bool isPublished, isArchived) async {
+      Content content, bool isPublished, isArchived) async {
     String updateQuery = '''
      mutation MyMutation {
-      updateContent(input: {id: "$id", isPublished: $isPublished, isArchived: $isArchived}) {
+      updateContent(input: {id: "${content.id}", isPublished: $isPublished, isArchived: $isArchived}) {
         id
         isArchived
         isPublished
@@ -361,12 +350,22 @@ class _ListContentsWidgetState extends State<ListContentsWidget> {
       variables: <String, String>{},
     );
 
+    String message = (isPublished == true)
+        ? 'Publishing the content, it will be visible to world. You can add it to a product to sell'
+        : 'Archiving the content. Owners will still be able to access it but audience will not be able to buy it anymore';
+
+    ScaffoldMessenger.of(context).clearSnackBars();
+    ScaffoldMessenger.of(context)
+        .showSnackBar(SnackBar(content: Text(message)));
+
     var response = await Amplify.API.mutate(request: request).response;
     print(response.data);
     print(response.errors);
     Content result = response.data;
     print('${result.id} is published: ${result.isPublished}');
     print('${result.id} is archived: ${result.isArchived}');
+
+    setState(() {});
   }
 
   Future<List<Content>?> getContents() async {
