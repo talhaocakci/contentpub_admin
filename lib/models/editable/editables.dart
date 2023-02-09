@@ -9,6 +9,7 @@ import 'package:contentpub_admin/models/Price.dart';
 import 'package:contentpub_admin/models/PurchaseType.dart';
 import 'package:contentpub_admin/models/RecurrenceType.dart';
 import 'package:contentpub_admin/models/Section.dart';
+import 'package:flutter/foundation.dart';
 
 class EditableCourse {
   String? id;
@@ -348,5 +349,84 @@ class EditableCoworker {
     editable.photoUrl = coworker.photoUrl;
 
     return editable;
+  }
+}
+
+class EditableTenant {
+  String id;
+  String? name;
+  EditableTenantConfiguration? testingConfiguration;
+  EditableTenantConfiguration? productionConfiguration;
+  String? coverPhotoUrl;
+  String? promoVideoUrl;
+  String? description;
+  bool newItem = false;
+
+  EditableTenant({required this.id});
+
+  static Tenant fromEditable(EditableTenant editable) {
+    var staging = EditableTenantConfiguration.fromEditable(
+        editable.testingConfiguration!);
+    var prod = EditableTenantConfiguration.fromEditable(
+        editable.productionConfiguration!);
+
+    return Tenant(
+        id: editable.coverPhotoUrl = editable.coverPhotoUrl,
+        promoVideoUrl: editable.promoVideoUrl,
+        name: editable.name,
+        testingConfiguration: staging,
+        productionConfiguration: prod,
+        tenantProductionConfigurationId: prod.id,
+        tenantTestingConfigurationId: staging.id,
+        description: editable.description);
+  }
+
+  static EditableTenant toEditable(Tenant tenant) {
+    EditableTenant editable = EditableTenant(id: tenant.id);
+
+    editable.promoVideoUrl = tenant.promoVideoUrl;
+    editable.name = tenant.name;
+    editable.description = tenant.description;
+    editable.coverPhotoUrl = tenant.coverPhotoUrl;
+
+    editable.testingConfiguration = tenant.testingConfiguration != null
+        ? EditableTenantConfiguration.toEditable(tenant.testingConfiguration!)
+        : EditableTenantConfiguration(id: '${tenant.id}-testing');
+
+    editable.productionConfiguration = tenant.testingConfiguration != null
+        ? EditableTenantConfiguration.toEditable(tenant.testingConfiguration!)
+        : EditableTenantConfiguration(id: '${tenant.id}-prod');
+
+    return editable;
+  }
+}
+
+class EditableTenantConfiguration {
+  String id;
+  String? stripeSecretKey;
+  String? stripeWebhookSecretKey;
+  String? stripeWebhookUrl;
+  String? contentpubApiKey;
+
+  EditableTenantConfiguration({required this.id});
+
+  static EditableTenantConfiguration toEditable(TenantConfiguration conf) {
+    EditableTenantConfiguration editable =
+        EditableTenantConfiguration(id: conf.id);
+    editable.contentpubApiKey = conf.contentpubApiKey;
+    editable.stripeSecretKey = conf.stripeSecretKey;
+    editable.stripeWebhookSecretKey = conf.stripeWebhookSecretKey;
+    editable.stripeWebhookUrl = conf.stripeWebhookUrl;
+    return editable;
+  }
+
+  static TenantConfiguration fromEditable(
+      EditableTenantConfiguration editable) {
+    return TenantConfiguration(
+        id: editable.id,
+        contentpubApiKey: editable.contentpubApiKey,
+        stripeSecretKey: editable.stripeSecretKey,
+        stripeWebhookSecretKey: editable.stripeWebhookSecretKey,
+        stripeWebhookUrl: editable.stripeWebhookUrl);
   }
 }
