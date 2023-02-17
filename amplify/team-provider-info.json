@@ -1,31 +1,47 @@
 {
-  "staging": {
+  "dev": {
     "awscloudformation": {
-      "AuthRoleName": "amplify-contentpubio-staging-174002-authRole",
-      "UnauthRoleArn": "arn:aws:iam::348467063208:role/amplify-contentpubio-staging-174002-unauthRole",
-      "AuthRoleArn": "arn:aws:iam::348467063208:role/amplify-contentpubio-staging-174002-authRole",
+      "AuthRoleName": "amplify-javathlon-dev-224548-authRole",
+      "UnauthRoleArn": "arn:aws:iam::348467063208:role/amplify-javathlon-dev-224548-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::348467063208:role/amplify-javathlon-dev-224548-authRole",
       "Region": "us-east-1",
-      "DeploymentBucketName": "amplify-contentpubio-staging-174002-deployment",
-      "UnauthRoleName": "amplify-contentpubio-staging-174002-unauthRole",
-      "StackName": "amplify-contentpubio-staging-174002",
-      "StackId": "arn:aws:cloudformation:us-east-1:348467063208:stack/amplify-contentpubio-staging-174002/a5ed6d90-9044-11ed-b42d-0ab8ef1bfb2b",
-      "AmplifyAppId": "d2b1nl7bu073fp"
+      "DeploymentBucketName": "amplify-javathlon-dev-224548-deployment",
+      "UnauthRoleName": "amplify-javathlon-dev-224548-unauthRole",
+      "StackName": "amplify-javathlon-dev-224548",
+      "StackId": "arn:aws:cloudformation:us-east-1:348467063208:stack/amplify-javathlon-dev-224548/c84fc720-abe7-11ed-96b4-0a2977c255a7",
+      "AmplifyAppId": "dd7qvfcvzwzrb"
     },
     "categories": {
-      "auth": {
-        "contentpubio7714cf7a": {}
-      },
-      "function": {
-        "S3Trigger6cc87bf5": {
-          "deploymentBucketName": "amplify-contentpubio-staging-174002-deployment",
-          "s3Key": "amplify-builds/S3Trigger6cc87bf5-7879312b49336844776b-build.zip"
-        }
-      },
       "api": {
-        "ContentPubIO": {}
+        "javathlon": {}
       },
-      "storage": {
-        "ContentPub": {}
+      "auth": {
+        "javathlone581277f": {
+          "userPoolId": "us-east-1_Ec8vL6yjP",
+          "userPoolName": "ContentPubEndUsers",
+          "webClientId": "maentip904saalikkhvrkqo48",
+          "nativeClientId": "56raqg36gm2r3dgjo1ck2hq5b6",
+          "identityPoolId": "us-east-1:2a350144-ef2d-4c92-b2bf-c9eab7bb667d",
+          "identityPoolName": "ContentPub Admin IdentityPool",
+          "allowUnauthenticatedIdentities": false,
+          "authRoleArn": "arn:aws:iam::348467063208:role/Cognito_ContentPubAdminIdentityPoolAuth_Role",
+          "authRoleName": "Cognito_ContentPubAdminIdentityPoolAuth_Role",
+          "unauthRoleArn": "arn:aws:iam::348467063208:role/Cognito_ContentPubAdminIdentityPoolUnauth_Role",
+          "unauthRoleName": "Cognito_ContentPubAdminIdentityPoolUnauth_Role"
+        },
+        "javathlon8c9d9802": {
+          "userPoolId": "us-east-1_Ec8vL6yjP",
+          "userPoolName": "ContentPubEndUsers",
+          "webClientId": "maentip904saalikkhvrkqo48",
+          "nativeClientId": "56raqg36gm2r3dgjo1ck2hq5b6",
+          "identityPoolId": "us-east-1:2a350144-ef2d-4c92-b2bf-c9eab7bb667d",
+          "identityPoolName": "ContentPub Admin IdentityPool",
+          "allowUnauthenticatedIdentities": false,
+          "authRoleArn": "arn:aws:iam::348467063208:role/Cognito_ContentPubAdminIdentityPoolAuth_Role",
+          "authRoleName": "Cognito_ContentPubAdminIdentityPoolAuth_Role",
+          "unauthRoleArn": "arn:aws:iam::348467063208:role/Cognito_ContentPubAdminIdentityPoolUnauth_Role",
+          "unauthRoleName": "Cognito_ContentPubAdminIdentityPoolUnauth_Role"
+        }
       }
     }
   }

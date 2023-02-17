@@ -1,12 +1,11 @@
 
-variable "base_bucket_name" {
-  type        = string
-  description = "Base s3 bucket name. Your files will be structured relative to this base name. It can be your domain name such as x.com or your project name that can be unique across all AWS"
+
+resource "aws_s3_bucket" "AmplifyDeploymentStaging" {
+  bucket = "${var.base_bucket_name}-backend-staging-deployment"
 }
 
-variable "custom_domain" {
-  type        = string
-  description = "Used for deploying Content Pub Web applications to S3 and serve from there. Must be the same with domain name such as mydomain.com without www. Subdomain buckets will be created automatically "
+resource "aws_s3_bucket" "AmplifyDeploymentProduction" {
+  bucket = "${var.base_bucket_name}-backend-production-deployment"
 }
 
 resource "aws_s3_bucket" "RestrictedMediaBucketStaging" {

@@ -1,18 +1,13 @@
 {
   "api": {
-    "ContentPubIO": {
+    "javathlon": {
       "dependsOn": [],
       "output": {
         "authConfig": {
-          "additionalAuthenticationProviders": [
-            {
-              "authenticationType": "AWS_IAM"
-            }
-          ],
+          "additionalAuthenticationProviders": [],
           "defaultAuthentication": {
             "apiKeyConfig": {
-              "apiKeyExpirationDays": 30,
-              "description": "api key description"
+              "apiKeyExpirationDays": 7
             },
             "authenticationType": "API_KEY"
           }
@@ -22,64 +17,183 @@
       "service": "AppSync"
     }
   },
-  "auth": {
-    "contentpubio7714cf7a": {
-      "customAuth": false,
-      "dependsOn": [],
-      "frontendAuthConfig": {
-        "mfaConfiguration": "OFF",
-        "mfaTypes": [
-          "SMS"
-        ],
-        "passwordProtectionSettings": {
-          "passwordPolicyCharacters": [],
-          "passwordPolicyMinLength": 8
-        },
-        "signupAttributes": [
-          "EMAIL"
-        ],
-        "socialProviders": [],
-        "usernameAttributes": [
-          "EMAIL"
-        ],
-        "verificationMechanisms": [
-          "EMAIL"
-        ]
-      },
-      "providerPlugin": "awscloudformation",
-      "service": "Cognito"
-    }
-  },
-  "function": {
-    "S3Trigger6cc87bf5": {
-      "build": true,
-      "providerPlugin": "awscloudformation",
-      "service": "Lambda"
-    }
-  },
+  "auth": {},
   "parameters": {
-    "AMPLIFY_function_S3Trigger6cc87bf5_deploymentBucketName": {
+    "AMPLIFY_auth_javathlon8c9d9802_allowUnauthenticatedIdentities": {
       "usedBy": [
         {
-          "category": "function",
-          "resourceName": "S3Trigger6cc87bf5"
+          "category": "auth",
+          "resourceName": "javathlon8c9d9802"
         }
       ]
     },
-    "AMPLIFY_function_S3Trigger6cc87bf5_s3Key": {
+    "AMPLIFY_auth_javathlon8c9d9802_authRoleArn": {
       "usedBy": [
         {
-          "category": "function",
-          "resourceName": "S3Trigger6cc87bf5"
+          "category": "auth",
+          "resourceName": "javathlon8c9d9802"
         }
       ]
-    }
-  },
-  "storage": {
-    "ContentPub": {
-      "dependsOn": [],
-      "providerPlugin": "awscloudformation",
-      "service": "S3"
+    },
+    "AMPLIFY_auth_javathlon8c9d9802_authRoleName": {
+      "usedBy": [
+        {
+          "category": "auth",
+          "resourceName": "javathlon8c9d9802"
+        }
+      ]
+    },
+    "AMPLIFY_auth_javathlon8c9d9802_identityPoolId": {
+      "usedBy": [
+        {
+          "category": "auth",
+          "resourceName": "javathlon8c9d9802"
+        }
+      ]
+    },
+    "AMPLIFY_auth_javathlon8c9d9802_identityPoolName": {
+      "usedBy": [
+        {
+          "category": "auth",
+          "resourceName": "javathlon8c9d9802"
+        }
+      ]
+    },
+    "AMPLIFY_auth_javathlon8c9d9802_nativeClientId": {
+      "usedBy": [
+        {
+          "category": "auth",
+          "resourceName": "javathlon8c9d9802"
+        }
+      ]
+    },
+    "AMPLIFY_auth_javathlon8c9d9802_unauthRoleArn": {
+      "usedBy": [
+        {
+          "category": "auth",
+          "resourceName": "javathlon8c9d9802"
+        }
+      ]
+    },
+    "AMPLIFY_auth_javathlon8c9d9802_unauthRoleName": {
+      "usedBy": [
+        {
+          "category": "auth",
+          "resourceName": "javathlon8c9d9802"
+        }
+      ]
+    },
+    "AMPLIFY_auth_javathlon8c9d9802_userPoolId": {
+      "usedBy": [
+        {
+          "category": "auth",
+          "resourceName": "javathlon8c9d9802"
+        }
+      ]
+    },
+    "AMPLIFY_auth_javathlon8c9d9802_userPoolName": {
+      "usedBy": [
+        {
+          "category": "auth",
+          "resourceName": "javathlon8c9d9802"
+        }
+      ]
+    },
+    "AMPLIFY_auth_javathlon8c9d9802_webClientId": {
+      "usedBy": [
+        {
+          "category": "auth",
+          "resourceName": "javathlon8c9d9802"
+        }
+      ]
+    },
+    "AMPLIFY_auth_javathlone581277f_allowUnauthenticatedIdentities": {
+      "usedBy": [
+        {
+          "category": "auth",
+          "resourceName": "javathlone581277f"
+        }
+      ]
+    },
+    "AMPLIFY_auth_javathlone581277f_authRoleArn": {
+      "usedBy": [
+        {
+          "category": "auth",
+          "resourceName": "javathlone581277f"
+        }
+      ]
+    },
+    "AMPLIFY_auth_javathlone581277f_authRoleName": {
+      "usedBy": [
+        {
+          "category": "auth",
+          "resourceName": "javathlone581277f"
+        }
+      ]
+    },
+    "AMPLIFY_auth_javathlone581277f_identityPoolId": {
+      "usedBy": [
+        {
+          "category": "auth",
+          "resourceName": "javathlone581277f"
+        }
+      ]
+    },
+    "AMPLIFY_auth_javathlone581277f_identityPoolName": {
+      "usedBy": [
+        {
+          "category": "auth",
+          "resourceName": "javathlone581277f"
+        }
+      ]
+    },
+    "AMPLIFY_auth_javathlone581277f_nativeClientId": {
+      "usedBy": [
+        {
+          "category": "auth",
+          "resourceName": "javathlone581277f"
+        }
+      ]
+    },
+    "AMPLIFY_auth_javathlone581277f_unauthRoleArn": {
+      "usedBy": [
+        {
+          "category": "auth",
+          "resourceName": "javathlone581277f"
+        }
+      ]
+    },
+    "AMPLIFY_auth_javathlone581277f_unauthRoleName": {
+      "usedBy": [
+        {
+          "category": "auth",
+          "resourceName": "javathlone581277f"
+        }
+      ]
+    },
+    "AMPLIFY_auth_javathlone581277f_userPoolId": {
+      "usedBy": [
+        {
+          "category": "auth",
+          "resourceName": "javathlone581277f"
+        }
+      ]
+    },
+    "AMPLIFY_auth_javathlone581277f_userPoolName": {
+      "usedBy": [
+        {
+          "category": "auth",
+          "resourceName": "javathlone581277f"
+        }
+      ]
+    },
+    "AMPLIFY_auth_javathlone581277f_webClientId": {
+      "usedBy": [
+        {
+          "category": "auth",
+          "resourceName": "javathlone581277f"
+        }
+      ]
     }
   }
 }

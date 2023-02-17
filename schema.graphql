@@ -149,4 +149,3 @@ type Course @model @auth(rules: [{allow: public}]) {
   promoVideoUrl: String
   subtitle: String
 }
- 
