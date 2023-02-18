@@ -249,8 +249,8 @@ class _FileUploadWithDropState extends State<FileUploadWithDrop> {
 
     String? result = await AwsS3.uploadFile(
         //acl: ,
-        accessKey: "AKIAVCISBNGUGFQ4LAPR", // cognitoya cevir
-        secretKey: "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",
+        accessKey: "access key from env", // cognitoya cevir
+        secretKey: "secret key from env",
         inputStream: file.stream,
         fileSize: fileSize,
         destination: uploadDest,
