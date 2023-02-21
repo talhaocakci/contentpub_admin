@@ -56,4 +56,4 @@ amplify pull
 cp -a build/web/. terraform/deployment/artifacts/
 
 
-terraform apply -var="project_name=myprojectname"
+terraform apply -var="project_name=$projectname"
