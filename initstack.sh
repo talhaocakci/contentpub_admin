@@ -6,15 +6,20 @@ read awsprofilename
 
 aws configure --profile $awsprofilename
 
-cd terraform
+echo Please enter a unique project name such as com.projectname
+
+read projectname
+
+cd terraform/infra
 
 terraform init
 
 pwd
 
-terraform apply -var-file="staging.tfvars"
+terraform apply -var-file="staging.tfvars" -var="project_name=$projectname" -var="aws_profile=$awsprofilename"
 
 # go back to root folder and init amplify there
+cd ..
 cd ..
 
 amplify init
@@ -23,7 +28,8 @@ amplify add api
 
 # get the name before running the shell, use it here instead of javathlon
 
-cp schema.graphql amplify/backend/api/javathlon
+rm amplify/backend/api/$projectname/schema.graphql
+cp schema.graphql amplify/backend/api/$projectname/schema.graphql
 
 amplify push
 
@@ -43,3 +49,11 @@ amplify push
 
 
 amplify pull
+
+
+
+
+cp -a build/web/. terraform/deployment/artifacts/
+
+
+terraform apply -var="project_name=myprojectname"
