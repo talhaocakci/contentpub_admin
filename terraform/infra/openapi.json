@@ -7,109 +7,15 @@
   "basePath" : "/testing",
   "schemes" : [ "https" ],
   "paths" : {
-    "/" : {
-      "get" : {
-        "produces" : [ "application/json" ],
-        "responses" : {
-          "200" : {
-            "description" : "200 response",
-            "schema" : {
-              "$ref" : "#/definitions/Empty"
-            }
-          }
-        }
-      }
-    },
     "/presignupload" : {
-      "get" : {
-        "x-amazon-apigateway-integration": {
-          "type": "AWS_PROXY",
-          "httpMethod": "POST",
-          "uri": "arn:aws:apigateway:${aws_region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${aws_region}:${account_id}:function:s3PresignerFunction/invocations",
-          "payloadFormatVersion": "1.0"
-        },
-        "produces" : [ "application/json" ],
-        "responses" : {
-          "200" : {
-            "description" : "200 response",
-            "schema" : {
-              "$ref" : "#/definitions/Empty"
-            }
-          }
-        }
-      }
-    },
-    "/bucket/{bucket}" : {
-      "get" : {
-        "consumes" : [ "application/json" ],
-        "produces" : [ "application/json" ],
-        "parameters" : [ {
-          "name" : "bucket",
-          "in" : "path",
-          "required" : true,
-          "type" : "string"
-        } ],
-        "responses" : {
-          "200" : {
-            "description" : "200 response",
-            "schema" : {
-              "$ref" : "#/definitions/Empty"
-            }
-          }
-        }
-      }
-    },
-    "/bucket/{bucket}/object/{object}" : {
-      "get" : {
-        "x-amazon-apigateway-integration": {
-          "type": "AWS_PROXY",
-          "httpMethod": "GET",
-          "uri": "arn:aws:apigateway:${aws_region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${aws_region}:${account_id}:function:s3PresignerFunction/invocations",
-          "payloadFormatVersion": "1.0"
-        },
-        "produces" : [ "application/json" ],
-        "parameters" : [ {
-          "name" : "object",
-          "in" : "path",
-          "required" : true,
-          "type" : "string"
-        }, {
-          "name" : "bucket",
-          "in" : "path",
-          "required" : true,
-          "type" : "string"
-        } ],
-        "responses" : {
-          "200" : {
-            "description" : "200 response",
-            "schema" : {
-              "$ref" : "#/definitions/Empty"
-            },
-            "headers" : {
-              "Access-Control-Allow-Origin" : {
-                "type" : "string"
-              }
-            }
-          }
-        },
-        "security" : [ {
-          "ContentPubAStaging" : [ ]
-        } ]
-      },
       "options" : {
         "consumes" : [ "application/json" ],
         "produces" : [ "application/json" ],
-        "parameters" : [ {
-          "name" : "bucket",
-          "in" : "path",
-          "required" : true,
-          "type" : "string"
-        }, {
-          "name" : "object",
-          "in" : "path",
-          "required" : true,
-          "type" : "string"
-        } ],
+        "x-amazon-apigateway-integration": {
+          "type": "MOCK",
+          "httpMethod": "POST",
+          "payloadFormatVersion": "1.0"
+        },
         "responses" : {
           "200" : {
             "description" : "200 response",
@@ -129,9 +35,76 @@
             }
           }
         }
+      },
+      "get" : {
+        "x-amazon-apigateway-integration": {
+          "type": "AWS_PROXY",
+          "httpMethod": "POST",
+          "uri": "arn:aws:apigateway:${aws_region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${aws_region}:${account_id}:function:s3PresignerFunction/invocations",
+          "payloadFormatVersion": "1.0"
+        },
+        "produces" : [ "application/json" ],
+        "responses" : {
+          "200" : {
+            "description" : "200 response",
+            "schema" : {
+              "$ref" : "#/definitions/Empty"
+            }
+          }
+        }
       }
-
-
+    },
+    "/presign" : {
+      "options" : {
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "x-amazon-apigateway-integration": {
+          "type": "MOCK",
+          "httpMethod": "POST",
+          "payloadFormatVersion": "1.0"
+        },
+        "responses" : {
+          "200" : {
+            "description" : "200 response",
+            "schema" : {
+              "$ref" : "#/definitions/Empty"
+            },
+            "headers" : {
+              "Access-Control-Allow-Origin" : {
+                "type" : "string"
+              },
+              "Access-Control-Allow-Methods" : {
+                "type" : "string"
+              },
+              "Access-Control-Allow-Headers" : {
+                "type" : "string"
+              }
+            }
+          }
+        }
+      },
+      "get" : {
+        "x-amazon-apigateway-integration": {
+          "type": "AWS_PROXY",
+          "httpMethod": "POST",
+          "uri": "arn:aws:apigateway:${aws_region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${aws_region}:${account_id}:function:s3PresignerFunction/invocations",
+          "payloadFormatVersion": "1.0"
+        },
+        "produces" : [ "application/json" ],
+        "responses" : {
+          "200" : {
+            "description" : "200 response",
+            "schema" : {
+              "$ref" : "#/definitions/Empty"
+            },
+            "headers" : {
+              "Access-Control-Allow-Origin" : {
+                "type" : "string"
+              }
+            }
+          }
+        }
+      }
     },
     "/customer" : {
       "post" : {
@@ -159,6 +132,11 @@
       "options" : {
         "consumes" : [ "application/json" ],
         "produces" : [ "application/json" ],
+        "x-amazon-apigateway-integration": {
+          "type": "MOCK",
+          "httpMethod": "POST",
+          "payloadFormatVersion": "1.0"
+        },
         "responses" : {
           "200" : {
             "description" : "200 response",
@@ -206,6 +184,11 @@
       "options" : {
         "consumes" : [ "application/json" ],
         "produces" : [ "application/json" ],
+        "x-amazon-apigateway-integration": {
+          "type": "MOCK",
+          "httpMethod": "POST",
+          "payloadFormatVersion": "1.0"
+        },
         "responses" : {
           "200" : {
             "description" : "200 response",
@@ -259,6 +242,11 @@
       "options" : {
         "consumes" : [ "application/json" ],
         "produces" : [ "application/json" ],
+        "x-amazon-apigateway-integration": {
+          "type": "MOCK",
+          "httpMethod": "POST",
+          "payloadFormatVersion": "1.0"
+        },
         "parameters" : [ {
           "name" : "productId",
           "in" : "path",
@@ -326,6 +314,12 @@
     },
     "/stripe/webhooks" : {
       "post" : {
+        "x-amazon-apigateway-integration": {
+          "type": "AWS_PROXY",
+          "httpMethod": "POST",
+          "uri": "arn:aws:apigateway:${aws_region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${aws_region}:${account_id}:function:stripeFunctions/invocations",
+          "payloadFormatVersion": "1.0"
+        },
         "produces" : [ "application/json" ],
         "responses" : {
           "200" : {

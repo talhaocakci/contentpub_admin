@@ -14,13 +14,14 @@ cd terraform/infra
 
 terraform init
 
-pwd
 
 terraform apply -var-file="staging.tfvars" -var="project_name=$projectname" -var="aws_profile=$awsprofilename"
 
 # go back to root folder and init amplify there
 cd ..
 cd ..
+
+echo "{\"project\":\"$projectname\"}" >> lib/projectconfiguration.json
 
 amplify init
 

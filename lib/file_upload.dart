@@ -8,6 +8,10 @@ import 'package:contentpub_admin/video_player.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dropzone/flutter_dropzone.dart';
 
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+import 'dart:io';
+
 class FileUploadWithDrop extends StatefulWidget {
   final FileType fileType;
   final String? remoteUrl;
@@ -71,6 +75,8 @@ class _FileUploadWithDropState extends State<FileUploadWithDrop> {
   bool? dirty;
   bool uploadInProgress = false;
 
+  String? projectName;
+
   _FileUploadWithDropState(
       this.fileType, this.remoteFileName, this.remoteDirectory);
 
@@ -80,8 +86,23 @@ class _FileUploadWithDropState extends State<FileUploadWithDrop> {
       uploadedFileUrl = widget.remoteUrl;
       uploadInProgress = false;
     }
+
+    initComponent();
+
     setState(() {});
     super.initState();
+  }
+
+  Future<String?> initComponent() async {
+    projectName = await getProjectName();
+
+    return projectName;
+  }
+
+  Future<String> getProjectName() async {
+    var input = await File("projectconfiguration.json").readAsString();
+    var map = jsonDecode(input);
+    return map['project'];
   }
 
   @override
@@ -214,16 +235,15 @@ class _FileUploadWithDropState extends State<FileUploadWithDrop> {
       DropzoneViewController controller, dynamic ev, String url) async {
     print("cozulecek dosya");
 
-    AWSFile file = AWSFile.fromPath(url ?? 'wrong video url');
+    AWSFile file = AWSFile.fromPath(url);
 
     print("awsfile:${file.toString()}");
     print("awsfile:${url.toString()}");
 
-    String bucket = "contentpub-media174002-staging-restricted";
+    String bucket = "$projectName-staging-restricted";
 
-    bucket = (widget.isPublic ?? false)
-        ? "contentpub-media174002-staging-public"
-        : bucket;
+    bucket =
+        (widget.isPublic ?? false) ? "$projectName-staging-public" : bucket;
 
     String uploadDest = remoteDirectory;
 
@@ -246,20 +266,36 @@ class _FileUploadWithDropState extends State<FileUploadWithDrop> {
       localFile = url;
     });
 
+    String presignedUrl = await retrievePresignedUrl(bucket, filename);
+
+    print(presignedUrl);
+
     String? result = await AwsS3.uploadFile(
-        //acl: ,
-        accessKey: "access key from env", // cognitoya cevir
-        secretKey: "secret key from env",
+        presignedUrl: presignedUrl,
         inputStream: file.stream,
         fileSize: fileSize,
-        destination: uploadDest,
-        filename: filename, //degistri, laf olsun diye koyduk
-        bucket: bucket,
+        filename: filename,
         onProgress: (bytes, totalBytes) =>
-            printprogress(bytes, totalBytes, remoteFileUrl),
-        region: "us-east-1");
+            printprogress(bytes, totalBytes, remoteFileUrl));
 
     return result ?? 'Unknown file upload result';
+  }
+
+  Future<String> retrievePresignedUrl(String bucket, String key) async {
+    final initUri = Uri.parse(
+        "https://2u5wcv8573.execute-api.us-east-1.amazonaws.com/production/presignedupload?bucket=$bucket&key=$key");
+
+    final headers = <String, String>{
+      'Content-Type': 'application/json',
+    };
+
+    http.Response initResponse = await http.get(initUri, headers: headers);
+
+    var url = jsonDecode(initResponse.body)["url"];
+
+    print(url);
+
+    return url;
   }
 
   void printprogress(int bytes, int totalBytes, String remoteFileUrl) {
