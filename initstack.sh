@@ -51,7 +51,7 @@ amplify push
 amplify pull
 
 
-
+flutter build web --release
 
 cp -a build/web/. terraform/deployment/artifacts/
 
