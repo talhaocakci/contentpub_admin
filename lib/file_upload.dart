@@ -91,12 +91,11 @@ class _FileUploadWithDropState extends State<FileUploadWithDrop> {
         decoration: BoxDecoration(border: Border.all(color: Colors.black)),
         child: Center(
             child: uploadedFileUrl == null
-                ? Expanded(
-                    child: Stack(children: [
+                ? Stack(children: [
                     SizedBox(height: 150, child: buildZone2(context)),
                     Container(
                         alignment: Alignment.center,
-                        child: const Expanded(child: Text('Drop file here'))),
+                        child: Text('Drop file here')),
                     Container(
                         alignment: Alignment.topRight,
                         child: FlutterFlowIconButton(
@@ -115,7 +114,7 @@ class _FileUploadWithDropState extends State<FileUploadWithDrop> {
                             onDrop(controller2, (ev as List).elementAt(0));
                           },
                         )),
-                  ]))
+                  ])
                 : Column(
                     children: (uploadInProgress == false &&
                             uploadedFileUrl != null)
