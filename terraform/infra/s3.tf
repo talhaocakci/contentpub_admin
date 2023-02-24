@@ -70,6 +70,11 @@ resource "aws_s3_bucket" "PublicMediaBucketStaging" {
     bucket = "${var.project_name}-staging-public"
 }
 
+resource "aws_s3_bucket_policy" "stage_public_bucket_policy" {
+  bucket = aws_s3_bucket.PublicMediaBucketStaging.bucket
+  policy = templatefile("s3-policy.json", { bucket = aws_s3_bucket.PublicMediaBucketStaging.bucket })
+}
+
 resource "aws_s3_bucket_cors_configuration" "PublicMediaBucketStagingCors" {
   bucket = aws_s3_bucket.PublicMediaBucketStaging.id
 
@@ -89,6 +94,11 @@ resource "aws_s3_bucket_cors_configuration" "PublicMediaBucketStagingCors" {
 
 resource "aws_s3_bucket" "PublicMediaBucketProd" {
     bucket = "${var.project_name}-production-public"
+}
+
+resource "aws_s3_bucket_policy" "production_public_bucket_policy" {
+  bucket = aws_s3_bucket.PublicMediaBucketProd.bucket
+  policy = templatefile("s3-policy.json", { bucket = aws_s3_bucket.PublicMediaBucketProd.bucket })
 }
 
 resource "aws_s3_bucket_cors_configuration" "PublicMediaBucketProdCors" {

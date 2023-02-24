@@ -5,6 +5,7 @@ import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
 import 'package:amplify_datastore/amplify_datastore.dart';
 import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:http/http.dart' as http;
 
@@ -35,6 +36,13 @@ class StateContainerState extends State<StateContainer> {
   Course originalCourse = Course();
   Course courseInModification = Course();
   Content? documentInModification;
+
+  String? projectName;
+  String? environment;
+  String? appsyncId;
+  String? apiRootUrl;
+  String? apigatewayId;
+  String? region;
 
   bool _isLoading = true;
   late AuthUser authUser;
@@ -80,6 +88,20 @@ class StateContainerState extends State<StateContainer> {
       await Amplify.addPlugins([authPlugin]);
       final apiPlugin = AmplifyAPI(modelProvider: ModelProvider.instance);
       await Amplify.addPlugins([apiPlugin]);
+
+      var input =
+          await rootBundle.loadString('assets/projectconfiguration.json');
+
+      var map = jsonDecode(input);
+
+      projectName = map['project'];
+      environment = map['environment'];
+      appsyncId = map['appsyncId'];
+      apigatewayId = map['apigatewayId'];
+      region = map['region'];
+
+      apiRootUrl =
+          'https://$apigatewayId.execute-api.$region.amazonaws.com/$environment';
 
       //  var themeStr = await rootBundle.loadString('themes/appainter_theme.json');
       //var themeJson = json.decode(themeStr);

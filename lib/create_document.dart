@@ -275,8 +275,8 @@ class _CreateDocumentWidgetState extends State<CreateDocumentWidget> {
                               children: [
                                 Expanded(
                                   child: FileUploadWithDrop(
-                                      remoteDirectory: 'files',
-                                      remoteFileName: '${editableContent!.id}-file1',
+                                      remoteDirectory: '${editableContent!.id}',
+                                      remoteFileName: 'file1',
                                       isPublic: false,
                                       remoteUrl: editableContent?.s3Url,
                                       fileType: FileType.OTHER,
@@ -296,8 +296,8 @@ class _CreateDocumentWidgetState extends State<CreateDocumentWidget> {
                               children: [
                                 Expanded(
                                   child: FileUploadWithDrop(
-                                      remoteDirectory: content!.id,
-                                      remoteFileName: '${editableContent!.id}-photo',
+                                      remoteDirectory: '${editableContent!.id}',
+                                      remoteFileName: 'cover-photo',
                                       isPublic: true,
                                       remoteUrl: editableContent?.photoUrl,
                                       fileType: FileType.PICTURE,
@@ -317,8 +317,8 @@ class _CreateDocumentWidgetState extends State<CreateDocumentWidget> {
                               children: [
                                 Expanded(
                                   child: FileUploadWithDrop(
-                                      remoteDirectory: editableContent!.id,
-                                      remoteFileName: '${editableContent!.id}-promo-video',
+                                      remoteDirectory: '${editableContent!.id}',
+                                      remoteFileName: 'promo-video',
                                       isPublic: true,
                                       fileType: FileType.VIDEO,
                                       remoteUrl: editableContent?.promoVideoUrl,

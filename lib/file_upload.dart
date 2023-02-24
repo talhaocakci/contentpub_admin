@@ -5,6 +5,7 @@ import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:contentpub_admin/aws_s3.dart';
 import 'package:contentpub_admin/flutter_flow/flutter_flow_icon_button.dart';
 import 'package:contentpub_admin/flutter_flow/flutter_flow_theme.dart';
+import 'package:contentpub_admin/state_container.dart';
 import 'package:contentpub_admin/video_player.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -89,21 +90,8 @@ class _FileUploadWithDropState extends State<FileUploadWithDrop> {
       uploadInProgress = false;
     }
 
-    initComponent();
-
     setState(() {});
     super.initState();
-  }
-
-  Future<void> initComponent() async {
-    projectName = await getProjectName();
-    print("projectName: $projectName");
-  }
-
-  Future<String> getProjectName() async {
-    var input = await rootBundle.loadString('assets/projectconfiguration.json');
-    var map = jsonDecode(input);
-    return map['project'];
   }
 
   @override
@@ -241,15 +229,16 @@ class _FileUploadWithDropState extends State<FileUploadWithDrop> {
     print("awsfile:${file.toString()}");
     print("awsfile:${url.toString()}");
 
-    String bucket = "$projectName-staging-restricted";
+    String projectName = StateContainer.of(context).projectName ?? 'contentpub';
+    String environment = StateContainer.of(context).environment ?? 'staging';
+    String visibility = (widget.isPublic ?? false) ? 'public' : 'restricted';
 
-    bucket =
-        (widget.isPublic ?? false) ? "$projectName-staging-public" : bucket;
-
-    String uploadDest = remoteDirectory;
+    String bucket = "$projectName-$environment-$visibility";
 
     String extension = ev.name.substring(ev.name.lastIndexOf('.'));
     String filename = '${remoteFileName}${extension}';
+
+    String uploadDest = remoteDirectory;
 
     String remoteFileUrl =
         'https://$bucket.s3.amazonaws.com/$uploadDest/${filename}';
@@ -267,7 +256,7 @@ class _FileUploadWithDropState extends State<FileUploadWithDrop> {
       localFile = url;
     });
 
-    String presignedUrl = await retrievePresignedUrl(bucket, filename);
+    String presignedUrl = await retrievePresignedUrl(bucket, '$uploadDest/$filename');
 
     print(presignedUrl);
 
@@ -296,8 +285,9 @@ class _FileUploadWithDropState extends State<FileUploadWithDrop> {
 
     String rawIdToken = idToken!.raw;
 
-    final initUri = Uri.parse(
-        "https://mtueq0xze8.execute-api.us-east-1.amazonaws.com/production/presignupload?bucket=$bucket&key=$key");
+    String apiRoot = StateContainer.of(context).apiRootUrl ?? '';
+
+    final initUri = Uri.parse("$apiRoot/presignupload?bucket=$bucket&key=$key");
 
     final headers = <String, String>{
       'Content-Type': 'application/json',

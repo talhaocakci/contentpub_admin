@@ -309,7 +309,7 @@ class EditableContent {
         photoUrl: editable.photoUrl,
         promoVideoUrl: editable.promoVideoUrl,
         isPublished: editable.isPublished,
-        Coworkers: editable.coworkerRelations!,
+        Coworkers: editable.coworkerRelations,
         isArchived: editable.isArchived);
 
     return content;
