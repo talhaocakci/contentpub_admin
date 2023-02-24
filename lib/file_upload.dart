@@ -1,11 +1,13 @@
 import 'dart:html' as html;
 
+import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
 import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:contentpub_admin/aws_s3.dart';
 import 'package:contentpub_admin/flutter_flow/flutter_flow_icon_button.dart';
 import 'package:contentpub_admin/flutter_flow/flutter_flow_theme.dart';
 import 'package:contentpub_admin/video_player.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_dropzone/flutter_dropzone.dart';
 
 import 'package:http/http.dart' as http;
@@ -93,14 +95,13 @@ class _FileUploadWithDropState extends State<FileUploadWithDrop> {
     super.initState();
   }
 
-  Future<String?> initComponent() async {
+  Future<void> initComponent() async {
     projectName = await getProjectName();
-
-    return projectName;
+    print("projectName: $projectName");
   }
 
   Future<String> getProjectName() async {
-    var input = await File("projectconfiguration.json").readAsString();
+    var input = await rootBundle.loadString('assets/projectconfiguration.json');
     var map = jsonDecode(input);
     return map['project'];
   }
@@ -281,12 +282,26 @@ class _FileUploadWithDropState extends State<FileUploadWithDrop> {
     return result ?? 'Unknown file upload result';
   }
 
+  Future<AuthSession> getCurrentSession() async {
+    final session = await Amplify.Auth.fetchAuthSession(
+        options: CognitoSessionOptions(getAWSCredentials: false));
+    return session;
+  }
+
   Future<String> retrievePresignedUrl(String bucket, String key) async {
+    AuthSession session = await getCurrentSession();
+
+    var tokens = (session as CognitoAuthSession).userPoolTokens;
+    var idToken = tokens?.idToken;
+
+    String rawIdToken = idToken!.raw;
+
     final initUri = Uri.parse(
-        "https://2u5wcv8573.execute-api.us-east-1.amazonaws.com/production/presignedupload?bucket=$bucket&key=$key");
+        "https://mtueq0xze8.execute-api.us-east-1.amazonaws.com/production/presignupload?bucket=$bucket&key=$key");
 
     final headers = <String, String>{
       'Content-Type': 'application/json',
+      'Authorization': rawIdToken
     };
 
     http.Response initResponse = await http.get(initUri, headers: headers);

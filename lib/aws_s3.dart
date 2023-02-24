@@ -1,4 +1,5 @@
 import 'package:amazon_cognito_identity_dart_2/sig_v4.dart';
+import 'package:amplify_api/amplify_api.dart';
 import 'package:http/http.dart' as http;
 
 import 'acl.dart';
@@ -27,12 +28,11 @@ class AwsS3 {
     final length = fileSize;
 
     final uri = Uri.parse(presignedUrl);
-    final req = MultipartRequest("POST", uri, onProgress: onProgress);
+    final req = MultipartRequest("PUT", uri, onProgress: onProgress);
     final multipartFile =
-        http.MultipartFile('file', stream, length, filename: filename);
+    http.MultipartFile('file', stream, length, filename: filename);
 
     req.files.add(multipartFile);
-
     print(req.toString());
 
     try {
@@ -46,5 +46,6 @@ class AwsS3 {
       print(e);
       return null;
     }
+
   }
 }

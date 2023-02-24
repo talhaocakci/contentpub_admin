@@ -21,7 +21,7 @@ terraform apply -var-file="staging.tfvars" -var="project_name=$projectname" -var
 cd ..
 cd ..
 
-echo "{\"project\":\"$projectname\"}" >> lib/projectconfiguration.json
+echo "{\"project\":\"$projectname\"}" >> assets/projectconfiguration.json
 
 amplify init
 

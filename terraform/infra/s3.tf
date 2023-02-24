@@ -12,6 +12,23 @@ resource "aws_s3_bucket" "RestrictedMediaBucketStaging" {
   bucket = "${var.project_name}-staging-restricted"
 }
 
+resource "aws_s3_bucket_cors_configuration" "RestrictedMediaBucketStagingCors" {
+  bucket = aws_s3_bucket.RestrictedMediaBucketStaging.id
+
+  cors_rule {
+    allowed_headers = ["*"]
+    allowed_methods = ["PUT", "POST"]
+    allowed_origins = ["*"]
+    expose_headers  = ["ETag"]
+    max_age_seconds = 3000
+  }
+
+  cors_rule {
+    allowed_methods = ["GET"]
+    allowed_origins = ["*"]
+  }
+}
+
 resource "aws_s3_bucket_public_access_block" "RestrictedMediaBucketStaging" {
     bucket = aws_s3_bucket.RestrictedMediaBucketStaging.id
     block_public_acls       = true
@@ -22,6 +39,23 @@ resource "aws_s3_bucket_public_access_block" "RestrictedMediaBucketStaging" {
 
 resource "aws_s3_bucket" "RestrictedMediaBucketProd" {
   bucket = "${var.project_name}-production-restricted"
+}
+
+resource "aws_s3_bucket_cors_configuration" "RestrictedMediaBucketProdCors" {
+  bucket = aws_s3_bucket.RestrictedMediaBucketProd.id
+
+  cors_rule {
+    allowed_headers = ["*"]
+    allowed_methods = ["PUT", "POST"]
+    allowed_origins = ["*"]
+    expose_headers  = ["ETag"]
+    max_age_seconds = 3000
+  }
+
+  cors_rule {
+    allowed_methods = ["GET"]
+    allowed_origins = ["*"]
+  }
 }
 
 resource "aws_s3_bucket_public_access_block" "RestrictedMediaBucketProd" {
@@ -36,8 +70,42 @@ resource "aws_s3_bucket" "PublicMediaBucketStaging" {
     bucket = "${var.project_name}-staging-public"
 }
 
+resource "aws_s3_bucket_cors_configuration" "PublicMediaBucketStagingCors" {
+  bucket = aws_s3_bucket.PublicMediaBucketStaging.id
+
+  cors_rule {
+    allowed_headers = ["*"]
+    allowed_methods = ["PUT", "POST"]
+    allowed_origins = ["*"]
+    expose_headers  = ["ETag"]
+    max_age_seconds = 3000
+  }
+
+  cors_rule {
+    allowed_methods = ["GET"]
+    allowed_origins = ["*"]
+  }
+}
+
 resource "aws_s3_bucket" "PublicMediaBucketProd" {
     bucket = "${var.project_name}-production-public"
+}
+
+resource "aws_s3_bucket_cors_configuration" "PublicMediaBucketProdCors" {
+  bucket = aws_s3_bucket.PublicMediaBucketProd.id
+
+  cors_rule {
+    allowed_headers = ["*"]
+    allowed_methods = ["PUT", "POST"]
+    allowed_origins = ["*"]
+    expose_headers  = ["ETag"]
+    max_age_seconds = 3000
+  }
+
+  cors_rule {
+    allowed_methods = ["GET"]
+    allowed_origins = ["*"]
+  }
 }
 
 resource "aws_s3_bucket" "CustomDomainAdminApp" {

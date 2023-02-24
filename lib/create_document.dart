@@ -276,8 +276,8 @@ class _CreateDocumentWidgetState extends State<CreateDocumentWidget> {
                                 Expanded(
                                   child: FileUploadWithDrop(
                                       remoteDirectory: 'files',
-                                      remoteFileName: editableContent!.id,
-                                      isPublic: true,
+                                      remoteFileName: '${editableContent!.id}-file1',
+                                      isPublic: false,
                                       remoteUrl: editableContent?.s3Url,
                                       fileType: FileType.OTHER,
                                       onComplete: (uploadedFile) {
@@ -297,7 +297,7 @@ class _CreateDocumentWidgetState extends State<CreateDocumentWidget> {
                                 Expanded(
                                   child: FileUploadWithDrop(
                                       remoteDirectory: content!.id,
-                                      remoteFileName: 'photo',
+                                      remoteFileName: '${editableContent!.id}-photo',
                                       isPublic: true,
                                       remoteUrl: editableContent?.photoUrl,
                                       fileType: FileType.PICTURE,
@@ -318,7 +318,7 @@ class _CreateDocumentWidgetState extends State<CreateDocumentWidget> {
                                 Expanded(
                                   child: FileUploadWithDrop(
                                       remoteDirectory: editableContent!.id,
-                                      remoteFileName: 'promo-video',
+                                      remoteFileName: '${editableContent!.id}-promo-video',
                                       isPublic: true,
                                       fileType: FileType.VIDEO,
                                       remoteUrl: editableContent?.promoVideoUrl,
