@@ -2,9 +2,12 @@ import 'dart:html' as html;
 
 import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
 import 'package:amplify_flutter/amplify_flutter.dart';
+import 'package:async/async.dart';
+import 'package:chunked_stream/chunked_stream.dart';
 import 'package:contentpub_admin/aws_s3.dart';
 import 'package:contentpub_admin/flutter_flow/flutter_flow_icon_button.dart';
 import 'package:contentpub_admin/flutter_flow/flutter_flow_theme.dart';
+import 'package:contentpub_admin/models/api/presign_response.dart';
 import 'package:contentpub_admin/state_container.dart';
 import 'package:contentpub_admin/video_player.dart';
 import 'package:flutter/material.dart';
@@ -13,7 +16,10 @@ import 'package:flutter_dropzone/flutter_dropzone.dart';
 
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'dart:async';
 import 'dart:io';
+
+import 'package:xml/xml.dart';
 
 class FileUploadWithDrop extends StatefulWidget {
   final FileType fileType;
@@ -256,19 +262,93 @@ class _FileUploadWithDropState extends State<FileUploadWithDrop> {
       localFile = url;
     });
 
-    String presignedUrl = await retrievePresignedUrl(bucket, '$uploadDest/$filename');
+    int index = 0;
 
-    print(presignedUrl);
+    int mb_25 = 25 * 1024 * 1024;
 
-    String? result = await AwsS3.uploadFile(
-        presignedUrl: presignedUrl,
-        inputStream: file.stream,
-        fileSize: fileSize,
-        filename: filename,
-        onProgress: (bytes, totalBytes) =>
-            printprogress(bytes, totalBytes, remoteFileUrl));
+    int splitCount = (fileSize / mb_25).ceil();
 
-    return result ?? 'Unknown file upload result';
+    var r = await retrievePresignedUrl(
+        bucket, '$uploadDest/$filename', splitCount, "");
+
+    PresignUploadResponse presign = PresignUploadResponse();
+    presign.initUrl = jsonDecode(r)['initUrl'];
+    presign.partUrls = jsonDecode(r)['partUrls'];
+    presign.abortUrl = jsonDecode(r)['abortUrl'];
+
+    var initiateResponse =
+        await http.post(Uri.parse(presign.initUrl ?? 'wrong url'), body: {});
+
+    final document = XmlDocument.parse(initiateResponse.body);
+    String? uploadId = document
+        .getElement('InitiateMultipartUploadResult')!
+        .getElement('UploadId')!
+        .text;
+
+    print('upload id: $uploadId');
+
+    r = await retrievePresignedUrl(bucket, '$uploadDest/$filename', splitCount,
+        uploadId ?? 'wrong upload id');
+
+    presign = PresignUploadResponse();
+    presign.initUrl = jsonDecode(r)['initUrl'];
+    presign.partUrls = jsonDecode(r)['partUrls'];
+    presign.abortUrl = jsonDecode(r)['abortUrl'];
+    presign.completeUrl = jsonDecode(r)['completeUrl'];
+
+    int i = 0;
+    String parts = '';
+
+    var stream = file.stream;
+
+    Uint8List substream;
+
+    final chunkStreamReader = ChunkedStreamReader(stream);
+
+    while (index < fileSize) {
+      var substreamSize = mb_25;
+
+      if (fileSize - index < substreamSize) {
+        substreamSize = fileSize - index;
+      }
+
+      substream = await chunkStreamReader.readBytes(substreamSize);
+
+      print('part ${i + 1}');
+
+      print('substream length ${substream.length}');
+
+      var res = await http.put(Uri.parse(presign.partUrls!.elementAt(i)),
+          body: substream);
+
+      print(res.statusCode);
+      print(res.headers);
+
+      String s = '''<Part>
+     
+      <ETag>${res.headers["etag"]}</ETag>
+      <PartNumber>${i + 1}</PartNumber>
+   </Part>
+    ''';
+
+      print(s);
+
+      index += substreamSize;
+      i++;
+
+      parts = parts + s;
+    }
+
+    String completeRequest = '''<?xml version="1.0" encoding="UTF-8"?>
+<CompleteMultipartUpload xmlns="http://s3.amazonaws.com/doc/2006-03-01/">
+   $parts
+</CompleteMultipartUpload>''';
+
+    var completeResponse = await http.post(
+        Uri.parse(presign.completeUrl ?? 'wrong url'),
+        body: completeRequest);
+
+    return 'return file url';
   }
 
   Future<AuthSession> getCurrentSession() async {
@@ -277,7 +357,8 @@ class _FileUploadWithDropState extends State<FileUploadWithDrop> {
     return session;
   }
 
-  Future<String> retrievePresignedUrl(String bucket, String key) async {
+  Future<String> retrievePresignedUrl(
+      String bucket, String key, int splitCount, String uploadId) async {
     AuthSession session = await getCurrentSession();
 
     var tokens = (session as CognitoAuthSession).userPoolTokens;
@@ -287,7 +368,8 @@ class _FileUploadWithDropState extends State<FileUploadWithDrop> {
 
     String apiRoot = StateContainer.of(context).apiRootUrl ?? '';
 
-    final initUri = Uri.parse("$apiRoot/presignupload?bucket=$bucket&key=$key");
+    final initUri = Uri.parse(
+        "$apiRoot/presignupload?bucket=$bucket&key=$key&splitCount=$splitCount&uploadId=$uploadId");
 
     final headers = <String, String>{
       'Content-Type': 'application/json',
@@ -296,11 +378,9 @@ class _FileUploadWithDropState extends State<FileUploadWithDrop> {
 
     http.Response initResponse = await http.get(initUri, headers: headers);
 
-    var url = jsonDecode(initResponse.body)["url"];
+    //print(initResponse.body);
 
-    print(url);
-
-    return url;
+    return initResponse.body;
   }
 
   void printprogress(int bytes, int totalBytes, String remoteFileUrl) {
