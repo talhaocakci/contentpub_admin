@@ -264,9 +264,9 @@ class _FileUploadWithDropState extends State<FileUploadWithDrop> {
 
     int index = 0;
 
-    int mb_25 = 25 * 1024 * 1024;
+    int chunkSize = 25 * 1024 * 1024;
 
-    int splitCount = (fileSize / mb_25).ceil();
+    int splitCount = (fileSize / chunkSize).ceil();
 
     var r = await retrievePresignedUrl(
         bucket, '$uploadDest/$filename', splitCount, "");
@@ -275,6 +275,20 @@ class _FileUploadWithDropState extends State<FileUploadWithDrop> {
     presign.initUrl = jsonDecode(r)['initUrl'];
     presign.partUrls = jsonDecode(r)['partUrls'];
     presign.abortUrl = jsonDecode(r)['abortUrl'];
+    presign.singleUrl = jsonDecode(r)['singleUrl'];
+
+    print('split count $splitCount');
+
+    if (splitCount.compareTo(1) == 0) {
+      final chunkStreamReader = ChunkedStreamReader(file.stream);
+
+      var res = await http.put(Uri.parse(presign.singleUrl!),
+          body: await chunkStreamReader.readBytes(fileSize));
+      print('single upload');
+      print(res.statusCode);
+      print(res.headers);
+      return 'return url';
+    }
 
     var initiateResponse =
         await http.post(Uri.parse(presign.initUrl ?? 'wrong url'), body: {});
@@ -306,7 +320,7 @@ class _FileUploadWithDropState extends State<FileUploadWithDrop> {
     final chunkStreamReader = ChunkedStreamReader(stream);
 
     while (index < fileSize) {
-      var substreamSize = mb_25;
+      var substreamSize = chunkSize;
 
       if (fileSize - index < substreamSize) {
         substreamSize = fileSize - index;
