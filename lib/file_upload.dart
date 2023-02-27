@@ -260,6 +260,7 @@ class _FileUploadWithDropState extends State<FileUploadWithDrop> {
     setState(() {
       uploadInProgress = true;
       localFile = url;
+      uploadMessage = 'Initating secure URL to AWS';
     });
 
     int index = 0;
@@ -280,6 +281,10 @@ class _FileUploadWithDropState extends State<FileUploadWithDrop> {
     print('split count $splitCount');
 
     if (splitCount.compareTo(1) == 0) {
+      setState(() {
+        uploadMessage = 'Uploading...';
+      });
+
       final chunkStreamReader = ChunkedStreamReader(file.stream);
 
       var res = await http.put(Uri.parse(presign.singleUrl!),
@@ -325,6 +330,10 @@ class _FileUploadWithDropState extends State<FileUploadWithDrop> {
       if (fileSize - index < substreamSize) {
         substreamSize = fileSize - index;
       }
+
+      setState(() {
+        uploadMessage = 'Uploading chunk ${i + 1} of $splitCount';
+      });
 
       substream = await chunkStreamReader.readBytes(substreamSize);
 

@@ -153,6 +153,10 @@ class StateContainerState extends State<StateContainer> {
     return user;
   }
 
+  String apigatewayBaseUrl() {
+    return "https://$apigatewayId.execute-api.$region.amazonaws.com/$environment";
+  }
+
   void processAuthUser() async {
     authUser = await getCurrentUser();
 
@@ -176,8 +180,8 @@ class StateContainerState extends State<StateContainer> {
 
       // stripe customer generation and putting into session
 
-      const String customerUrl =
-          "https://zaacxi1w85.execute-api.us-east-1.amazonaws.com/testing/customer";
+      String customerUrl =
+          "https://$apigatewayId.execute-api.$region.amazonaws.com/$environment/customer";
 
       http.Response initResponse = await http.post(Uri.parse(customerUrl),
           body: jsonEncode(

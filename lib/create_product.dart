@@ -7,6 +7,7 @@ import 'package:contentpub_admin/flutter_flow/flutter_flow_theme.dart';
 import 'package:contentpub_admin/models/ModelProvider.dart';
 import 'package:contentpub_admin/models/PublishProductModel.dart';
 import 'package:contentpub_admin/models/editable/editables.dart';
+import 'package:contentpub_admin/state_container.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_multi_select_items/flutter_multi_select_items.dart';
 import 'package:http/http.dart' as http;
@@ -601,7 +602,7 @@ class _CreateProductWidgetState extends State<CreateProductWidget> {
     print('Product publishing started');
 
     final initUri = Uri.parse(
-        "https://zaacxi1w85.execute-api.us-east-1.amazonaws.com/testing/product/publish");
+        "${StateContainer.of(context).apigatewayBaseUrl()}/product/publish");
 
     Product product = Product();
     product.id = bundleToPublish!.id;
