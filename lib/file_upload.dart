@@ -292,7 +292,10 @@ class _FileUploadWithDropState extends State<FileUploadWithDrop> {
       print('single upload');
       print(res.statusCode);
       print(res.headers);
-      return 'return url';
+
+      completeUpload(remoteFileUrl, fileSize);
+
+      return remoteFileUrl;
     }
 
     var initiateResponse =
@@ -319,6 +322,10 @@ class _FileUploadWithDropState extends State<FileUploadWithDrop> {
     String parts = '';
 
     var stream = file.stream;
+
+    print(presign.completeUrl);
+    String? remoteUrl = presign.completeUrl?.substring(0, presign.completeUrl?.indexOf("?"));
+    print(remoteUrl);
 
     Uint8List substream;
 
@@ -371,6 +378,8 @@ class _FileUploadWithDropState extends State<FileUploadWithDrop> {
         Uri.parse(presign.completeUrl ?? 'wrong url'),
         body: completeRequest);
 
+    completeUpload(remoteUrl ?? 'wrong url', fileSize);
+
     return 'return file url';
   }
 
@@ -406,29 +415,33 @@ class _FileUploadWithDropState extends State<FileUploadWithDrop> {
     return initResponse.body;
   }
 
+  void completeUpload(String remoteFileUrl, int totalBytes) {
+    uploadInProgress = false;
+    //make s3 resign call to access the video
+
+    UploadedFile uploadedFile = UploadedFile(
+        remoteUrl: remoteFileUrl,
+        localFileName: localFile,
+        fileSize: totalBytes,
+        fileType: widget.fileType);
+
+    print('result of upload: ${uploadedFile.remoteUrl}');
+
+    setState(() {
+      uploadInProgress = false;
+      uploadedFileUrl = remoteFileUrl;
+    });
+
+    widget.onComplete(uploadedFile);
+  }
+
   void printprogress(int bytes, int totalBytes, String remoteFileUrl) {
     setState(() {
       uploadMessage = 'uploaded ${bytes} of ${totalBytes}';
     });
 
     if (bytes == totalBytes) {
-      uploadInProgress = false;
-      //make s3 resign call to access the video
-
-      UploadedFile uploadedFile = UploadedFile(
-          remoteUrl: remoteFileUrl,
-          localFileName: localFile,
-          fileSize: totalBytes,
-          fileType: widget.fileType);
-
-      print('result of upload: ${uploadedFile.remoteUrl}');
-
-      setState(() {
-        uploadInProgress = false;
-        uploadedFileUrl = remoteFileUrl;
-      });
-
-      widget.onComplete(uploadedFile);
+      completeUpload(remoteFileUrl, totalBytes);
     }
   }
 }
