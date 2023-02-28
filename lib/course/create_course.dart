@@ -71,9 +71,6 @@ class _CreateCourseWidgetState extends State<CreateCourseWidget> {
   }
 
   Future<EditableCourse> _initPage() async {
-    editableCourse =
-        course != null ? EditableCourse.toEditable(course!) : EditableCourse();
-
     return editableCourse!;
   }
 

@@ -21,6 +21,8 @@ import 'dart:io';
 
 import 'package:xml/xml.dart';
 
+var regex = RegExp(r'https:\/\/(.?[^\.]*)\.(s3.amazonaws.com)\/(.*)');
+
 class FileUploadWithDrop extends StatefulWidget {
   final FileType fileType;
   final String? remoteUrl;
@@ -94,10 +96,33 @@ class _FileUploadWithDropState extends State<FileUploadWithDrop> {
     if (widget.remoteUrl != null) {
       uploadedFileUrl = widget.remoteUrl;
       uploadInProgress = false;
+
+      if (!(widget.isPublic ?? false)) {
+        convertToAccessibleUrl();
+      }
     }
 
     setState(() {});
     super.initState();
+  }
+
+  Future<String> convertToAccessibleUrl() async {
+    Iterable<RegExpMatch> matches = regex.allMatches(uploadedFileUrl ?? '');
+    String bucket = '';
+    String key = '';
+
+    for (final m in matches) {
+      bucket = m[1] ?? '';
+      key = m[3] ?? '';
+    }
+
+    uploadedFileUrl = await retrievePresignedUrlForRead(bucket, key);
+
+    setState(() {
+      uploadedFileUrl = uploadedFileUrl;
+    });
+
+    return uploadedFileUrl ?? 'wrong presign url';
   }
 
   @override
@@ -293,7 +318,7 @@ class _FileUploadWithDropState extends State<FileUploadWithDrop> {
       print(res.statusCode);
       print(res.headers);
 
-      completeUpload(remoteFileUrl, fileSize);
+      completeUpload(visibility, bucket, uploadDest, filename, fileSize);
 
       return remoteFileUrl;
     }
@@ -324,7 +349,8 @@ class _FileUploadWithDropState extends State<FileUploadWithDrop> {
     var stream = file.stream;
 
     print(presign.completeUrl);
-    String? remoteUrl = presign.completeUrl?.substring(0, presign.completeUrl?.indexOf("?"));
+    String? remoteUrl =
+        presign.completeUrl?.substring(0, presign.completeUrl?.indexOf("?"));
     print(remoteUrl);
 
     Uint8List substream;
@@ -378,9 +404,9 @@ class _FileUploadWithDropState extends State<FileUploadWithDrop> {
         Uri.parse(presign.completeUrl ?? 'wrong url'),
         body: completeRequest);
 
-    completeUpload(remoteUrl ?? 'wrong url', fileSize);
+    completeUpload(visibility, bucket, uploadDest, filename, fileSize);
 
-    return 'return file url';
+    return remoteUrl ?? 'wrong url';
   }
 
   Future<AuthSession> getCurrentSession() async {
@@ -415,14 +441,50 @@ class _FileUploadWithDropState extends State<FileUploadWithDrop> {
     return initResponse.body;
   }
 
-  void completeUpload(String remoteFileUrl, int totalBytes) {
+  Future<String> retrievePresignedUrlForRead(String bucket, String key) async {
+    AuthSession session = await getCurrentSession();
+
+    var tokens = (session as CognitoAuthSession).userPoolTokens;
+    var idToken = tokens?.idToken;
+
+    String rawIdToken = idToken!.raw;
+
+    String apiRoot = StateContainer.of(context).apiRootUrl ?? '';
+
+    final initUri = Uri.parse("$apiRoot/presign?bucket=$bucket&key=$key");
+
+    final headers = <String, String>{
+      'Content-Type': 'application/json',
+      'Authorization': rawIdToken
+    };
+
+    http.Response response = await http.get(initUri, headers: headers);
+
+    if (response.statusCode == 200) {
+      return jsonDecode(response.body)['url'];
+    }
+
+    return 'https://$bucket.s3.amazonaws.com/$key';
+  }
+
+  void completeUpload(String visibility, String bucket, String uploadDest,
+      String fileName, int fileSize) async {
     uploadInProgress = false;
-    //make s3 resign call to access the video
+
+    String remoteFileUrl =
+        'https://$bucket.s3.amazonaws.com/$uploadDest/$fileName';
+
+    if (visibility == 'restricted') {
+      remoteFileUrl =
+          await retrievePresignedUrlForRead(bucket, '$uploadDest/$fileName');
+
+      print('get url $remoteFileUrl');
+    }
 
     UploadedFile uploadedFile = UploadedFile(
         remoteUrl: remoteFileUrl,
         localFileName: localFile,
-        fileSize: totalBytes,
+        fileSize: fileSize,
         fileType: widget.fileType);
 
     print('result of upload: ${uploadedFile.remoteUrl}');
@@ -441,7 +503,7 @@ class _FileUploadWithDropState extends State<FileUploadWithDrop> {
     });
 
     if (bytes == totalBytes) {
-      completeUpload(remoteFileUrl, totalBytes);
+      // complete
     }
   }
 }
