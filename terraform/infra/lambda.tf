@@ -41,10 +41,20 @@ variable "stripe_api_secret" {
    description = "Stripe webhook secret key"
  }
 
-   variable "stripe_webhook_id" {
+ variable "stripe_webhook_id" {
    type = string
    description = "Stripe webhook id"
  }
+
+variable "appsync_api_id" {
+  type = string
+  description = "Appsync api id - Set after creating the appsync grapghq"
+}
+
+variable "appsync_api_key" {
+  type = string
+  description = "Appsync api key - Set after creating the appsync grapghq"
+}
 
 resource "aws_lambda_function" "StripeLambda" {
     description = "Stripe functions, product functions etc"
@@ -64,6 +74,8 @@ resource "aws_lambda_function" "StripeLambda" {
             stripe_webhook_secret = var.stripe_webhook_secret
             stripe_webhook_id = var.stripe_webhook_id
             stripe_api_secret = var.stripe_api_secret
+            appsync_api_id = var.appsync_api_id
+            appsync_api_key = var.appsync_api_key
          }
     }
     tracing_config {
