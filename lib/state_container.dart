@@ -157,6 +157,14 @@ class StateContainerState extends State<StateContainer> {
     return "https://$apigatewayId.execute-api.$region.amazonaws.com/$environment";
   }
 
+  String getBucketName(bool public) {
+    String visibility = (public) ? 'public' : 'restricted';
+
+    String bucket = "$projectName-$environment-$visibility";
+
+    return bucket;
+  }
+
   void processAuthUser() async {
     authUser = await getCurrentUser();
 

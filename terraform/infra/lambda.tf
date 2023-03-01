@@ -30,14 +30,20 @@ resource "aws_iam_role" "StripeLibraryIamRole" {
     max_session_duration = 3600
 }
 
- variable "stripe_api_key" {
+variable "stripe_api_secret" {
    type = string
-   description = "Stripe API Key"
+   description = "Stripe API Secret"
  }
+ 
 
   variable "stripe_webhook_secret" {
    type = string
    description = "Stripe webhook secret key"
+ }
+
+   variable "stripe_webhook_id" {
+   type = string
+   description = "Stripe webhook id"
  }
 
 resource "aws_lambda_function" "StripeLambda" {
@@ -55,8 +61,9 @@ resource "aws_lambda_function" "StripeLambda" {
     timeout = 20
     environment {
          variables = {
-            stripe_key = var.stripe_api_key
             stripe_webhook_secret = var.stripe_webhook_secret
+            stripe_webhook_id = var.stripe_webhook_id
+            stripe_api_secret = var.stripe_api_secret
          }
     }
     tracing_config {

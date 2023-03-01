@@ -133,17 +133,6 @@ class _ListContentsWidgetState extends State<ListContentsWidget> {
                                   child: Container(
                                     width: double.infinity,
                                     height: 200,
-                                    decoration: BoxDecoration(
-                                      color: FlutterFlowTheme.of(context)
-                                          .secondaryBackground,
-                                      image: DecorationImage(
-                                        fit: BoxFit.fitWidth,
-                                        image: Image.network(
-                                          'https://images.unsplash.com/photo-1635863786408-69e343062dbc?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MTI2fHx3b3Jrb3V0fGVufDB8fDB8fA%3D%3D&auto=format&fit=crop&w=800&q=60',
-                                        ).image,
-                                      ),
-                                      borderRadius: BorderRadius.circular(8),
-                                    ),
                                     child: Padding(
                                       padding:
                                           const EdgeInsetsDirectional.fromSTEB(

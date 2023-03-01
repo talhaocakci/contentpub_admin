@@ -37,16 +37,17 @@ class _CreateCourseWidgetState extends State<CreateCourseWidget> {
   Course? course;
   EditableCourse? editableCourse;
 
+  bool isNewCourse = true;
+
   @override
   void initState() {
     if (widget.courseId == '') {
-      course = Course(id: '');
+      String id = Uuid().v4();
+      course = Course(id: id);
+      editableCourse = EditableCourse.toEditable(course!);
     } else {
+      isNewCourse = false;
       course = Course(id: widget.courseId);
-      _initCourse();
-    }
-
-    if (course!.id != '') {
       _initCourse();
     }
 
@@ -453,24 +454,15 @@ class _CreateCourseWidgetState extends State<CreateCourseWidget> {
       const SnackBar(content: Text('Saving the course')),
     );
 
-    bool newCourse = course!.id == '';
-    String courseId = (course!.id != '') ? course!.id : uuid.v4();
     String sectionId = uuid.v4();
     String lessonId = uuid.v4();
     String contentId = uuid.v4();
 
-    course = Course(
-        id: courseId,
-        title: editableCourse!.title,
-        subtitle: editableCourse!.subtitle,
-        courseContentId: contentId,
-        coverPhotoUrl: editableCourse?.coverPhotoUrl,
-        promoVideoUrl: editableCourse?.promoVideoUrl,
-        description: editableCourse!.description);
+    course = EditableCourse.fromEditable(editableCourse!);
 
-    if (newCourse) {
+    if (isNewCourse) {
       Section section =
-          Section(id: sectionId, courseID: courseId, name: 'Section 1');
+          Section(id: sectionId, courseID: course!.id, name: 'Section 1');
 
       final sectionSaveRequest = ModelMutations.create(section);
 
@@ -504,9 +496,9 @@ class _CreateCourseWidgetState extends State<CreateCourseWidget> {
       print('Retrieved course id: ${course!.id}');
 
       var content = Content(
-          id: contentId,
+          id: course!.id, // use the same id with course for simplicity
           type: ContentType.COURSE,
-          objectId: course!.id,
+          objectId: course!.id, // this will not be needed
           name: course!.title);
 
       final contentSaveRequest = ModelMutations.create(content);
@@ -515,9 +507,11 @@ class _CreateCourseWidgetState extends State<CreateCourseWidget> {
 
       print('Course id ${course!.id}');
       print('Course id ${course}');
+
+      isNewCourse = false;
     }
 
-    if (newCourse) {
+    if (isNewCourse) {
       final courseSaveRequest = ModelMutations.create(course!);
 
       Amplify.API.mutate(request: courseSaveRequest);
