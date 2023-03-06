@@ -54,7 +54,7 @@ export 'TenantConfiguration.dart';
 
 class ModelProvider implements ModelProviderInterface {
   @override
-  String version = "be6861bb9063c6a8877e6acfe160e6b4";
+  String version = "7f278780ea6e5444e14f8049c0db7e9b";
   @override
   List<ModelSchema> modelSchemas = [Bundle.schema, BundleContent.schema, Content.schema, ContentCoworker.schema, Course.schema, Coworker.schema, Customer.schema, Lesson.schema, Price.schema, Purchase.schema, Section.schema, Tenant.schema, TenantConfiguration.schema];
   static final ModelProvider _instance = ModelProvider();

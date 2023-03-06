@@ -31,6 +31,7 @@ class Lesson extends Model {
   final String? _name;
   final String? _description;
   final String? _video;
+  final int? _videoDuration;
   final String? _sectionID;
   final int? _order;
   final TemporalDateTime? _createdAt;
@@ -61,6 +62,10 @@ class Lesson extends Model {
     return _video;
   }
   
+  int? get videoDuration {
+    return _videoDuration;
+  }
+  
   String get sectionID {
     try {
       return _sectionID!;
@@ -86,14 +91,15 @@ class Lesson extends Model {
     return _updatedAt;
   }
   
-  const Lesson._internal({required this.id, name, description, video, required sectionID, order, createdAt, updatedAt}): _name = name, _description = description, _video = video, _sectionID = sectionID, _order = order, _createdAt = createdAt, _updatedAt = updatedAt;
+  const Lesson._internal({required this.id, name, description, video, videoDuration, required sectionID, order, createdAt, updatedAt}): _name = name, _description = description, _video = video, _videoDuration = videoDuration, _sectionID = sectionID, _order = order, _createdAt = createdAt, _updatedAt = updatedAt;
   
-  factory Lesson({String? id, String? name, String? description, String? video, required String sectionID, int? order}) {
+  factory Lesson({String? id, String? name, String? description, String? video, int? videoDuration, required String sectionID, int? order}) {
     return Lesson._internal(
       id: id == null ? UUID.getUUID() : id,
       name: name,
       description: description,
       video: video,
+      videoDuration: videoDuration,
       sectionID: sectionID,
       order: order);
   }
@@ -110,6 +116,7 @@ class Lesson extends Model {
       _name == other._name &&
       _description == other._description &&
       _video == other._video &&
+      _videoDuration == other._videoDuration &&
       _sectionID == other._sectionID &&
       _order == other._order;
   }
@@ -126,6 +133,7 @@ class Lesson extends Model {
     buffer.write("name=" + "$_name" + ", ");
     buffer.write("description=" + "$_description" + ", ");
     buffer.write("video=" + "$_video" + ", ");
+    buffer.write("videoDuration=" + (_videoDuration != null ? _videoDuration!.toString() : "null") + ", ");
     buffer.write("sectionID=" + "$_sectionID" + ", ");
     buffer.write("order=" + (_order != null ? _order!.toString() : "null") + ", ");
     buffer.write("createdAt=" + (_createdAt != null ? _createdAt!.format() : "null") + ", ");
@@ -135,12 +143,13 @@ class Lesson extends Model {
     return buffer.toString();
   }
   
-  Lesson copyWith({String? name, String? description, String? video, String? sectionID, int? order}) {
+  Lesson copyWith({String? name, String? description, String? video, int? videoDuration, String? sectionID, int? order}) {
     return Lesson._internal(
       id: id,
       name: name ?? this.name,
       description: description ?? this.description,
       video: video ?? this.video,
+      videoDuration: videoDuration ?? this.videoDuration,
       sectionID: sectionID ?? this.sectionID,
       order: order ?? this.order);
   }
@@ -150,17 +159,18 @@ class Lesson extends Model {
       _name = json['name'],
       _description = json['description'],
       _video = json['video'],
+      _videoDuration = (json['videoDuration'] as num?)?.toInt(),
       _sectionID = json['sectionID'],
       _order = (json['order'] as num?)?.toInt(),
       _createdAt = json['createdAt'] != null ? TemporalDateTime.fromString(json['createdAt']) : null,
       _updatedAt = json['updatedAt'] != null ? TemporalDateTime.fromString(json['updatedAt']) : null;
   
   Map<String, dynamic> toJson() => {
-    'id': id, 'name': _name, 'description': _description, 'video': _video, 'sectionID': _sectionID, 'order': _order, 'createdAt': _createdAt?.format(), 'updatedAt': _updatedAt?.format()
+    'id': id, 'name': _name, 'description': _description, 'video': _video, 'videoDuration': _videoDuration, 'sectionID': _sectionID, 'order': _order, 'createdAt': _createdAt?.format(), 'updatedAt': _updatedAt?.format()
   };
   
   Map<String, Object?> toMap() => {
-    'id': id, 'name': _name, 'description': _description, 'video': _video, 'sectionID': _sectionID, 'order': _order, 'createdAt': _createdAt, 'updatedAt': _updatedAt
+    'id': id, 'name': _name, 'description': _description, 'video': _video, 'videoDuration': _videoDuration, 'sectionID': _sectionID, 'order': _order, 'createdAt': _createdAt, 'updatedAt': _updatedAt
   };
 
   static final QueryModelIdentifier<LessonModelIdentifier> MODEL_IDENTIFIER = QueryModelIdentifier<LessonModelIdentifier>();
@@ -168,6 +178,7 @@ class Lesson extends Model {
   static final QueryField NAME = QueryField(fieldName: "name");
   static final QueryField DESCRIPTION = QueryField(fieldName: "description");
   static final QueryField VIDEO = QueryField(fieldName: "video");
+  static final QueryField VIDEODURATION = QueryField(fieldName: "videoDuration");
   static final QueryField SECTIONID = QueryField(fieldName: "sectionID");
   static final QueryField ORDER = QueryField(fieldName: "order");
   static var schema = Model.defineSchema(define: (ModelSchemaDefinition modelSchemaDefinition) {
@@ -207,6 +218,12 @@ class Lesson extends Model {
       key: Lesson.VIDEO,
       isRequired: false,
       ofType: ModelFieldType(ModelFieldTypeEnum.string)
+    ));
+    
+    modelSchemaDefinition.addField(ModelFieldDefinition.field(
+      key: Lesson.VIDEODURATION,
+      isRequired: false,
+      ofType: ModelFieldType(ModelFieldTypeEnum.int)
     ));
     
     modelSchemaDefinition.addField(ModelFieldDefinition.field(

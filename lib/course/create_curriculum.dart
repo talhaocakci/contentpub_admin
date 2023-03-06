@@ -154,6 +154,13 @@ class CurriculumCreateWidgetState extends State<CurriculumCreateWidget> {
                                                       lesson = lesson;
                                                     });
                                                   },
+                                                  onVideoDurationKnown:
+                                                      (duration) {
+                                                    lesson?.duration =
+                                                        duration.inSeconds;
+                                                    print(
+                                                        'update duration with $duration');
+                                                  },
                                                   onClear: () {
                                                     var editable = (lesson
                                                         as EditableLesson);
@@ -210,9 +217,9 @@ class CurriculumCreateWidgetState extends State<CurriculumCreateWidget> {
   }
 
   void saveCourse() async {
-    course = EditableCourse.fromEditable(editableCourse ?? EditableCourse());
-
     int sectionOrder = 0;
+    int totalDurationInSeconds = 0;
+
     for (EditableSection section in editableCourse!.Sections ?? List.empty()) {
       if (section.order != sectionOrder) {
         section.dirty = true;
@@ -225,6 +232,7 @@ class CurriculumCreateWidgetState extends State<CurriculumCreateWidget> {
           lesson.dirty = true;
         }
         lesson.order = lessonOrder;
+        totalDurationInSeconds += (lesson.duration ?? 0);
         if (lesson.dirty) {
           lesson.sectionID = section.id;
           if (lesson.newItem) {
@@ -273,15 +281,13 @@ class CurriculumCreateWidgetState extends State<CurriculumCreateWidget> {
       sectionOrder++;
     }
 
-    if (course?.id != '') {
-      final courseSaveRequest = ModelMutations.create(course!);
+    editableCourse!.totalVideoDuration = totalDurationInSeconds;
 
-      Amplify.API.mutate(request: courseSaveRequest);
-    } else {
-      final courseSaveRequest = ModelMutations.update(course!);
+    course = EditableCourse.fromEditable(editableCourse ?? EditableCourse());
 
-      Amplify.API.mutate(request: courseSaveRequest);
-    }
+    final courseSaveRequest = ModelMutations.update(course!);
+
+    Amplify.API.mutate(request: courseSaveRequest);
 
     //print('Course id: ${course!.id}');
   }

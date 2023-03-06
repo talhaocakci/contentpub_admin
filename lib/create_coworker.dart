@@ -307,6 +307,7 @@ class _CreateAuthorWidgetState extends State<CreateAuthorWidget> {
                                                     editableCoworker?.photoUrl =
                                                         uploadedFile.remoteUrl;
                                                   },
+                                                  onVideoDurationKnown: (_) {},
                                                   onClear: () {
                                                     print(
                                                         'Clear the object here as well');

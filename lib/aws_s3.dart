@@ -5,8 +5,6 @@ import 'package:http/http.dart';
 
 import 'acl.dart';
 import 'multipart_request.dart';
-import 'policy.dart';
-import 'utils.dart';
 import 'package:http_parser/http_parser.dart';
 
 /// Convenience class for uploading files to AWS S3

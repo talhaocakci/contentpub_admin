@@ -280,6 +280,7 @@ class _CreateDocumentWidgetState extends State<CreateDocumentWidget> {
                                       isPublic: false,
                                       remoteUrl: editableContent?.s3Url,
                                       fileType: FileType.OTHER,
+                                      onVideoDurationKnown: (_) {},
                                       onComplete: (uploadedFile) {
                                         editableContent?.s3Url =
                                             uploadedFile.remoteUrl;
@@ -301,6 +302,7 @@ class _CreateDocumentWidgetState extends State<CreateDocumentWidget> {
                                       isPublic: true,
                                       remoteUrl: editableContent?.photoUrl,
                                       fileType: FileType.PICTURE,
+                                      onVideoDurationKnown: (_) {},
                                       onComplete: (uploadedFile) {
                                         editableContent?.photoUrl =
                                             uploadedFile.remoteUrl;
@@ -326,6 +328,7 @@ class _CreateDocumentWidgetState extends State<CreateDocumentWidget> {
                                         editableContent?.promoVideoUrl =
                                             uploadedFile.remoteUrl;
                                       },
+                                      onVideoDurationKnown: (_) {},
                                       onClear: () {
                                         print('Clear the object here as well');
                                       }),

@@ -10,6 +10,7 @@ import 'package:contentpub_admin/models/Section.dart';
 import 'package:contentpub_admin/models/editable/editables.dart';
 import 'package:flutter/material.dart';
 import 'package:uuid/uuid.dart';
+import 'package:simple_markdown_editor/simple_markdown_editor.dart';
 
 import '../flutter_flow/flutter_flow_icon_button.dart';
 import '../flutter_flow/flutter_flow_theme.dart';
@@ -28,6 +29,8 @@ class CreateCourseWidget extends StatefulWidget {
 class _CreateCourseWidgetState extends State<CreateCourseWidget> {
   String? coverPhotoUrl;
   String? promoVideoUrl;
+
+  TextEditingController _descriptionController = TextEditingController();
 
   bool? switchListTileValue;
   final scaffoldKey = GlobalKey<ScaffoldState>();
@@ -62,6 +65,8 @@ class _CreateCourseWidgetState extends State<CreateCourseWidget> {
         course != null ? EditableCourse.toEditable(course!) : EditableCourse();
 
     print('editable course : ${editableCourse!.title}');
+
+    _descriptionController.text = editableCourse?.description ?? '';
 
     setState(() {
       course = course;
@@ -231,54 +236,18 @@ class _CreateCourseWidgetState extends State<CreateCourseWidget> {
                                 ))
                               ]),
                               Row(mainAxisSize: MainAxisSize.max, children: [
-                                Expanded(
-                                    child: TextFormField(
-                                  obscureText: false,
-                                  initialValue:
-                                      editableCourse?.description ?? '',
-                                  onChanged: (value) {
-                                    editableCourse!.description = value;
-                                    editableCourse!.dirty = true;
-                                  },
-                                  validator: (value) {
-                                    if (value == null || value.isEmpty) {
-                                      return 'Could you describe your course? Audience will need it';
-                                    }
-                                    return null;
-                                  },
-                                  decoration: InputDecoration(
-                                    labelText: 'Description',
-                                    hintStyle:
-                                        FlutterFlowTheme.of(context).bodyText2,
-                                    enabledBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                        color: Colors.black87,
-                                        width: 2,
-                                      ),
-                                      borderRadius: BorderRadius.circular(8),
-                                    ),
-                                    focusedBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                        width: 2,
-                                      ),
-                                      borderRadius: BorderRadius.circular(8),
-                                    ),
-                                    errorBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                        width: 2,
-                                      ),
-                                      borderRadius: BorderRadius.circular(8),
-                                    ),
-                                    focusedErrorBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                        width: 2,
-                                      ),
-                                      borderRadius: BorderRadius.circular(8),
-                                    ),
-                                  ),
-                                  style: FlutterFlowTheme.of(context).bodyText1,
-                                  maxLines: 20,
-                                )),
+                                SizedBox(
+                                  height: 400,
+                                  width: 600,
+                                  child: MarkdownFormField(
+                                      enableToolBar: true,
+                                      readOnly: false,
+                                      controller: _descriptionController,
+                                      onChanged: (value) {
+                                        editableCourse!.description = value;
+                                        editableCourse!.dirty = true;
+                                      }),
+                                ),
                               ]),
                               Padding(
                                 padding:
@@ -314,6 +283,7 @@ class _CreateCourseWidgetState extends State<CreateCourseWidget> {
                                                             ?.coverPhotoUrl =
                                                         uploadedFile.remoteUrl;
                                                   },
+                                                  onVideoDurationKnown: (_) {},
                                                   onClear: () {
                                                     print(
                                                         'Clear the object here as well');
@@ -342,6 +312,11 @@ class _CreateCourseWidgetState extends State<CreateCourseWidget> {
                                                     editableCourse
                                                             ?.promoVideoUrl =
                                                         uploadedFile.remoteUrl;
+                                                  },
+                                                  onVideoDurationKnown:
+                                                      (duration) {
+                                                    print(
+                                                        'update duration with $duration');
                                                   },
                                                   onClear: () {
                                                     print(

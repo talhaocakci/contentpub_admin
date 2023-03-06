@@ -23,6 +23,7 @@ class EditableCourse {
   String? promoVideoUrl;
   String? subtitle;
   String? courseContentId;
+  int? totalVideoDuration;
   bool dirty = false;
   bool newItem = false;
 
@@ -43,6 +44,7 @@ class EditableCourse {
         coverPhotoUrl: editable.coverPhotoUrl,
         promoVideoUrl: editable.promoVideoUrl,
         subtitle: editable.subtitle,
+        totalVideoDuration: editable.totalVideoDuration,
         courseContentId: editable.courseContentId);
   }
 
@@ -134,6 +136,7 @@ class EditableLesson {
   String? description;
   String? video;
   String? sectionID;
+  int? duration;
   int? order;
   bool dirty = false;
   bool newItem = false;
@@ -141,6 +144,7 @@ class EditableLesson {
   EditableLesson(
       {required this.sectionID,
       required this.name,
+      this.duration,
       this.id,
       this.dirty: true,
       this.newItem: true});
@@ -151,6 +155,7 @@ class EditableLesson {
         name: editable.name,
         description: editable.description,
         video: editable.video,
+        videoDuration: editable.duration,
         order: editable.order,
         id: editable.id);
   }
@@ -166,6 +171,7 @@ class EditableLesson {
     editableLesson.order = lesson.order;
     editableLesson.newItem = false;
     editableLesson.dirty = false;
+    editableLesson.duration = lesson.videoDuration;
 
     return editableLesson;
   }
@@ -270,6 +276,7 @@ class EditableContent {
   String? owner;
   String? photoUrl;
   String? promoVideoUrl;
+  int? duration;
   List<ContentCoworker>? coworkerRelations;
   bool? isPublished = false;
   bool? isArchived = false;
@@ -290,6 +297,7 @@ class EditableContent {
     editable.s3Url = content.s3Url;
     editable.photoUrl = content.photoUrl;
     editable.promoVideoUrl = content.promoVideoUrl;
+    editable.duration = content.promoVideoDuration;
     editable.isPublished = content.isPublished;
     editable.isArchived = content.isArchived;
     editable.coworkerRelations = content.Coworkers;

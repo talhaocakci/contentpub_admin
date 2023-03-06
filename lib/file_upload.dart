@@ -10,6 +10,7 @@ import 'package:contentpub_admin/flutter_flow/flutter_flow_theme.dart';
 import 'package:contentpub_admin/models/api/presign_response.dart';
 import 'package:contentpub_admin/state_container.dart';
 import 'package:contentpub_admin/video_player.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_dropzone/flutter_dropzone.dart';
@@ -21,6 +22,8 @@ import 'dart:io';
 
 import 'package:xml/xml.dart';
 
+import 'package:logger/logger.dart';
+
 var regex = RegExp(r'https:\/\/(.?[^\.]*)\.(s3.amazonaws.com)\/(.*)');
 
 class FileUploadWithDrop extends StatefulWidget {
@@ -29,6 +32,7 @@ class FileUploadWithDrop extends StatefulWidget {
   final String remoteFileName;
   final String remoteDirectory;
   final Function(UploadedFile) onComplete;
+  final Function(Duration) onVideoDurationKnown;
   final Function() onClear;
   final bool? isPublic;
 
@@ -38,6 +42,7 @@ class FileUploadWithDrop extends StatefulWidget {
       required this.onClear,
       required this.remoteFileName,
       required this.remoteDirectory,
+      required this.onVideoDurationKnown,
       this.isPublic,
       this.remoteUrl,
       Key? key})
@@ -86,6 +91,8 @@ class _FileUploadWithDropState extends State<FileUploadWithDrop> {
   bool? dirty;
   bool uploadInProgress = false;
 
+  bool fileAccessible = false;
+
   String? projectName;
 
   _FileUploadWithDropState(
@@ -99,6 +106,8 @@ class _FileUploadWithDropState extends State<FileUploadWithDrop> {
 
       if (!(widget.isPublic ?? false)) {
         convertToAccessibleUrl();
+      } else {
+        fileAccessible = true;
       }
     }
 
@@ -120,6 +129,7 @@ class _FileUploadWithDropState extends State<FileUploadWithDrop> {
 
     setState(() {
       uploadedFileUrl = uploadedFileUrl;
+      fileAccessible = true;
     });
 
     return uploadedFileUrl ?? 'wrong presign url';
@@ -158,7 +168,8 @@ class _FileUploadWithDropState extends State<FileUploadWithDrop> {
                   ])
                 : Column(
                     children: (uploadInProgress == false &&
-                            uploadedFileUrl != null)
+                            uploadedFileUrl != null &&
+                            fileAccessible)
                         ? (fileType == FileType.VIDEO)
                             ? [
                                 ElevatedButton(
@@ -178,6 +189,11 @@ class _FileUploadWithDropState extends State<FileUploadWithDrop> {
                                     child: VideoPlayerScreen(
                                       videoUrl: uploadedFileUrl ?? '',
                                       autoPlay: false,
+                                      onLoad: (duration) {
+                                        print(printDuration(duration));
+
+                                        widget.onVideoDurationKnown(duration);
+                                      },
                                     ))
                               ]
                             : (fileType == FileType.PICTURE)
@@ -249,6 +265,12 @@ class _FileUploadWithDropState extends State<FileUploadWithDrop> {
     });
 
     await uploadFile(controller2, ev, url);
+  }
+
+  String printDuration(Duration duration) {
+    return [duration.inHours, duration.inMinutes, duration.inSeconds]
+        .map((seg) => seg.remainder(60).toString().padLeft(2, '0'))
+        .join(':');
   }
 
   Future<String> uploadFile(
@@ -474,6 +496,8 @@ class _FileUploadWithDropState extends State<FileUploadWithDrop> {
     String remoteFileUrl =
         'https://$bucket.s3.amazonaws.com/$uploadDest/$fileName';
 
+    String originalUrl = remoteFileUrl;
+
     if (visibility == 'restricted') {
       remoteFileUrl =
           await retrievePresignedUrlForRead(bucket, '$uploadDest/$fileName');
@@ -482,7 +506,7 @@ class _FileUploadWithDropState extends State<FileUploadWithDrop> {
     }
 
     UploadedFile uploadedFile = UploadedFile(
-        remoteUrl: remoteFileUrl,
+        remoteUrl: originalUrl,
         localFileName: localFile,
         fileSize: fileSize,
         fileType: widget.fileType);
@@ -507,6 +531,8 @@ class _FileUploadWithDropState extends State<FileUploadWithDrop> {
     }
   }
 }
+
+void updateDuration(int duration) {}
 
 Future<int> getFileSize(DropzoneViewController controller, dynamic ev) async {
   int size = await controller.getFileSize(ev);

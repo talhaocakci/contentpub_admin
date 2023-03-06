@@ -76,6 +76,7 @@ resource "aws_lambda_function" "StripeLambda" {
             stripe_api_secret = var.stripe_api_secret
             appsync_api_id = var.appsync_api_id
             appsync_api_key = var.appsync_api_key
+            JAVA_TOOL_OPTIONS = "-XX:+TieredCompilation -XX:TieredStopAtLevel=1"
          }
     }
     tracing_config {
@@ -96,6 +97,12 @@ resource "aws_lambda_function" "S3PresignerLambda" {
   role = aws_iam_role.S3PreSignerLambdaIamRole.arn
   runtime = "java11"
   timeout = 20
+
+  environment {
+    variables = {
+      JAVA_TOOL_OPTIONS = "-XX:+TieredCompilation -XX:TieredStopAtLevel=1"
+    }
+  }
 
   tracing_config {
     mode = "PassThrough"

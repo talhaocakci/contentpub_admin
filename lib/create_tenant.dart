@@ -278,6 +278,7 @@ class _CreateTenantWidgetState extends State<CreateTenantWidget> {
                                       isPublic: true,
                                       remoteUrl: editableTenant?.coverPhotoUrl,
                                       fileType: FileType.PICTURE,
+                                      onVideoDurationKnown: (_) {},
                                       onComplete: (uploadedFile) {
                                         editableTenant?.coverPhotoUrl =
                                             uploadedFile.remoteUrl;
@@ -299,6 +300,7 @@ class _CreateTenantWidgetState extends State<CreateTenantWidget> {
                                       isPublic: true,
                                       fileType: FileType.VIDEO,
                                       remoteUrl: editableTenant?.promoVideoUrl,
+                                      onVideoDurationKnown: (_) {},
                                       onComplete: (uploadedFile) {
                                         editableTenant?.promoVideoUrl =
                                             uploadedFile.remoteUrl;

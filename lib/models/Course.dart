@@ -39,6 +39,15 @@ class Course extends Model {
   final String? _coverPhotoUrl;
   final String? _promoVideoUrl;
   final String? _subtitle;
+  final int? _totalVideoDuration;
+  final int? _videoCount;
+  final String? _features;
+  final String? _requirements;
+  final String? _goals;
+  final String? _language;
+  final double? _averagePoint;
+  final int? _studentCount;
+  final TemporalDate? _lastUpdateDate;
   final TemporalDateTime? _createdAt;
   final TemporalDateTime? _updatedAt;
   final String? _courseContentId;
@@ -92,6 +101,42 @@ class Course extends Model {
     return _subtitle;
   }
   
+  int? get totalVideoDuration {
+    return _totalVideoDuration;
+  }
+  
+  int? get videoCount {
+    return _videoCount;
+  }
+  
+  String? get features {
+    return _features;
+  }
+  
+  String? get requirements {
+    return _requirements;
+  }
+  
+  String? get goals {
+    return _goals;
+  }
+  
+  String? get language {
+    return _language;
+  }
+  
+  double? get averagePoint {
+    return _averagePoint;
+  }
+  
+  int? get studentCount {
+    return _studentCount;
+  }
+  
+  TemporalDate? get lastUpdateDate {
+    return _lastUpdateDate;
+  }
+  
   TemporalDateTime? get createdAt {
     return _createdAt;
   }
@@ -104,9 +149,9 @@ class Course extends Model {
     return _courseContentId;
   }
   
-  const Course._internal({required this.id, title, description, thumbnail, stripeProduct, Sections, content, coverPhotoUrl, promoVideoUrl, subtitle, createdAt, updatedAt, courseContentId}): _title = title, _description = description, _thumbnail = thumbnail, _stripeProduct = stripeProduct, _Sections = Sections, _content = content, _coverPhotoUrl = coverPhotoUrl, _promoVideoUrl = promoVideoUrl, _subtitle = subtitle, _createdAt = createdAt, _updatedAt = updatedAt, _courseContentId = courseContentId;
+  const Course._internal({required this.id, title, description, thumbnail, stripeProduct, Sections, content, coverPhotoUrl, promoVideoUrl, subtitle, totalVideoDuration, videoCount, features, requirements, goals, language, averagePoint, studentCount, lastUpdateDate, createdAt, updatedAt, courseContentId}): _title = title, _description = description, _thumbnail = thumbnail, _stripeProduct = stripeProduct, _Sections = Sections, _content = content, _coverPhotoUrl = coverPhotoUrl, _promoVideoUrl = promoVideoUrl, _subtitle = subtitle, _totalVideoDuration = totalVideoDuration, _videoCount = videoCount, _features = features, _requirements = requirements, _goals = goals, _language = language, _averagePoint = averagePoint, _studentCount = studentCount, _lastUpdateDate = lastUpdateDate, _createdAt = createdAt, _updatedAt = updatedAt, _courseContentId = courseContentId;
   
-  factory Course({String? id, String? title, String? description, String? thumbnail, String? stripeProduct, List<Section>? Sections, Content? content, String? coverPhotoUrl, String? promoVideoUrl, String? subtitle, String? courseContentId}) {
+  factory Course({String? id, String? title, String? description, String? thumbnail, String? stripeProduct, List<Section>? Sections, Content? content, String? coverPhotoUrl, String? promoVideoUrl, String? subtitle, int? totalVideoDuration, int? videoCount, String? features, String? requirements, String? goals, String? language, double? averagePoint, int? studentCount, TemporalDate? lastUpdateDate, String? courseContentId}) {
     return Course._internal(
       id: id == null ? UUID.getUUID() : id,
       title: title,
@@ -118,6 +163,15 @@ class Course extends Model {
       coverPhotoUrl: coverPhotoUrl,
       promoVideoUrl: promoVideoUrl,
       subtitle: subtitle,
+      totalVideoDuration: totalVideoDuration,
+      videoCount: videoCount,
+      features: features,
+      requirements: requirements,
+      goals: goals,
+      language: language,
+      averagePoint: averagePoint,
+      studentCount: studentCount,
+      lastUpdateDate: lastUpdateDate,
       courseContentId: courseContentId);
   }
   
@@ -139,6 +193,15 @@ class Course extends Model {
       _coverPhotoUrl == other._coverPhotoUrl &&
       _promoVideoUrl == other._promoVideoUrl &&
       _subtitle == other._subtitle &&
+      _totalVideoDuration == other._totalVideoDuration &&
+      _videoCount == other._videoCount &&
+      _features == other._features &&
+      _requirements == other._requirements &&
+      _goals == other._goals &&
+      _language == other._language &&
+      _averagePoint == other._averagePoint &&
+      _studentCount == other._studentCount &&
+      _lastUpdateDate == other._lastUpdateDate &&
       _courseContentId == other._courseContentId;
   }
   
@@ -158,6 +221,15 @@ class Course extends Model {
     buffer.write("coverPhotoUrl=" + "$_coverPhotoUrl" + ", ");
     buffer.write("promoVideoUrl=" + "$_promoVideoUrl" + ", ");
     buffer.write("subtitle=" + "$_subtitle" + ", ");
+    buffer.write("totalVideoDuration=" + (_totalVideoDuration != null ? _totalVideoDuration!.toString() : "null") + ", ");
+    buffer.write("videoCount=" + (_videoCount != null ? _videoCount!.toString() : "null") + ", ");
+    buffer.write("features=" + "$_features" + ", ");
+    buffer.write("requirements=" + "$_requirements" + ", ");
+    buffer.write("goals=" + "$_goals" + ", ");
+    buffer.write("language=" + "$_language" + ", ");
+    buffer.write("averagePoint=" + (_averagePoint != null ? _averagePoint!.toString() : "null") + ", ");
+    buffer.write("studentCount=" + (_studentCount != null ? _studentCount!.toString() : "null") + ", ");
+    buffer.write("lastUpdateDate=" + (_lastUpdateDate != null ? _lastUpdateDate!.format() : "null") + ", ");
     buffer.write("createdAt=" + (_createdAt != null ? _createdAt!.format() : "null") + ", ");
     buffer.write("updatedAt=" + (_updatedAt != null ? _updatedAt!.format() : "null") + ", ");
     buffer.write("courseContentId=" + "$_courseContentId");
@@ -166,7 +238,7 @@ class Course extends Model {
     return buffer.toString();
   }
   
-  Course copyWith({String? title, String? description, String? thumbnail, String? stripeProduct, List<Section>? Sections, Content? content, String? coverPhotoUrl, String? promoVideoUrl, String? subtitle, String? courseContentId}) {
+  Course copyWith({String? title, String? description, String? thumbnail, String? stripeProduct, List<Section>? Sections, Content? content, String? coverPhotoUrl, String? promoVideoUrl, String? subtitle, int? totalVideoDuration, int? videoCount, String? features, String? requirements, String? goals, String? language, double? averagePoint, int? studentCount, TemporalDate? lastUpdateDate, String? courseContentId}) {
     return Course._internal(
       id: id,
       title: title ?? this.title,
@@ -178,6 +250,15 @@ class Course extends Model {
       coverPhotoUrl: coverPhotoUrl ?? this.coverPhotoUrl,
       promoVideoUrl: promoVideoUrl ?? this.promoVideoUrl,
       subtitle: subtitle ?? this.subtitle,
+      totalVideoDuration: totalVideoDuration ?? this.totalVideoDuration,
+      videoCount: videoCount ?? this.videoCount,
+      features: features ?? this.features,
+      requirements: requirements ?? this.requirements,
+      goals: goals ?? this.goals,
+      language: language ?? this.language,
+      averagePoint: averagePoint ?? this.averagePoint,
+      studentCount: studentCount ?? this.studentCount,
+      lastUpdateDate: lastUpdateDate ?? this.lastUpdateDate,
       courseContentId: courseContentId ?? this.courseContentId);
   }
   
@@ -199,16 +280,25 @@ class Course extends Model {
       _coverPhotoUrl = json['coverPhotoUrl'],
       _promoVideoUrl = json['promoVideoUrl'],
       _subtitle = json['subtitle'],
+      _totalVideoDuration = (json['totalVideoDuration'] as num?)?.toInt(),
+      _videoCount = (json['videoCount'] as num?)?.toInt(),
+      _features = json['features'],
+      _requirements = json['requirements'],
+      _goals = json['goals'],
+      _language = json['language'],
+      _averagePoint = (json['averagePoint'] as num?)?.toDouble(),
+      _studentCount = (json['studentCount'] as num?)?.toInt(),
+      _lastUpdateDate = json['lastUpdateDate'] != null ? TemporalDate.fromString(json['lastUpdateDate']) : null,
       _createdAt = json['createdAt'] != null ? TemporalDateTime.fromString(json['createdAt']) : null,
       _updatedAt = json['updatedAt'] != null ? TemporalDateTime.fromString(json['updatedAt']) : null,
       _courseContentId = json['courseContentId'];
   
   Map<String, dynamic> toJson() => {
-    'id': id, 'title': _title, 'description': _description, 'thumbnail': _thumbnail, 'stripeProduct': _stripeProduct, 'Sections': _Sections?.map((Section? e) => e?.toJson()).toList(), 'content': _content?.toJson(), 'coverPhotoUrl': _coverPhotoUrl, 'promoVideoUrl': _promoVideoUrl, 'subtitle': _subtitle, 'createdAt': _createdAt?.format(), 'updatedAt': _updatedAt?.format(), 'courseContentId': _courseContentId
+    'id': id, 'title': _title, 'description': _description, 'thumbnail': _thumbnail, 'stripeProduct': _stripeProduct, 'Sections': _Sections?.map((Section? e) => e?.toJson()).toList(), 'content': _content?.toJson(), 'coverPhotoUrl': _coverPhotoUrl, 'promoVideoUrl': _promoVideoUrl, 'subtitle': _subtitle, 'totalVideoDuration': _totalVideoDuration, 'videoCount': _videoCount, 'features': _features, 'requirements': _requirements, 'goals': _goals, 'language': _language, 'averagePoint': _averagePoint, 'studentCount': _studentCount, 'lastUpdateDate': _lastUpdateDate?.format(), 'createdAt': _createdAt?.format(), 'updatedAt': _updatedAt?.format(), 'courseContentId': _courseContentId
   };
   
   Map<String, Object?> toMap() => {
-    'id': id, 'title': _title, 'description': _description, 'thumbnail': _thumbnail, 'stripeProduct': _stripeProduct, 'Sections': _Sections, 'content': _content, 'coverPhotoUrl': _coverPhotoUrl, 'promoVideoUrl': _promoVideoUrl, 'subtitle': _subtitle, 'createdAt': _createdAt, 'updatedAt': _updatedAt, 'courseContentId': _courseContentId
+    'id': id, 'title': _title, 'description': _description, 'thumbnail': _thumbnail, 'stripeProduct': _stripeProduct, 'Sections': _Sections, 'content': _content, 'coverPhotoUrl': _coverPhotoUrl, 'promoVideoUrl': _promoVideoUrl, 'subtitle': _subtitle, 'totalVideoDuration': _totalVideoDuration, 'videoCount': _videoCount, 'features': _features, 'requirements': _requirements, 'goals': _goals, 'language': _language, 'averagePoint': _averagePoint, 'studentCount': _studentCount, 'lastUpdateDate': _lastUpdateDate, 'createdAt': _createdAt, 'updatedAt': _updatedAt, 'courseContentId': _courseContentId
   };
 
   static final QueryModelIdentifier<CourseModelIdentifier> MODEL_IDENTIFIER = QueryModelIdentifier<CourseModelIdentifier>();
@@ -226,6 +316,15 @@ class Course extends Model {
   static final QueryField COVERPHOTOURL = QueryField(fieldName: "coverPhotoUrl");
   static final QueryField PROMOVIDEOURL = QueryField(fieldName: "promoVideoUrl");
   static final QueryField SUBTITLE = QueryField(fieldName: "subtitle");
+  static final QueryField TOTALVIDEODURATION = QueryField(fieldName: "totalVideoDuration");
+  static final QueryField VIDEOCOUNT = QueryField(fieldName: "videoCount");
+  static final QueryField FEATURES = QueryField(fieldName: "features");
+  static final QueryField REQUIREMENTS = QueryField(fieldName: "requirements");
+  static final QueryField GOALS = QueryField(fieldName: "goals");
+  static final QueryField LANGUAGE = QueryField(fieldName: "language");
+  static final QueryField AVERAGEPOINT = QueryField(fieldName: "averagePoint");
+  static final QueryField STUDENTCOUNT = QueryField(fieldName: "studentCount");
+  static final QueryField LASTUPDATEDATE = QueryField(fieldName: "lastUpdateDate");
   static final QueryField COURSECONTENTID = QueryField(fieldName: "courseContentId");
   static var schema = Model.defineSchema(define: (ModelSchemaDefinition modelSchemaDefinition) {
     modelSchemaDefinition.name = "Course";
@@ -298,6 +397,60 @@ class Course extends Model {
       key: Course.SUBTITLE,
       isRequired: false,
       ofType: ModelFieldType(ModelFieldTypeEnum.string)
+    ));
+    
+    modelSchemaDefinition.addField(ModelFieldDefinition.field(
+      key: Course.TOTALVIDEODURATION,
+      isRequired: false,
+      ofType: ModelFieldType(ModelFieldTypeEnum.int)
+    ));
+    
+    modelSchemaDefinition.addField(ModelFieldDefinition.field(
+      key: Course.VIDEOCOUNT,
+      isRequired: false,
+      ofType: ModelFieldType(ModelFieldTypeEnum.int)
+    ));
+    
+    modelSchemaDefinition.addField(ModelFieldDefinition.field(
+      key: Course.FEATURES,
+      isRequired: false,
+      ofType: ModelFieldType(ModelFieldTypeEnum.string)
+    ));
+    
+    modelSchemaDefinition.addField(ModelFieldDefinition.field(
+      key: Course.REQUIREMENTS,
+      isRequired: false,
+      ofType: ModelFieldType(ModelFieldTypeEnum.string)
+    ));
+    
+    modelSchemaDefinition.addField(ModelFieldDefinition.field(
+      key: Course.GOALS,
+      isRequired: false,
+      ofType: ModelFieldType(ModelFieldTypeEnum.string)
+    ));
+    
+    modelSchemaDefinition.addField(ModelFieldDefinition.field(
+      key: Course.LANGUAGE,
+      isRequired: false,
+      ofType: ModelFieldType(ModelFieldTypeEnum.string)
+    ));
+    
+    modelSchemaDefinition.addField(ModelFieldDefinition.field(
+      key: Course.AVERAGEPOINT,
+      isRequired: false,
+      ofType: ModelFieldType(ModelFieldTypeEnum.double)
+    ));
+    
+    modelSchemaDefinition.addField(ModelFieldDefinition.field(
+      key: Course.STUDENTCOUNT,
+      isRequired: false,
+      ofType: ModelFieldType(ModelFieldTypeEnum.int)
+    ));
+    
+    modelSchemaDefinition.addField(ModelFieldDefinition.field(
+      key: Course.LASTUPDATEDATE,
+      isRequired: false,
+      ofType: ModelFieldType(ModelFieldTypeEnum.date)
     ));
     
     modelSchemaDefinition.addField(ModelFieldDefinition.nonQueryField(

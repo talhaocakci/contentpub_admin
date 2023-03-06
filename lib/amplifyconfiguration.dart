@@ -29,6 +29,12 @@ const amplifyconfig = ''' {
                         "AuthMode": "API_KEY",
                         "ApiKey": "da2-b3myb3llnbdofdyb4fif5g5r2a",
                         "ClientDatabasePrefix": "javathlon_API_KEY"
+                    },
+                    "javathlon_AWS_IAM": {
+                        "ApiUrl": "https://igjkkti7svewhfgi7jg4eruda4.appsync-api.us-east-1.amazonaws.com/graphql",
+                        "Region": "us-east-1",
+                        "AuthMode": "AWS_IAM",
+                        "ClientDatabasePrefix": "javathlon_AWS_IAM"
                     }
                 },
                 "CognitoUserPool": {

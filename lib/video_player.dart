@@ -7,10 +7,12 @@ import 'package:video_player/video_player.dart';
 class VideoPlayerScreen extends StatefulWidget {
   final String videoUrl;
   final bool? autoPlay;
+  final Function(Duration) onLoad;
 
   const VideoPlayerScreen({
     required this.videoUrl,
     this.autoPlay,
+    required this.onLoad,
     Key? key,
   }) : super(key: key);
 
@@ -68,6 +70,7 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
         future: _initializeVideoPlayerFuture,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
+            widget.onLoad(_controller.value.duration);
             // If the VideoPlayerController has finished initialization, use
             // the data it provides to limit the aspect ratio of the video.
             return Container(

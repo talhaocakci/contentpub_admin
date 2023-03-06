@@ -265,6 +265,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.2.1"
+  charcode:
+    dependency: transitive
+    description:
+      name: charcode
+      sha256: fb98c0f6d12c920a02ee2d998da788bca066ca5f148492b7085ee23372b12306
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.3.1"
   chewie:
     dependency: "direct main"
     description:
@@ -377,14 +385,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.3.0"
-  effective_dart:
-    dependency: transitive
-    description:
-      name: effective_dart
-      sha256: "6a69783c808344084b65667e87ff600823531e95810a8a15882cb542fe22de80"
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.3.2"
   expandable:
     dependency: transitive
     description:
@@ -507,6 +507,14 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  flutter_markdown:
+    dependency: transitive
+    description:
+      name: flutter_markdown
+      sha256: "7c4e42e66fb24bc912b64860c69806ef5cc0ad1480772aa2201ede568125a379"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.6.9+1"
   flutter_multi_select_items:
     dependency: "direct main"
     description:
@@ -545,10 +553,10 @@ packages:
     dependency: "direct main"
     description:
       name: font_awesome_flutter
-      sha256: "875dbb9ec1ad30d68102019ceb682760d06c72747c1c5b7885781b95f88569cc"
+      sha256: "1f93e5799f0e6c882819e8393a05c6ca5226010f289190f2242ec19f3f0fdba5"
       url: "https://pub.dev"
     source: hosted
-    version: "10.3.0"
+    version: "9.2.0"
   freezed_annotation:
     dependency: transitive
     description:
@@ -649,10 +657,10 @@ packages:
     dependency: "direct main"
     description:
       name: logger
-      sha256: "5076f09225f91dc49289a4ccb92df2eeea9ea01cf7c26d49b3a1f04c6a49eec1"
+      sha256: c40f9ef51e5bffb4ce69ad2d8c8aad7bd47ec109c090521109b63a4e2bc27191
       url: "https://pub.dev"
     source: hosted
-    version: "1.1.0"
+    version: "1.2.2"
   logging:
     dependency: transitive
     description:
@@ -661,14 +669,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.1.0"
-  markdown_editable_textinput:
-    dependency: "direct main"
+  markdown:
+    dependency: transitive
     description:
-      name: markdown_editable_textinput
-      sha256: f52a40c6c9ad21c9fedc09e7f29ac2f173909e255b80f3f668f44be477a8dec6
+      name: markdown
+      sha256: "01512006c8429f604eb10f9848717baeaedf99e991d14a50d540d9beff08e5c6"
       url: "https://pub.dev"
     source: hosted
-    version: "2.2.0"
+    version: "4.0.1"
   matcher:
     dependency: transitive
     description:
@@ -949,6 +957,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.4.0"
+  simple_markdown_editor:
+    dependency: "direct main"
+    description:
+      name: simple_markdown_editor
+      sha256: "5ce1ec4d4c2393040817c4d08e96a3df0d1b9bd488c5cd70986c76fb81708e71"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.1.8"
   sky_engine:
     dependency: transitive
     description: flutter
@@ -1098,14 +1114,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.3.0"
-  translator:
-    dependency: transitive
-    description:
-      name: translator
-      sha256: "225ee22fc482736c593be5c232c0c5884b16d7cc42945c51ac73d9a0441dddcc"
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.1.7"
   tuple:
     dependency: transitive
     description:

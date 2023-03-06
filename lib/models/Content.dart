@@ -36,12 +36,16 @@ class Content extends Model {
   final ContentType? _type;
   final String? _objectId;
   final String? _owner;
+  final int? _duration;
   final List<BundleContent>? _bundles;
   final String? _photoUrl;
   final String? _promoVideoUrl;
+  final int? _promoVideoDuration;
   final bool? _isPublished;
   final bool? _isArchived;
   final List<ContentCoworker>? _Coworkers;
+  final String? _videoDuration;
+  final String? _fileSize;
   final TemporalDateTime? _createdAt;
   final TemporalDateTime? _updatedAt;
 
@@ -82,6 +86,10 @@ class Content extends Model {
     return _owner;
   }
   
+  int? get duration {
+    return _duration;
+  }
+  
   List<BundleContent>? get bundles {
     return _bundles;
   }
@@ -92,6 +100,10 @@ class Content extends Model {
   
   String? get promoVideoUrl {
     return _promoVideoUrl;
+  }
+  
+  int? get promoVideoDuration {
+    return _promoVideoDuration;
   }
   
   bool? get isPublished {
@@ -106,6 +118,14 @@ class Content extends Model {
     return _Coworkers;
   }
   
+  String? get videoDuration {
+    return _videoDuration;
+  }
+  
+  String? get fileSize {
+    return _fileSize;
+  }
+  
   TemporalDateTime? get createdAt {
     return _createdAt;
   }
@@ -114,9 +134,9 @@ class Content extends Model {
     return _updatedAt;
   }
   
-  const Content._internal({required this.id, name, description, s3Url, type, objectId, owner, bundles, photoUrl, promoVideoUrl, isPublished, isArchived, Coworkers, createdAt, updatedAt}): _name = name, _description = description, _s3Url = s3Url, _type = type, _objectId = objectId, _owner = owner, _bundles = bundles, _photoUrl = photoUrl, _promoVideoUrl = promoVideoUrl, _isPublished = isPublished, _isArchived = isArchived, _Coworkers = Coworkers, _createdAt = createdAt, _updatedAt = updatedAt;
+  const Content._internal({required this.id, name, description, s3Url, type, objectId, owner, duration, bundles, photoUrl, promoVideoUrl, promoVideoDuration, isPublished, isArchived, Coworkers, videoDuration, fileSize, createdAt, updatedAt}): _name = name, _description = description, _s3Url = s3Url, _type = type, _objectId = objectId, _owner = owner, _duration = duration, _bundles = bundles, _photoUrl = photoUrl, _promoVideoUrl = promoVideoUrl, _promoVideoDuration = promoVideoDuration, _isPublished = isPublished, _isArchived = isArchived, _Coworkers = Coworkers, _videoDuration = videoDuration, _fileSize = fileSize, _createdAt = createdAt, _updatedAt = updatedAt;
   
-  factory Content({String? id, String? name, String? description, String? s3Url, ContentType? type, String? objectId, String? owner, List<BundleContent>? bundles, String? photoUrl, String? promoVideoUrl, bool? isPublished, bool? isArchived, List<ContentCoworker>? Coworkers}) {
+  factory Content({String? id, String? name, String? description, String? s3Url, ContentType? type, String? objectId, String? owner, int? duration, List<BundleContent>? bundles, String? photoUrl, String? promoVideoUrl, int? promoVideoDuration, bool? isPublished, bool? isArchived, List<ContentCoworker>? Coworkers, String? videoDuration, String? fileSize}) {
     return Content._internal(
       id: id == null ? UUID.getUUID() : id,
       name: name,
@@ -125,12 +145,16 @@ class Content extends Model {
       type: type,
       objectId: objectId,
       owner: owner,
+      duration: duration,
       bundles: bundles != null ? List<BundleContent>.unmodifiable(bundles) : bundles,
       photoUrl: photoUrl,
       promoVideoUrl: promoVideoUrl,
+      promoVideoDuration: promoVideoDuration,
       isPublished: isPublished,
       isArchived: isArchived,
-      Coworkers: Coworkers != null ? List<ContentCoworker>.unmodifiable(Coworkers) : Coworkers);
+      Coworkers: Coworkers != null ? List<ContentCoworker>.unmodifiable(Coworkers) : Coworkers,
+      videoDuration: videoDuration,
+      fileSize: fileSize);
   }
   
   bool equals(Object other) {
@@ -148,12 +172,16 @@ class Content extends Model {
       _type == other._type &&
       _objectId == other._objectId &&
       _owner == other._owner &&
+      _duration == other._duration &&
       DeepCollectionEquality().equals(_bundles, other._bundles) &&
       _photoUrl == other._photoUrl &&
       _promoVideoUrl == other._promoVideoUrl &&
+      _promoVideoDuration == other._promoVideoDuration &&
       _isPublished == other._isPublished &&
       _isArchived == other._isArchived &&
-      DeepCollectionEquality().equals(_Coworkers, other._Coworkers);
+      DeepCollectionEquality().equals(_Coworkers, other._Coworkers) &&
+      _videoDuration == other._videoDuration &&
+      _fileSize == other._fileSize;
   }
   
   @override
@@ -171,10 +199,14 @@ class Content extends Model {
     buffer.write("type=" + (_type != null ? enumToString(_type)! : "null") + ", ");
     buffer.write("objectId=" + "$_objectId" + ", ");
     buffer.write("owner=" + "$_owner" + ", ");
+    buffer.write("duration=" + (_duration != null ? _duration!.toString() : "null") + ", ");
     buffer.write("photoUrl=" + "$_photoUrl" + ", ");
     buffer.write("promoVideoUrl=" + "$_promoVideoUrl" + ", ");
+    buffer.write("promoVideoDuration=" + (_promoVideoDuration != null ? _promoVideoDuration!.toString() : "null") + ", ");
     buffer.write("isPublished=" + (_isPublished != null ? _isPublished!.toString() : "null") + ", ");
     buffer.write("isArchived=" + (_isArchived != null ? _isArchived!.toString() : "null") + ", ");
+    buffer.write("videoDuration=" + "$_videoDuration" + ", ");
+    buffer.write("fileSize=" + "$_fileSize" + ", ");
     buffer.write("createdAt=" + (_createdAt != null ? _createdAt!.format() : "null") + ", ");
     buffer.write("updatedAt=" + (_updatedAt != null ? _updatedAt!.format() : "null"));
     buffer.write("}");
@@ -182,7 +214,7 @@ class Content extends Model {
     return buffer.toString();
   }
   
-  Content copyWith({String? name, String? description, String? s3Url, ContentType? type, String? objectId, String? owner, List<BundleContent>? bundles, String? photoUrl, String? promoVideoUrl, bool? isPublished, bool? isArchived, List<ContentCoworker>? Coworkers}) {
+  Content copyWith({String? name, String? description, String? s3Url, ContentType? type, String? objectId, String? owner, int? duration, List<BundleContent>? bundles, String? photoUrl, String? promoVideoUrl, int? promoVideoDuration, bool? isPublished, bool? isArchived, List<ContentCoworker>? Coworkers, String? videoDuration, String? fileSize}) {
     return Content._internal(
       id: id,
       name: name ?? this.name,
@@ -191,12 +223,16 @@ class Content extends Model {
       type: type ?? this.type,
       objectId: objectId ?? this.objectId,
       owner: owner ?? this.owner,
+      duration: duration ?? this.duration,
       bundles: bundles ?? this.bundles,
       photoUrl: photoUrl ?? this.photoUrl,
       promoVideoUrl: promoVideoUrl ?? this.promoVideoUrl,
+      promoVideoDuration: promoVideoDuration ?? this.promoVideoDuration,
       isPublished: isPublished ?? this.isPublished,
       isArchived: isArchived ?? this.isArchived,
-      Coworkers: Coworkers ?? this.Coworkers);
+      Coworkers: Coworkers ?? this.Coworkers,
+      videoDuration: videoDuration ?? this.videoDuration,
+      fileSize: fileSize ?? this.fileSize);
   }
   
   Content.fromJson(Map<String, dynamic> json)  
@@ -207,6 +243,7 @@ class Content extends Model {
       _type = enumFromString<ContentType>(json['type'], ContentType.values),
       _objectId = json['objectId'],
       _owner = json['owner'],
+      _duration = (json['duration'] as num?)?.toInt(),
       _bundles = json['bundles'] is List
         ? (json['bundles'] as List)
           .where((e) => e?['serializedData'] != null)
@@ -215,6 +252,7 @@ class Content extends Model {
         : null,
       _photoUrl = json['photoUrl'],
       _promoVideoUrl = json['promoVideoUrl'],
+      _promoVideoDuration = (json['promoVideoDuration'] as num?)?.toInt(),
       _isPublished = json['isPublished'],
       _isArchived = json['isArchived'],
       _Coworkers = json['Coworkers'] is List
@@ -223,15 +261,17 @@ class Content extends Model {
           .map((e) => ContentCoworker.fromJson(new Map<String, dynamic>.from(e['serializedData'])))
           .toList()
         : null,
+      _videoDuration = json['videoDuration'],
+      _fileSize = json['fileSize'],
       _createdAt = json['createdAt'] != null ? TemporalDateTime.fromString(json['createdAt']) : null,
       _updatedAt = json['updatedAt'] != null ? TemporalDateTime.fromString(json['updatedAt']) : null;
   
   Map<String, dynamic> toJson() => {
-    'id': id, 'name': _name, 'description': _description, 's3Url': _s3Url, 'type': enumToString(_type), 'objectId': _objectId, 'owner': _owner, 'bundles': _bundles?.map((BundleContent? e) => e?.toJson()).toList(), 'photoUrl': _photoUrl, 'promoVideoUrl': _promoVideoUrl, 'isPublished': _isPublished, 'isArchived': _isArchived, 'Coworkers': _Coworkers?.map((ContentCoworker? e) => e?.toJson()).toList(), 'createdAt': _createdAt?.format(), 'updatedAt': _updatedAt?.format()
+    'id': id, 'name': _name, 'description': _description, 's3Url': _s3Url, 'type': enumToString(_type), 'objectId': _objectId, 'owner': _owner, 'duration': _duration, 'bundles': _bundles?.map((BundleContent? e) => e?.toJson()).toList(), 'photoUrl': _photoUrl, 'promoVideoUrl': _promoVideoUrl, 'promoVideoDuration': _promoVideoDuration, 'isPublished': _isPublished, 'isArchived': _isArchived, 'Coworkers': _Coworkers?.map((ContentCoworker? e) => e?.toJson()).toList(), 'videoDuration': _videoDuration, 'fileSize': _fileSize, 'createdAt': _createdAt?.format(), 'updatedAt': _updatedAt?.format()
   };
   
   Map<String, Object?> toMap() => {
-    'id': id, 'name': _name, 'description': _description, 's3Url': _s3Url, 'type': _type, 'objectId': _objectId, 'owner': _owner, 'bundles': _bundles, 'photoUrl': _photoUrl, 'promoVideoUrl': _promoVideoUrl, 'isPublished': _isPublished, 'isArchived': _isArchived, 'Coworkers': _Coworkers, 'createdAt': _createdAt, 'updatedAt': _updatedAt
+    'id': id, 'name': _name, 'description': _description, 's3Url': _s3Url, 'type': _type, 'objectId': _objectId, 'owner': _owner, 'duration': _duration, 'bundles': _bundles, 'photoUrl': _photoUrl, 'promoVideoUrl': _promoVideoUrl, 'promoVideoDuration': _promoVideoDuration, 'isPublished': _isPublished, 'isArchived': _isArchived, 'Coworkers': _Coworkers, 'videoDuration': _videoDuration, 'fileSize': _fileSize, 'createdAt': _createdAt, 'updatedAt': _updatedAt
   };
 
   static final QueryModelIdentifier<ContentModelIdentifier> MODEL_IDENTIFIER = QueryModelIdentifier<ContentModelIdentifier>();
@@ -242,16 +282,20 @@ class Content extends Model {
   static final QueryField TYPE = QueryField(fieldName: "type");
   static final QueryField OBJECTID = QueryField(fieldName: "objectId");
   static final QueryField OWNER = QueryField(fieldName: "owner");
+  static final QueryField DURATION = QueryField(fieldName: "duration");
   static final QueryField BUNDLES = QueryField(
     fieldName: "bundles",
     fieldType: ModelFieldType(ModelFieldTypeEnum.model, ofModelName: 'BundleContent'));
   static final QueryField PHOTOURL = QueryField(fieldName: "photoUrl");
   static final QueryField PROMOVIDEOURL = QueryField(fieldName: "promoVideoUrl");
+  static final QueryField PROMOVIDEODURATION = QueryField(fieldName: "promoVideoDuration");
   static final QueryField ISPUBLISHED = QueryField(fieldName: "isPublished");
   static final QueryField ISARCHIVED = QueryField(fieldName: "isArchived");
   static final QueryField COWORKERS = QueryField(
     fieldName: "Coworkers",
     fieldType: ModelFieldType(ModelFieldTypeEnum.model, ofModelName: 'ContentCoworker'));
+  static final QueryField VIDEODURATION = QueryField(fieldName: "videoDuration");
+  static final QueryField FILESIZE = QueryField(fieldName: "fileSize");
   static var schema = Model.defineSchema(define: (ModelSchemaDefinition modelSchemaDefinition) {
     modelSchemaDefinition.name = "Content";
     modelSchemaDefinition.pluralName = "Contents";
@@ -305,6 +349,12 @@ class Content extends Model {
       ofType: ModelFieldType(ModelFieldTypeEnum.string)
     ));
     
+    modelSchemaDefinition.addField(ModelFieldDefinition.field(
+      key: Content.DURATION,
+      isRequired: false,
+      ofType: ModelFieldType(ModelFieldTypeEnum.int)
+    ));
+    
     modelSchemaDefinition.addField(ModelFieldDefinition.hasMany(
       key: Content.BUNDLES,
       isRequired: false,
@@ -325,6 +375,12 @@ class Content extends Model {
     ));
     
     modelSchemaDefinition.addField(ModelFieldDefinition.field(
+      key: Content.PROMOVIDEODURATION,
+      isRequired: false,
+      ofType: ModelFieldType(ModelFieldTypeEnum.int)
+    ));
+    
+    modelSchemaDefinition.addField(ModelFieldDefinition.field(
       key: Content.ISPUBLISHED,
       isRequired: false,
       ofType: ModelFieldType(ModelFieldTypeEnum.bool)
@@ -341,6 +397,18 @@ class Content extends Model {
       isRequired: false,
       ofModelName: 'ContentCoworker',
       associatedKey: ContentCoworker.CONTENT
+    ));
+    
+    modelSchemaDefinition.addField(ModelFieldDefinition.field(
+      key: Content.VIDEODURATION,
+      isRequired: false,
+      ofType: ModelFieldType(ModelFieldTypeEnum.string)
+    ));
+    
+    modelSchemaDefinition.addField(ModelFieldDefinition.field(
+      key: Content.FILESIZE,
+      isRequired: false,
+      ofType: ModelFieldType(ModelFieldTypeEnum.string)
     ));
     
     modelSchemaDefinition.addField(ModelFieldDefinition.nonQueryField(

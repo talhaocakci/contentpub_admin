@@ -36,6 +36,8 @@ class Section extends Model {
   final List<Lesson>? _Lessons;
   final String? _subtitle;
   final int? _order;
+  final int? _totalVideoCount;
+  final int? _totalVideoDuration;
   final TemporalDateTime? _createdAt;
   final TemporalDateTime? _updatedAt;
 
@@ -85,6 +87,14 @@ class Section extends Model {
     return _order;
   }
   
+  int? get totalVideoCount {
+    return _totalVideoCount;
+  }
+  
+  int? get totalVideoDuration {
+    return _totalVideoDuration;
+  }
+  
   TemporalDateTime? get createdAt {
     return _createdAt;
   }
@@ -93,9 +103,9 @@ class Section extends Model {
     return _updatedAt;
   }
   
-  const Section._internal({required this.id, name, description, required courseID, Lessons, subtitle, order, createdAt, updatedAt}): _name = name, _description = description, _courseID = courseID, _Lessons = Lessons, _subtitle = subtitle, _order = order, _createdAt = createdAt, _updatedAt = updatedAt;
+  const Section._internal({required this.id, name, description, required courseID, Lessons, subtitle, order, totalVideoCount, totalVideoDuration, createdAt, updatedAt}): _name = name, _description = description, _courseID = courseID, _Lessons = Lessons, _subtitle = subtitle, _order = order, _totalVideoCount = totalVideoCount, _totalVideoDuration = totalVideoDuration, _createdAt = createdAt, _updatedAt = updatedAt;
   
-  factory Section({String? id, String? name, String? description, required String courseID, List<Lesson>? Lessons, String? subtitle, int? order}) {
+  factory Section({String? id, String? name, String? description, required String courseID, List<Lesson>? Lessons, String? subtitle, int? order, int? totalVideoCount, int? totalVideoDuration}) {
     return Section._internal(
       id: id == null ? UUID.getUUID() : id,
       name: name,
@@ -103,7 +113,9 @@ class Section extends Model {
       courseID: courseID,
       Lessons: Lessons != null ? List<Lesson>.unmodifiable(Lessons) : Lessons,
       subtitle: subtitle,
-      order: order);
+      order: order,
+      totalVideoCount: totalVideoCount,
+      totalVideoDuration: totalVideoDuration);
   }
   
   bool equals(Object other) {
@@ -120,7 +132,9 @@ class Section extends Model {
       _courseID == other._courseID &&
       DeepCollectionEquality().equals(_Lessons, other._Lessons) &&
       _subtitle == other._subtitle &&
-      _order == other._order;
+      _order == other._order &&
+      _totalVideoCount == other._totalVideoCount &&
+      _totalVideoDuration == other._totalVideoDuration;
   }
   
   @override
@@ -137,6 +151,8 @@ class Section extends Model {
     buffer.write("courseID=" + "$_courseID" + ", ");
     buffer.write("subtitle=" + "$_subtitle" + ", ");
     buffer.write("order=" + (_order != null ? _order!.toString() : "null") + ", ");
+    buffer.write("totalVideoCount=" + (_totalVideoCount != null ? _totalVideoCount!.toString() : "null") + ", ");
+    buffer.write("totalVideoDuration=" + (_totalVideoDuration != null ? _totalVideoDuration!.toString() : "null") + ", ");
     buffer.write("createdAt=" + (_createdAt != null ? _createdAt!.format() : "null") + ", ");
     buffer.write("updatedAt=" + (_updatedAt != null ? _updatedAt!.format() : "null"));
     buffer.write("}");
@@ -144,7 +160,7 @@ class Section extends Model {
     return buffer.toString();
   }
   
-  Section copyWith({String? name, String? description, String? courseID, List<Lesson>? Lessons, String? subtitle, int? order}) {
+  Section copyWith({String? name, String? description, String? courseID, List<Lesson>? Lessons, String? subtitle, int? order, int? totalVideoCount, int? totalVideoDuration}) {
     return Section._internal(
       id: id,
       name: name ?? this.name,
@@ -152,7 +168,9 @@ class Section extends Model {
       courseID: courseID ?? this.courseID,
       Lessons: Lessons ?? this.Lessons,
       subtitle: subtitle ?? this.subtitle,
-      order: order ?? this.order);
+      order: order ?? this.order,
+      totalVideoCount: totalVideoCount ?? this.totalVideoCount,
+      totalVideoDuration: totalVideoDuration ?? this.totalVideoDuration);
   }
   
   Section.fromJson(Map<String, dynamic> json)  
@@ -168,15 +186,17 @@ class Section extends Model {
         : null,
       _subtitle = json['subtitle'],
       _order = (json['order'] as num?)?.toInt(),
+      _totalVideoCount = (json['totalVideoCount'] as num?)?.toInt(),
+      _totalVideoDuration = (json['totalVideoDuration'] as num?)?.toInt(),
       _createdAt = json['createdAt'] != null ? TemporalDateTime.fromString(json['createdAt']) : null,
       _updatedAt = json['updatedAt'] != null ? TemporalDateTime.fromString(json['updatedAt']) : null;
   
   Map<String, dynamic> toJson() => {
-    'id': id, 'name': _name, 'description': _description, 'courseID': _courseID, 'Lessons': _Lessons?.map((Lesson? e) => e?.toJson()).toList(), 'subtitle': _subtitle, 'order': _order, 'createdAt': _createdAt?.format(), 'updatedAt': _updatedAt?.format()
+    'id': id, 'name': _name, 'description': _description, 'courseID': _courseID, 'Lessons': _Lessons?.map((Lesson? e) => e?.toJson()).toList(), 'subtitle': _subtitle, 'order': _order, 'totalVideoCount': _totalVideoCount, 'totalVideoDuration': _totalVideoDuration, 'createdAt': _createdAt?.format(), 'updatedAt': _updatedAt?.format()
   };
   
   Map<String, Object?> toMap() => {
-    'id': id, 'name': _name, 'description': _description, 'courseID': _courseID, 'Lessons': _Lessons, 'subtitle': _subtitle, 'order': _order, 'createdAt': _createdAt, 'updatedAt': _updatedAt
+    'id': id, 'name': _name, 'description': _description, 'courseID': _courseID, 'Lessons': _Lessons, 'subtitle': _subtitle, 'order': _order, 'totalVideoCount': _totalVideoCount, 'totalVideoDuration': _totalVideoDuration, 'createdAt': _createdAt, 'updatedAt': _updatedAt
   };
 
   static final QueryModelIdentifier<SectionModelIdentifier> MODEL_IDENTIFIER = QueryModelIdentifier<SectionModelIdentifier>();
@@ -189,6 +209,8 @@ class Section extends Model {
     fieldType: ModelFieldType(ModelFieldTypeEnum.model, ofModelName: 'Lesson'));
   static final QueryField SUBTITLE = QueryField(fieldName: "subtitle");
   static final QueryField ORDER = QueryField(fieldName: "order");
+  static final QueryField TOTALVIDEOCOUNT = QueryField(fieldName: "totalVideoCount");
+  static final QueryField TOTALVIDEODURATION = QueryField(fieldName: "totalVideoDuration");
   static var schema = Model.defineSchema(define: (ModelSchemaDefinition modelSchemaDefinition) {
     modelSchemaDefinition.name = "Section";
     modelSchemaDefinition.pluralName = "Sections";
@@ -243,6 +265,18 @@ class Section extends Model {
     
     modelSchemaDefinition.addField(ModelFieldDefinition.field(
       key: Section.ORDER,
+      isRequired: false,
+      ofType: ModelFieldType(ModelFieldTypeEnum.int)
+    ));
+    
+    modelSchemaDefinition.addField(ModelFieldDefinition.field(
+      key: Section.TOTALVIDEOCOUNT,
+      isRequired: false,
+      ofType: ModelFieldType(ModelFieldTypeEnum.int)
+    ));
+    
+    modelSchemaDefinition.addField(ModelFieldDefinition.field(
+      key: Section.TOTALVIDEODURATION,
       isRequired: false,
       ofType: ModelFieldType(ModelFieldTypeEnum.int)
     ));
