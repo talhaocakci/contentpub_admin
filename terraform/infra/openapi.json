@@ -5,7 +5,7 @@
     "title" : "javathlon-api"
   },
   "host" : "mtueq0xze8.execute-api.us-east-1.amazonaws.com",
-  "basePath" : "/staging",
+  "basePath" : "/production",
   "schemes" : [ "https" ],
   "paths" : {
     "/checkout/initiate" : {
@@ -131,9 +131,15 @@
         }
       }
     },
-    "/presign" : {
+    "/presign/{contentId}" : {
       "get" : {
         "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "contentId",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        } ],
         "responses" : {
           "200" : {
             "description" : "200 response",
@@ -147,6 +153,9 @@
             }
           }
         },
+        "security" : [ {
+          "ContentPubAuthorizer" : [ ]
+        } ],
         "x-amazon-apigateway-integration" : {
           "httpMethod" : "POST",
           "uri" : "arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/arn:aws:lambda:us-east-1:348467063208:function:s3PresignerFunction/invocations",
@@ -166,6 +175,12 @@
       "options" : {
         "consumes" : [ "application/json" ],
         "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "contentId",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        } ],
         "responses" : {
           "200" : {
             "description" : "200 response",
@@ -220,6 +235,9 @@
             }
           }
         },
+        "security" : [ {
+          "ContentPubAuthorizer" : [ ]
+        } ],
         "x-amazon-apigateway-integration" : {
           "httpMethod" : "POST",
           "uri" : "arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/arn:aws:lambda:us-east-1:348467063208:function:s3PresignerFunction/invocations",
@@ -251,6 +269,9 @@
             }
           }
         },
+        "security" : [ {
+          "ContentPubAuthorizer" : [ ]
+        } ],
         "x-amazon-apigateway-integration" : {
           "httpMethod" : "POST",
           "uri" : "arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/arn:aws:lambda:us-east-1:348467063208:function:s3PresignerFunction/invocations",
@@ -674,6 +695,18 @@
           "passthroughBehavior" : "when_no_match",
           "type" : "mock"
         }
+      }
+    }
+  },
+  "securityDefinitions" : {
+    "ContentPubAuthorizer" : {
+      "type" : "apiKey",
+      "name" : "Authorization",
+      "in" : "header",
+      "x-amazon-apigateway-authtype" : "cognito_user_pools",
+      "x-amazon-apigateway-authorizer" : {
+        "providerARNs" : [ "arn:aws:cognito-idp:us-east-1:348467063208:userpool/us-east-1_tYANAb3uF" ],
+        "type" : "cognito_user_pools"
       }
     }
   },

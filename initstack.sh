@@ -51,6 +51,7 @@ amplify push
 
 amplify pull
 
+export AWS_PROFILE=put_your_profile_name_here
 
 flutter build web --release
 

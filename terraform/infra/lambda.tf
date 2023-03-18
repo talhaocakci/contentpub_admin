@@ -56,6 +56,11 @@ variable "appsync_api_key" {
   description = "Appsync api key - Set after creating the appsync grapghq"
 }
 
+variable "app_url" {
+  type = string
+  description = "Domain name such as www.mysite.com"
+}
+
 resource "aws_lambda_function" "StripeLambda" {
     description = "Stripe functions, product functions etc"
     function_name = "stripeFunctions"
@@ -76,6 +81,7 @@ resource "aws_lambda_function" "StripeLambda" {
             stripe_api_secret = var.stripe_api_secret
             appsync_api_id = var.appsync_api_id
             appsync_api_key = var.appsync_api_key
+            app_url = var.app_url
             JAVA_TOOL_OPTIONS = "-XX:+TieredCompilation -XX:TieredStopAtLevel=1"
          }
     }
@@ -100,6 +106,8 @@ resource "aws_lambda_function" "S3PresignerLambda" {
 
   environment {
     variables = {
+      appsync_api_id = var.appsync_api_id
+      appsync_api_key = var.appsync_api_key
       JAVA_TOOL_OPTIONS = "-XX:+TieredCompilation -XX:TieredStopAtLevel=1"
     }
   }
