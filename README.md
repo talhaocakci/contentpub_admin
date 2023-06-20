@@ -41,6 +41,8 @@ Initialize amplify folder in your local repo and connect it to Amplify instance 
 
     amplify add api
 
+Use Cognito as default authorizer, use the previously generated user pool.
+Also configure IAM authorizer
   
 get the name before running the shell, use it here instead of {your_project_name}
 
