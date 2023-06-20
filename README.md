@@ -42,11 +42,11 @@ Initialize amplify folder in your local repo and connect it to Amplify instance 
     amplify add api
 
   
-get the name before running the shell, use it here instead of javathlon
+get the name before running the shell, use it here instead of {your_project_name}
 
   
 
-cp schema.graphql amplify/backend/api/javathlon
+cp schema.graphql amplify/backend/api/{your_project_name}
 
   
 
@@ -59,8 +59,5 @@ get pull command first
 amplify codegen models
 amplify import auth
 amplify push
-
-  
-  
 
 amplify pull
