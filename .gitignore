@@ -89,3 +89,6 @@ amplifytools.xcconfig
 /assets/projectconfiguration.json
 terraform/infra/.terraform.lock.hcl
 lib/amplifyconfiguration.dart
+
+artifacts/web/**
+

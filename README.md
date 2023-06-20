@@ -17,11 +17,9 @@ https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-profiles.html
 
     aws configure --profile yourprofilenametouselateron
 
-### Creating local repo
-Create an empty directory
-Move to this directory
-mkdir myprojectname
-cd myprojectname
+### Pull the admin repo 
+    git clone https://github.com/talhaocakci/contentpub_admin.git
+
 
 ### Creating AWS infrastructure
 Run following sh command to create 
