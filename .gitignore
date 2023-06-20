@@ -61,6 +61,9 @@ override.tf.json
 terraform.rc
 terraform/.terraform.lock.hcl
 terraform/contentpub-central/.terraform.lock.hcl
+terraform/deployment/*
+terraform/.terraform/*
+amplify/*
 
 #amplify-do-not-edit-begin
 amplify/\#current-cloud-backend
@@ -84,3 +87,5 @@ amplifytools.xcconfig
 **.sample
 #amplify-do-not-edit-end
 /assets/projectconfiguration.json
+terraform/infra/.terraform.lock.hcl
+lib/amplifyconfiguration.dart

@@ -6,7 +6,7 @@ read awsprofilename
 
 aws configure --profile $awsprofilename
 
-echo Please enter a unique project name such as com.projectname
+echo Please enter a unique project name such as "projectname.com"
 
 read projectname
 

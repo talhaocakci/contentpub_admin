@@ -3,6 +3,11 @@ variable "aws_profile" {
   description = "AWS profile"
 }
 
+variable "aws_region" {
+  type        = string
+  description = "AWS region"
+}
+
 variable "project_name" {
   type        = string
   description = "Base s3 bucket name. Your files will be structured relative to this base name. It can be your domain name such as x.com or your project name that can be unique across all AWS"
@@ -25,5 +30,5 @@ terraform {
 
 provider "aws" {
     profile = var.aws_profile
-    region = "us-east-1"
+    region = var.region
 }
