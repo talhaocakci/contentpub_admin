@@ -90,5 +90,5 @@ amplifytools.xcconfig
 terraform/infra/.terraform.lock.hcl
 lib/amplifyconfiguration.dart
 
-artifacts/web/**
+/artifacts/**
 
