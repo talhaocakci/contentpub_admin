@@ -10,6 +10,15 @@ Prepares your AWS environment and gives you the preferences to use in your Conte
 
 ##  Getting Started
 
+### Tooling
+
+1. Install terraform
+    brew install terraform
+
+2. Install AWS CLI
+    brew install awscli
+
+
 ### Configure your AWS account
 Create an AWS account or use an existing one.
 Create an API key in your account and add this configuration into your aws configuration via

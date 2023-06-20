@@ -92,3 +92,4 @@ lib/amplifyconfiguration.dart
 
 /artifacts/**
 
+terraform/core-infra/.terraform.lock.hcl
