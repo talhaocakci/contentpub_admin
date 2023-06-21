@@ -26,16 +26,13 @@ https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-profiles.html
 
     aws configure --profile yourprofilenametouselateron
 
-### Pull the admin repo 
+### Create AWS congnito
+    Go to terraform prep folder
+    cd terraform/prep
+    terraform init
+    
     git clone https://github.com/talhaocakci/contentpub_admin.git
-
-
-### Creating AWS infrastructure
-Run following sh command to create 
-
-    sh initstack.sh
-
-This command will ask you the profile name you created before. Provide the information when requested. ContentPub does not ask for your AWS secrets, they are securely managed in your local machine.
+    terraform apply -var="project_name=javawebdevelopment.com" -var="aws_profile=javathlon" -var="aws_region=eu-central-1"
 
 ### Creating AWS Amplify configuration
 This section will prepare your AWS Amplify and ContentPub configuration. Resulting files will be provided to your ContentPub Client instance.
@@ -48,16 +45,13 @@ Initialize amplify folder in your local repo and connect it to Amplify instance 
 
     amplify add api
 
-Use Cognito as default authorizer, use the previously generated user pool.
-Also configure IAM authorizer
+Select GraphQL as API type
+Change default authorizer to Cognito. If you have only one user pool (the one you created in the first step), it will be picked. Otherwise pick that one.
+Also configure IAM authorizer by selecting "yes" when "Do you wan to configure other authorizers" is prompted and select IAM.
   
 get the name before running the shell, use it here instead of {your_project_name}
 
-  
-
-cp schema.graphql amplify/backend/api/{your_project_name}
-
-  
+    Copy schema.graphql in the project root into amplify/backend/api/{your_project_name}
 
 amplify push
 
@@ -70,3 +64,11 @@ amplify import auth
 amplify push
 
 amplify pull
+
+
+### Creating Rest of the AWS infrastructure
+Run following sh command to create 
+
+    sh initstack.sh
+
+This command will ask you the profile name you created before. Provide the information when requested. ContentPub does not ask for your AWS secrets, they are securely managed in your local machine.

@@ -65,6 +65,14 @@ terraform/deployment/*
 terraform/.terraform/*
 amplify/*
 
+/assets/projectconfiguration.json
+terraform/infra/.terraform.lock.hcl
+lib/amplifyconfiguration.dart
+
+/artifacts/**
+
+terraform/core-infra/.terraform.lock.hcl
+
 #amplify-do-not-edit-begin
 amplify/\#current-cloud-backend
 amplify/.config/local-*
@@ -86,10 +94,4 @@ amplifytools.xcconfig
 .secret-*
 **.sample
 #amplify-do-not-edit-end
-/assets/projectconfiguration.json
-terraform/infra/.terraform.lock.hcl
-lib/amplifyconfiguration.dart
-
-/artifacts/**
-
-terraform/core-infra/.terraform.lock.hcl
+terraform/prep/.terraform.lock.hcl
