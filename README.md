@@ -41,6 +41,10 @@ Initialize amplify folder in your local repo and connect it to Amplify instance 
 
     amplify init --app https://github.com/talhaocakci/contentpub_admin
 
+Import existing user pools into Amplify and select the one ending with "mobile"
+
+    amplify import auth
+
   Add Graphql APIs via following command. All sources have already been created while initializing the infrastructure. This step only configures your Amplify instance and integrates to your codebase.
 
     amplify add api
@@ -53,17 +57,14 @@ get the name before running the shell, use it here instead of {your_project_name
 
     Copy schema.graphql in the project root into amplify/backend/api/{your_project_name}
 
-amplify push
+Push the amplify settings, this will generate necessary AWS components namely, Appsync API, DynamoDB tables etc...
+   
+    amplify push
 
-  prints graphql instances, this should be written back into a file
+run model generation on project root, you will see models under lib folder.
 
-  run model generation here again
-get pull command first
-amplify codegen models
-amplify import auth
-amplify push
-
-amplify pull
+    amplify pull
+    amplify codegen models
 
 
 ### Creating Rest of the AWS infrastructure
@@ -72,3 +73,16 @@ Run following sh command to create
     sh initstack.sh
 
 This command will ask you the profile name you created before. Provide the information when requested. ContentPub does not ask for your AWS secrets, they are securely managed in your local machine.
+
+Create project configuration file:
+
+    echo "{\"project\":\"$yourprojectname\"}" >> assets/projectconfiguration.json 
+
+
+Build Flutter project:
+
+    flutter build web --release
+
+Copy build folder into artifacts    
+    
+    cp -a build/web/. terraform/deployment/artifacts/

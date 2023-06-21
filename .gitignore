@@ -73,6 +73,10 @@ lib/amplifyconfiguration.dart
 
 terraform/core-infra/.terraform.lock.hcl
 
+lib/models/*
+
+terraform/prep/.terraform.lock.hcl
+
 #amplify-do-not-edit-begin
 amplify/\#current-cloud-backend
 amplify/.config/local-*
@@ -94,4 +98,3 @@ amplifytools.xcconfig
 .secret-*
 **.sample
 #amplify-do-not-edit-end
-terraform/prep/.terraform.lock.hcl
