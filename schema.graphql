@@ -35,6 +35,8 @@ type Section @model @auth(rules: [{allow: public}]) {
   Lessons: [Lesson] @hasMany(indexName: "bySection", fields: ["id"])
   subtitle: String
   order: Int
+  totalVideoCount: Int
+  totalVideoDuration: Int
 }
 
 type Tenant @model @auth(rules: [{allow: public}]) {
@@ -55,12 +57,16 @@ type Content @model @auth(rules: [{allow: public}]) {
   type: ContentType
   objectId: String
   owner: String
+  duration: Int
   bundles: [Bundle] @manyToMany(relationName: "BundleContent")
   photoUrl: String
   promoVideoUrl: String
+  promoVideoDuration: Int
   isPublished: Boolean
   isArchived: Boolean
   Coworkers: [Coworker] @manyToMany(relationName: "ContentCoworker")
+  videoDuration: String
+  fileSize: String
 }
 
 type Bundle @model @auth(rules: [{allow: public}]) {
@@ -133,8 +139,10 @@ type Lesson @model @auth(rules: [{allow: public}]) {
   name: String
   description: String
   video: String
+  videoDuration: Int
   sectionID: ID! @index(name: "bySection")
   order: Int
+  videoFileSize: String
 }
 
 type Course @model @auth(rules: [{allow: public}]) {
@@ -148,4 +156,14 @@ type Course @model @auth(rules: [{allow: public}]) {
   coverPhotoUrl: String
   promoVideoUrl: String
   subtitle: String
+  totalVideoDuration: Int
+  videoCount: Int
+  features: String
+  requirements: String
+  goals: String
+  language: String
+  averagePoint: Float
+  studentCount: Int
+  lastUpdateDate: AWSDate
 }
+ 
