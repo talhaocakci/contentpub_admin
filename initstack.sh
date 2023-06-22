@@ -10,16 +10,15 @@ echo Please enter a unique project name such as "projectname.com"
 
 read projectname
 
-cd terraform/infra
+cd terraform/core-infra
 
 terraform init
 
 
-terraform apply -var-file="staging.tfvars" -var="project_name=$projectname" -var="aws_profile=$awsprofilename"
+terraform apply -var="project_name=$projectname" -var="aws_profile=$awsprofilename"
 
+terraform apply -var="project_name=javawebdevelopment.com" -var="aws_profile=javathlon" -var="app_url=www.javawebdevelopment.com" -var="custom_domain=www.javawebdevelopment.com" -var="appsync_api_id=jj556jjncbfanh2fj6dknj7uyi"  -var="aws_region=eu-central-1"  
 
-
-
-
+##
 ## run in terraform/deployment folder
-terraform apply -var="project_name=$projectname"
+##terraform apply -var="project_name=$projectname"

@@ -70,6 +70,22 @@ resource "aws_s3_bucket" "PublicMediaBucketStaging" {
     bucket = "${var.project_name}-staging-public"
 }
 
+resource "aws_s3_bucket_public_access_block" "PublicMediaBucketStagingAccess" {
+    bucket = aws_s3_bucket.PublicMediaBucketStaging.id
+    block_public_acls       = false
+    block_public_policy     = false
+    ignore_public_acls      = false
+    restrict_public_buckets = false
+}
+
+resource "aws_s3_bucket_public_access_block" "PublicMediaBucketProdAccess" {
+    bucket = aws_s3_bucket.PublicMediaBucketProd.id
+    block_public_acls       = false
+    block_public_policy     = false
+    ignore_public_acls      = false
+    restrict_public_buckets = false
+}
+
 resource "aws_s3_bucket_policy" "stage_public_bucket_policy" {
   bucket = aws_s3_bucket.PublicMediaBucketStaging.bucket
   policy = templatefile("s3-policy.json", { bucket = aws_s3_bucket.PublicMediaBucketStaging.bucket })
@@ -120,40 +136,3 @@ resource "aws_s3_bucket_cors_configuration" "PublicMediaBucketProdCors" {
   }
 }
 
-resource "aws_s3_bucket" "CustomDomainAdminApp" {
-    count = var.custom_domain != "" ? 1 : 0
-    bucket = "admin.${var.custom_domain}"
-}
-
-resource "aws_s3_bucket" "CustomDomainClientRootApp" {
-     count = var.custom_domain != "" ? 1 : 0
-    bucket = "www.${var.custom_domain}"
-}
-
-resource "aws_s3_bucket" "CustomDomainClientStagingAdminApp" {
-     count = var.custom_domain != "" ? 1 : 0
-    bucket = "staging-admin.${var.custom_domain}"
-}
-
-resource "aws_s3_bucket" "CustomDomainClientStagingClientApp" {
-     count = var.custom_domain != "" ? 1 : 0
-    bucket = "staging-client.${var.custom_domain}"
-}
-
-resource "aws_s3_bucket" "CustomDomainClientApp" {
-     count = var.custom_domain != "" ? 1 : 0
-    bucket = "client.${var.custom_domain}"
-}
-
-
-resource "aws_s3_bucket_policy" "CustomDomainPublicPolicy" {
-     count = var.custom_domain != "" ? 1 : 0
-    bucket = "${var.custom_domain}"
-    policy = "{\"Version\":\"2012-10-17\",\"Statement\":[{\"Sid\":\"PublicReadGetObject\",\"Effect\":\"Allow\",\"Principal\":\"*\",\"Action\":\"s3:GetObject\",\"Resource\":\"arn:aws:s3:::${var.custom_domain}/*\"}]}"
-}
-
-resource "aws_s3_bucket_policy" "CustomDomainRootPolicy" {
-     count = var.custom_domain != "" ? 1 : 0
-    bucket = "www.${var.custom_domain}"
-    policy = "{\"Version\":\"2012-10-17\",\"Statement\":[{\"Sid\":\"PublicReadGetObject\",\"Effect\":\"Allow\",\"Principal\":\"*\",\"Action\":\"s3:GetObject\",\"Resource\":\"arn:aws:s3:::www.${var.custom_domain}/*\"}]}"
-}

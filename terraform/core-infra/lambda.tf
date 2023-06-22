@@ -28,6 +28,12 @@ variable "app_url" {
   description = "Domain name such as www.mysite.com"
 }
 
+resource "aws_s3_object" "GeneralLambdaSourceCode" {
+  bucket = aws_s3_bucket.LambdaFunctionsStaging.bucket
+  key    = "contentpub-lambdas-1.0-SNAPSHOT.jar"
+  source = "contentpub-lambdas-1.0-SNAPSHOT.jar" # its mean it depended on zip
+}
+
 resource "aws_lambda_function" "S3PresignerLambda" {
   description = "S3 presigner lambda for uploads"
   function_name = "s3PresignerFunction"
@@ -36,7 +42,7 @@ resource "aws_lambda_function" "S3PresignerLambda" {
     "x86_64"
   ]
   s3_bucket = aws_s3_bucket.LambdaFunctionsStaging.bucket
-  s3_key = aws_s3_object.StripeLibrarySourceCode.key
+  s3_key = aws_s3_object.GeneralLambdaSourceCode.key
   memory_size = 256
   role = aws_iam_role.S3PreSignerLambdaIamRole.arn
   runtime = "java11"
@@ -52,13 +58,6 @@ resource "aws_lambda_function" "S3PresignerLambda" {
   tracing_config {
     mode = "PassThrough"
   }
-}
-
-resource "aws_lambda_permission" "StripeLibraryApiPermission" {
-    action = "lambda:InvokeFunction"
-    function_name = "stripeFunctions"
-    principal = "apigateway.amazonaws.com"
-    source_arn = "arn:aws:execute-api:us-east-1:${data.aws_caller_identity.current.account_id}:${aws_api_gateway_rest_api.ApiGatewayRestApi.id}/*"
 }
 
 resource "aws_lambda_permission" "S3PresignerPermission" {

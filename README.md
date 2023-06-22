@@ -70,7 +70,7 @@ run model generation on project root, you will see models under lib folder.
 ### Creating Rest of the AWS infrastructure
 Run following sh command to create 
 
-    sh initstack.sh
+    terraform apply -var="project_name=javawebdevelopment.com" -var="aws_profile=javathlon" -var="app_url=www.javawebdevelopment.com" -var="custom_domain=www.javawebdevelopment.com" -var="appsync_api_id=jj556jjncbfanh2fj6dknj7uyi"  -var="aws_region=eu-central-1"
 
 This command will ask you the profile name you created before. Provide the information when requested. ContentPub does not ask for your AWS secrets, they are securely managed in your local machine.
 
@@ -78,10 +78,23 @@ Create project configuration file:
 
     echo "{\"project\":\"$yourprojectname\"}" >> assets/projectconfiguration.json 
 
+Replace assets/projectconfiguration.json file with real values
 
-Build Flutter project:
+    {
+    "project":"yourprojectname.com",
+    "environment" : "production or staging",
+    "appsyncId" : "Appsync Id in AWS console",
+    "apigatewayId" : "API Gateway Id in AWS console",
+    "region" : "eu-central-1"
+}
+
+
+### Build Flutter project:
 
     flutter build web --release
+
+### Deployment
+
 
 Copy build folder into artifacts    
     

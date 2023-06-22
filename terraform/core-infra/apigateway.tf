@@ -48,7 +48,7 @@ resource "aws_api_gateway_stage" "ApiStagingStage" {
   stage_name    = "staging"
 }
 
-resource "aws_api_gateway_production" "ApiProductionStage" {
+resource "aws_api_gateway_stage" "ApiProductionStage" {
   deployment_id = aws_api_gateway_deployment.ApiProductionDeployment.id
   rest_api_id   = aws_api_gateway_rest_api.ApiGatewayRestApi.id
   stage_name    = "production"

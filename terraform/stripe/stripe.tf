@@ -22,6 +22,13 @@ resource "aws_iam_role" "StripeLibraryIamRole" {
     max_session_duration = 3600
 }
 
+resource "aws_lambda_permission" "StripeLibraryApiPermission" {
+    action = "lambda:InvokeFunction"
+    function_name = "stripeFunctions"
+    principal = "apigateway.amazonaws.com"
+    source_arn = "arn:aws:execute-api:us-east-1:${data.aws_caller_identity.current.account_id}:${aws_api_gateway_rest_api.ApiGatewayRestApi.id}/*"
+}
+
 resource "aws_s3_object" "StripeLibrarySourceCode" {
   bucket = aws_s3_bucket.LambdaFunctionsStaging.bucket
   key    = "contentpub-lambdas-1.0-SNAPSHOT.jar"

@@ -30,5 +30,14 @@ terraform {
 
 provider "aws" {
     profile = var.aws_profile
-    region = var.region
+    region = var.aws_region
+
+   
+  default_tags {
+    tags = {
+      contentpubversion = "0.1"
+      app       = var.project_name
+    }
+  
+}
 }

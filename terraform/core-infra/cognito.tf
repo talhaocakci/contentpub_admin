@@ -1,36 +1,17 @@
-variable "aws_profile" {
-  type        = string
-  description = "AWS profile"
-}
-
-variable "aws_region" {
-  type        = string
-  description = "AWS region"
-}
-
-variable "project_name" {
-  type        = string
-  description = "Base s3 bucket name. Your files will be structured relative to this base name. It can be your domain name such as x.com or your project name that can be unique across all AWS"
-}
-
-terraform {
-    required_providers {
-        aws = {
-            source = "hashicorp/aws"
-            version = "4.15.1"
-        }
-    }
-}
-
-provider "aws" {
-    profile = var.aws_profile
-}
 
 resource "aws_cognito_user_pool" "ContentPubUserPool" {
   name = "${var.project_name}-user-pool"
 
   username_attributes = ["email"]
   auto_verified_attributes = ["email"]
+
+  account_recovery_setting {
+    recovery_mechanism {
+      name     = "verified_email"
+      priority = 1
+    }
+  }
+  
   password_policy {
     minimum_length = 6
   }
