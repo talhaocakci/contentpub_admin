@@ -93,9 +93,16 @@ Replace assets/projectconfiguration.json file with real values
 
     flutter build web --release
 
-### Deployment
 
+### Stripe enablement
+
+cd /terraform/stripe
+
+terraform apply -var="aws_profile=javathlon" -var="aws_region=eu-central-1" -var-file="stripe.tfvars" -var="project_name=javawebdevelopment.com"  -var="api_gateway_id=ke8u7yf2dg" -var="appsync_api_id=cldfndxd4zfrpfcb333wyik5vu"  -var="app_url=www.javawebdevelopment.com"
+
+### Deployment
 
 Copy build folder into artifacts    
     
     cp -a build/web/. terraform/deployment/artifacts/
+

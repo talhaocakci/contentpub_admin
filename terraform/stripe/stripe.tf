@@ -1,10 +1,20 @@
+data "aws_caller_identity" "current" {}
+
+variable "aws_profile" {
+   type = string
+   description = "AWS profile"
+ }
+
+ variable "aws_region" {
+   type = string
+   description = "AWS region"
+ }
 
 variable "stripe_api_secret" {
    type = string
    description = "Stripe API Secret"
  }
  
-
   variable "stripe_webhook_secret" {
    type = string
    description = "Stripe webhook secret key"
@@ -14,6 +24,26 @@ variable "stripe_api_secret" {
    type = string
    description = "Stripe webhook id"
  }
+
+ variable "appsync_api_id" {
+  type = string
+  description = "Appsync api id - Set after creating the appsync grapghq"
+}
+
+variable "api_gateway_id" {
+   type = string
+   description = "API gateway id, required to let that API gateway access stripe lambdas"
+ }
+
+variable "app_url" {
+  type = string
+  description = "Domain name such as www.mysite.com"
+}
+
+variable "project_name" {
+  type = string
+  description = "Domain name without www  eg: mysite.com"
+}
 
 resource "aws_iam_role" "StripeLibraryIamRole" {
     path = "/service-role/"
@@ -26,11 +56,11 @@ resource "aws_lambda_permission" "StripeLibraryApiPermission" {
     action = "lambda:InvokeFunction"
     function_name = "stripeFunctions"
     principal = "apigateway.amazonaws.com"
-    source_arn = "arn:aws:execute-api:us-east-1:${data.aws_caller_identity.current.account_id}:${aws_api_gateway_rest_api.ApiGatewayRestApi.id}/*"
+    source_arn = "arn:aws:execute-api:us-east-1:${data.aws_caller_identity.current.account_id}:${var.api_gateway_id}/*"
 }
 
 resource "aws_s3_object" "StripeLibrarySourceCode" {
-  bucket = aws_s3_bucket.LambdaFunctionsStaging.bucket
+  bucket = "${var.project_name}-staging-lambda"
   key    = "contentpub-lambdas-1.0-SNAPSHOT.jar"
   source = "contentpub-lambdas-1.0-SNAPSHOT.jar" # its mean it depended on zip
 }
@@ -42,7 +72,7 @@ resource "aws_lambda_function" "StripeLambda" {
     architectures = [
         "x86_64"
     ]
-    s3_bucket = aws_s3_bucket.LambdaFunctionsStaging.bucket
+    s3_bucket = "${var.project_name}-staging-lambda"
     s3_key = aws_s3_object.StripeLibrarySourceCode.key
     memory_size = 256
     role = aws_iam_role.StripeLibraryIamRole.arn
@@ -61,4 +91,25 @@ resource "aws_lambda_function" "StripeLambda" {
     tracing_config {
         mode = "PassThrough"
     }
+}
+
+terraform {
+    required_providers {
+        aws = {
+            source = "hashicorp/aws"
+            version = "4.15.1"
+        }
+    }
+}
+
+provider "aws" {
+    profile = var.aws_profile
+    region = var.aws_region
+
+  default_tags {
+    tags = {
+      contentpubversion = "0.1"
+      app       = var.project_name
+    }
+  }
 }
