@@ -1,4 +1,4 @@
-type Coworker @model @auth(rules: [{allow: public}]) {
+type Coworker @model @auth(rules: [{allow: private}]) {
   id: ID!
   email: String
   displayName: String
@@ -7,7 +7,7 @@ type Coworker @model @auth(rules: [{allow: public}]) {
   contents: [Content] @manyToMany(relationName: "ContentCoworker")
 }
 
-type TenantConfiguration @model @auth(rules: [{allow: public}]) {
+type TenantConfiguration @model @auth(rules: [{allow: private}]) {
   id: ID!
   stripeSecretKey: String
   stripeWebhookSecretKey: String
@@ -15,7 +15,7 @@ type TenantConfiguration @model @auth(rules: [{allow: public}]) {
   contentpubApiKey: String
 }
 
-type Price @model @auth(rules: [{allow: public}]) {
+type Price @model @auth(rules: [{allow: private}]) {
   id: ID!
   stripePriceId: String
   purchaseType: PurchaseType
@@ -27,7 +27,7 @@ type Price @model @auth(rules: [{allow: public}]) {
   trialPeriod: Int
 }
 
-type Section @model @auth(rules: [{allow: public}]) {
+type Section @model @auth(rules: [{allow: private}]) {
   id: ID!
   name: String
   description: String
@@ -39,7 +39,7 @@ type Section @model @auth(rules: [{allow: public}]) {
   totalVideoDuration: Int
 }
 
-type Tenant @model @auth(rules: [{allow: public}]) {
+type Tenant @model @auth(rules: [{allow: private}]) {
   id: ID!
   name: String
   testingConfiguration: TenantConfiguration @hasOne
@@ -49,7 +49,7 @@ type Tenant @model @auth(rules: [{allow: public}]) {
   description: String
 }
 
-type Content @model @auth(rules: [{allow: public}]) {
+type Content @model @auth(rules: [{allow: private}]) {
   id: ID!
   name: String
   description: String
@@ -69,7 +69,7 @@ type Content @model @auth(rules: [{allow: public}]) {
   fileSize: String
 }
 
-type Bundle @model @auth(rules: [{allow: public}]) {
+type Bundle @model @auth(rules: [{allow: private}]) {
   id: ID!
   name: String
   description: String
@@ -95,7 +95,7 @@ enum PurchaseType {
   SUBSCRIPTION
 }
 
-type Customer @model @auth(rules: [{allow: public}]) {
+type Customer @model @auth(rules: [{allow: private}]) {
   id: ID!
   userName: String
   stripeId: String
@@ -118,7 +118,7 @@ enum ContentType {
   ONLINE_SESSION
 }
 
-type Purchase @model @auth(rules: [{allow: public}]) {
+type Purchase @model @auth(rules: [{allow: private}]) {
   id: ID!
   purchaseTime: AWSDate
   validTill: AWSDate
@@ -134,7 +134,7 @@ type Purchase @model @auth(rules: [{allow: public}]) {
   cancellationDate: AWSDate
 }
 
-type Lesson @model @auth(rules: [{allow: public}]) {
+type Lesson @model @auth(rules: [{allow: private}]) {
   id: ID!
   name: String
   description: String
@@ -145,7 +145,7 @@ type Lesson @model @auth(rules: [{allow: public}]) {
   videoFileSize: String
 }
 
-type Course @model @auth(rules: [{allow: public}]) {
+type Course @model @auth(rules: [{allow: private}]) {
   id: ID!
   title: String
   description: String
