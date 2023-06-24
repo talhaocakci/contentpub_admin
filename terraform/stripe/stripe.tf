@@ -56,7 +56,7 @@ resource "aws_lambda_permission" "StripeLibraryApiPermission" {
     action = "lambda:InvokeFunction"
     function_name = "stripeFunctions"
     principal = "apigateway.amazonaws.com"
-    source_arn = "arn:aws:execute-api:us-east-1:${data.aws_caller_identity.current.account_id}:${var.api_gateway_id}/*"
+    source_arn = "arn:aws:execute-api:${var.aws_region}:${data.aws_caller_identity.current.account_id}:${var.api_gateway_id}/*"
 }
 
 resource "aws_s3_object" "StripeLibrarySourceCode" {

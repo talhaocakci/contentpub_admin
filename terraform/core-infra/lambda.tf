@@ -64,7 +64,7 @@ resource "aws_lambda_permission" "S3PresignerPermission" {
   action = "lambda:InvokeFunction"
   function_name = "s3PresignerFunction"
   principal = "apigateway.amazonaws.com"
-  source_arn = "arn:aws:execute-api:us-east-1:${data.aws_caller_identity.current.account_id}:${aws_api_gateway_rest_api.ApiGatewayRestApi.id}/*"
+  source_arn = "arn:aws:execute-api:${var.aws_region}:${data.aws_caller_identity.current.account_id}:${aws_api_gateway_rest_api.ApiGatewayRestApi.id}/*"
 }
 
 resource "aws_iam_policy" "s3PresignerPolicy" {
