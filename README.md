@@ -86,7 +86,7 @@ Replace assets/projectconfiguration.json file with real values
     "appsyncId" : "Appsync Id in AWS console",
     "apigatewayId" : "API Gateway Id in AWS console",
     "region" : "eu-central-1"
-}
+    }
 
 
 ### Build Flutter project:
