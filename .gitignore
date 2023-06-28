@@ -73,7 +73,7 @@ lib/amplifyconfiguration.dart
 
 terraform/core-infra/.terraform.lock.hcl
 
-lib/models/*
+
 
 terraform/prep/.terraform.lock.hcl
 
