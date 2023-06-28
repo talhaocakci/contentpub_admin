@@ -282,7 +282,7 @@ class Purchase extends Model {
     
     modelSchemaDefinition.authRules = [
       AuthRule(
-        authStrategy: AuthStrategy.PRIVATE,
+        authStrategy: AuthStrategy.PUBLIC,
         operations: [
           ModelOperation.CREATE,
           ModelOperation.UPDATE,

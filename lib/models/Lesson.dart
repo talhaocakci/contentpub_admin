@@ -34,7 +34,6 @@ class Lesson extends Model {
   final int? _videoDuration;
   final String? _sectionID;
   final int? _order;
-  final String? _videoFileSize;
   final TemporalDateTime? _createdAt;
   final TemporalDateTime? _updatedAt;
 
@@ -84,10 +83,6 @@ class Lesson extends Model {
     return _order;
   }
   
-  String? get videoFileSize {
-    return _videoFileSize;
-  }
-  
   TemporalDateTime? get createdAt {
     return _createdAt;
   }
@@ -96,9 +91,9 @@ class Lesson extends Model {
     return _updatedAt;
   }
   
-  const Lesson._internal({required this.id, name, description, video, videoDuration, required sectionID, order, videoFileSize, createdAt, updatedAt}): _name = name, _description = description, _video = video, _videoDuration = videoDuration, _sectionID = sectionID, _order = order, _videoFileSize = videoFileSize, _createdAt = createdAt, _updatedAt = updatedAt;
+  const Lesson._internal({required this.id, name, description, video, videoDuration, required sectionID, order, createdAt, updatedAt}): _name = name, _description = description, _video = video, _videoDuration = videoDuration, _sectionID = sectionID, _order = order, _createdAt = createdAt, _updatedAt = updatedAt;
   
-  factory Lesson({String? id, String? name, String? description, String? video, int? videoDuration, required String sectionID, int? order, String? videoFileSize}) {
+  factory Lesson({String? id, String? name, String? description, String? video, int? videoDuration, required String sectionID, int? order}) {
     return Lesson._internal(
       id: id == null ? UUID.getUUID() : id,
       name: name,
@@ -106,8 +101,7 @@ class Lesson extends Model {
       video: video,
       videoDuration: videoDuration,
       sectionID: sectionID,
-      order: order,
-      videoFileSize: videoFileSize);
+      order: order);
   }
   
   bool equals(Object other) {
@@ -124,8 +118,7 @@ class Lesson extends Model {
       _video == other._video &&
       _videoDuration == other._videoDuration &&
       _sectionID == other._sectionID &&
-      _order == other._order &&
-      _videoFileSize == other._videoFileSize;
+      _order == other._order;
   }
   
   @override
@@ -143,7 +136,6 @@ class Lesson extends Model {
     buffer.write("videoDuration=" + (_videoDuration != null ? _videoDuration!.toString() : "null") + ", ");
     buffer.write("sectionID=" + "$_sectionID" + ", ");
     buffer.write("order=" + (_order != null ? _order!.toString() : "null") + ", ");
-    buffer.write("videoFileSize=" + "$_videoFileSize" + ", ");
     buffer.write("createdAt=" + (_createdAt != null ? _createdAt!.format() : "null") + ", ");
     buffer.write("updatedAt=" + (_updatedAt != null ? _updatedAt!.format() : "null"));
     buffer.write("}");
@@ -151,7 +143,7 @@ class Lesson extends Model {
     return buffer.toString();
   }
   
-  Lesson copyWith({String? name, String? description, String? video, int? videoDuration, String? sectionID, int? order, String? videoFileSize}) {
+  Lesson copyWith({String? name, String? description, String? video, int? videoDuration, String? sectionID, int? order}) {
     return Lesson._internal(
       id: id,
       name: name ?? this.name,
@@ -159,8 +151,7 @@ class Lesson extends Model {
       video: video ?? this.video,
       videoDuration: videoDuration ?? this.videoDuration,
       sectionID: sectionID ?? this.sectionID,
-      order: order ?? this.order,
-      videoFileSize: videoFileSize ?? this.videoFileSize);
+      order: order ?? this.order);
   }
   
   Lesson.fromJson(Map<String, dynamic> json)  
@@ -171,16 +162,15 @@ class Lesson extends Model {
       _videoDuration = (json['videoDuration'] as num?)?.toInt(),
       _sectionID = json['sectionID'],
       _order = (json['order'] as num?)?.toInt(),
-      _videoFileSize = json['videoFileSize'],
       _createdAt = json['createdAt'] != null ? TemporalDateTime.fromString(json['createdAt']) : null,
       _updatedAt = json['updatedAt'] != null ? TemporalDateTime.fromString(json['updatedAt']) : null;
   
   Map<String, dynamic> toJson() => {
-    'id': id, 'name': _name, 'description': _description, 'video': _video, 'videoDuration': _videoDuration, 'sectionID': _sectionID, 'order': _order, 'videoFileSize': _videoFileSize, 'createdAt': _createdAt?.format(), 'updatedAt': _updatedAt?.format()
+    'id': id, 'name': _name, 'description': _description, 'video': _video, 'videoDuration': _videoDuration, 'sectionID': _sectionID, 'order': _order, 'createdAt': _createdAt?.format(), 'updatedAt': _updatedAt?.format()
   };
   
   Map<String, Object?> toMap() => {
-    'id': id, 'name': _name, 'description': _description, 'video': _video, 'videoDuration': _videoDuration, 'sectionID': _sectionID, 'order': _order, 'videoFileSize': _videoFileSize, 'createdAt': _createdAt, 'updatedAt': _updatedAt
+    'id': id, 'name': _name, 'description': _description, 'video': _video, 'videoDuration': _videoDuration, 'sectionID': _sectionID, 'order': _order, 'createdAt': _createdAt, 'updatedAt': _updatedAt
   };
 
   static final QueryModelIdentifier<LessonModelIdentifier> MODEL_IDENTIFIER = QueryModelIdentifier<LessonModelIdentifier>();
@@ -191,14 +181,13 @@ class Lesson extends Model {
   static final QueryField VIDEODURATION = QueryField(fieldName: "videoDuration");
   static final QueryField SECTIONID = QueryField(fieldName: "sectionID");
   static final QueryField ORDER = QueryField(fieldName: "order");
-  static final QueryField VIDEOFILESIZE = QueryField(fieldName: "videoFileSize");
   static var schema = Model.defineSchema(define: (ModelSchemaDefinition modelSchemaDefinition) {
     modelSchemaDefinition.name = "Lesson";
     modelSchemaDefinition.pluralName = "Lessons";
     
     modelSchemaDefinition.authRules = [
       AuthRule(
-        authStrategy: AuthStrategy.PRIVATE,
+        authStrategy: AuthStrategy.PUBLIC,
         operations: [
           ModelOperation.CREATE,
           ModelOperation.UPDATE,
@@ -247,12 +236,6 @@ class Lesson extends Model {
       key: Lesson.ORDER,
       isRequired: false,
       ofType: ModelFieldType(ModelFieldTypeEnum.int)
-    ));
-    
-    modelSchemaDefinition.addField(ModelFieldDefinition.field(
-      key: Lesson.VIDEOFILESIZE,
-      isRequired: false,
-      ofType: ModelFieldType(ModelFieldTypeEnum.string)
     ));
     
     modelSchemaDefinition.addField(ModelFieldDefinition.nonQueryField(
