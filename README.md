@@ -70,7 +70,7 @@ run model generation on project root, you will see models under lib folder.
 ### Creating Rest of the AWS infrastructure
 Run following sh command to create 
 
-    terraform apply -var="project_name=javawebdevelopment.com" -var="aws_profile=javathlon" -var="app_url=www.javawebdevelopment.com" -var="custom_domain=www.javawebdevelopment.com" -var="appsync_api_id=jj556jjncbfanh2fj6dknj7uyi"  -var="aws_region=eu-central-1"
+    terraform apply -var="project_name=javawebdevelopmentcom" -var="aws_profile=javathlon" -var="app_url=www.javawebdevelopment.com" -var="custom_domain=www.javawebdevelopment.com" -var="appsync_api_id=tziogh3ukbab3fo2a4omz4bnom"  -var="aws_region=eu-central-1"
 
 This command will ask you the profile name you created before. Provide the information when requested. ContentPub does not ask for your AWS secrets, they are securely managed in your local machine.
 
@@ -98,7 +98,7 @@ Replace assets/projectconfiguration.json file with real values
 
 cd /terraform/stripe
 
-terraform apply -var="aws_profile=javathlon" -var="aws_region=eu-central-1" -var-file="stripe.tfvars" -var="project_name=javawebdevelopment.com"  -var="api_gateway_id=ke8u7yf2dg" -var="appsync_api_id=cldfndxd4zfrpfcb333wyik5vu"  -var="app_url=www.javawebdevelopment.com"
+terraform apply -var="aws_profile=javathlon" -var="aws_region=eu-central-1" -var-file="stripe.tfvars" -var="project_name=javawebdevelopmentcom"  -var="api_gateway_id=ke8u7yf2dg" -var="appsync_api_id=cldfndxd4zfrpfcb333wyik5vu"  -var="app_url=www.javawebdevelopment.com"
 
 ### Deployment
 
@@ -106,3 +106,6 @@ Copy build folder into artifacts
     
     cp -a build/web/. terraform/deployment/artifacts/
 
+Run terraform
+
+    terraform apply -var="project_name=javawebdevelopmentcom"  -var="aws_profile=javathlon" -var="aws_region=eu-central-1"

@@ -58,7 +58,7 @@ resource "aws_cognito_user_pool_client" "ContentPubClientMobile" {
   name = "${var.project_name}-client-mobile"
 
   user_pool_id = aws_cognito_user_pool.ContentPubUserPool.id
-  generate_secret = true
+  generate_secret = false
   refresh_token_validity = 90
   prevent_user_existence_errors = "ENABLED"
   explicit_auth_flows = [

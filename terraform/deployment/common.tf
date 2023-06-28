@@ -11,3 +11,25 @@ module "file_extensions" {
 locals{
   mime_types = module.file_extensions.mappings
 }
+
+variable "aws_profile" {
+   type = string
+   description = "AWS profile"
+ }
+
+ variable "aws_region" {
+   type = string
+   description = "AWS region"
+ }
+ 
+provider "aws" {
+    profile = var.aws_profile
+    region = var.aws_region
+
+  default_tags {
+    tags = {
+      contentpubversion = "0.1"
+      app       = var.project_name
+    }
+  }
+}

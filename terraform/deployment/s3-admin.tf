@@ -10,6 +10,14 @@ resource "aws_s3_bucket_policy" "admin_deployment-policy" {
   policy = templatefile("s3-policy.json", { bucket = "admin.${var.project_name}" })
 }
 
+resource "aws_s3_bucket_public_access_block" "admin-prod-bucket-access" {
+    bucket = aws_s3_bucket.admin_bucket.id
+    block_public_acls       = false
+    block_public_policy     = false
+    ignore_public_acls      = false
+    restrict_public_buckets = false
+}
+
 resource "aws_s3_bucket_website_configuration" "staging_website_configuration" {
   bucket = aws_s3_bucket.admin_bucket.bucket
 
@@ -18,10 +26,7 @@ resource "aws_s3_bucket_website_configuration" "staging_website_configuration" {
   }
 }
 
-resource "aws_s3_bucket_acl" "admin_bucket-acl" {
-  bucket = aws_s3_bucket.admin_bucket.bucket
-  acl    = "public-read"
-}
+
 
 resource "aws_s3_bucket_versioning" "admin_bucket_versioning" {
   bucket = aws_s3_bucket.admin_bucket.bucket

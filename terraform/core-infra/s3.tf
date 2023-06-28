@@ -79,7 +79,7 @@ resource "aws_s3_bucket_public_access_block" "PublicMediaBucketStagingAccess" {
 }
 
 resource "aws_s3_bucket_public_access_block" "PublicMediaBucketProdAccess" {
-    bucket = aws_s3_bucket.PublicMediaBucketProd.id
+    bucket = aws_s3_bucket.PublicMediaBucketProd.bucket
     block_public_acls       = false
     block_public_policy     = false
     ignore_public_acls      = false

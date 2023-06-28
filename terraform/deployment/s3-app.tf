@@ -9,6 +9,14 @@ resource "aws_s3_bucket_policy" "www_deployment-policy" {
   policy = templatefile("s3-policy.json", { bucket = "www.${var.project_name}" })
 }
 
+resource "aws_s3_bucket_public_access_block" "www-prod-bucket-access" {
+    bucket = aws_s3_bucket.www_bucket.id
+    block_public_acls       = false
+    block_public_policy     = false
+    ignore_public_acls      = false
+    restrict_public_buckets = false
+}
+
 resource "aws_s3_bucket_website_configuration" "www_website_configuration" {
   bucket = aws_s3_bucket.www_bucket.bucket
 
@@ -17,10 +25,7 @@ resource "aws_s3_bucket_website_configuration" "www_website_configuration" {
   }
 }
 
-resource "aws_s3_bucket_acl" "www_bucket-acl" {
-  bucket = aws_s3_bucket.www_bucket.bucket
-  acl    = "public-read"
-}
+
 
 resource "aws_s3_bucket_versioning" "www_bucket_versioning" {
   bucket = aws_s3_bucket.www_bucket.bucket

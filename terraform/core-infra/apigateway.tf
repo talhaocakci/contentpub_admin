@@ -5,17 +5,9 @@ resource "aws_api_gateway_rest_api" "ApiGatewayRestApi" {
   body = templatefile("openapi.json", {
      aws_region = data.aws_region.current.name
      aws_account = data.aws_caller_identity.current.account_id
+     user_pool_id = aws_cognito_user_pool.ContentPubUserPool.id
+     project_name = var.project_name
   })
-}
-
-resource "aws_api_gateway_authorizer" "ApiGatewayAuthorizer" {
-    rest_api_id = aws_api_gateway_rest_api.ApiGatewayRestApi.id
-    name = "${var.project_name}-EndUserAuthorizer"
-    type = "COGNITO_USER_POOLS"
-    provider_arns = [
-        "${aws_cognito_user_pool.ContentPubUserPool.arn}"
-    ]
-    identity_source = "method.request.header.Authorization"
 }
 
 resource "aws_api_gateway_deployment" "ApiStageDeployment" {
