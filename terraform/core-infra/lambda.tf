@@ -13,8 +13,9 @@ resource "aws_iam_role" "S3PreSignerLambdaIamRole" {
   name = "s3Presigner"
   assume_role_policy = "{\"Version\":\"2012-10-17\",\"Statement\":[{\"Effect\":\"Allow\",\"Principal\":{\"Service\":\"lambda.amazonaws.com\"},\"Action\":\"sts:AssumeRole\"}]}"
   max_session_duration = 3600
-  managed_policy_arns = [aws_iam_policy.s3PresignerPolicy.arn]
-
+  managed_policy_arns = [
+    aws_iam_policy.s3PresignerPolicy.arn, 
+    "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"]
 }
 
 
@@ -50,6 +51,7 @@ resource "aws_lambda_function" "S3PresignerLambda" {
 
   environment {
     variables = {
+      aws_region = var.aws_region
       appsync_api_id = var.appsync_api_id
       JAVA_TOOL_OPTIONS = "-XX:+TieredCompilation -XX:TieredStopAtLevel=1"
     }

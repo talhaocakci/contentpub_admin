@@ -50,7 +50,10 @@ resource "aws_iam_role" "StripeLibraryIamRole" {
     name = "stripeLibrary"
     assume_role_policy = "{\"Version\":\"2012-10-17\",\"Statement\":[{\"Effect\":\"Allow\",\"Principal\":{\"Service\":\"lambda.amazonaws.com\"},\"Action\":\"sts:AssumeRole\"}]}"
     max_session_duration = 3600
-    managed_policy_arns = [aws_iam_policy.s3PresignerPolicy.arn]
+    managed_policy_arns = [
+      aws_iam_policy.s3PresignerPolicy.arn,
+      "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+      ]
 }
 
 resource "aws_lambda_permission" "StripeLibraryApiPermission" {
@@ -86,6 +89,7 @@ resource "aws_lambda_function" "StripeLambda" {
             stripe_api_secret = var.stripe_api_secret
             appsync_api_id = var.appsync_api_id
             app_url = var.app_url
+            aws_region = var.aws_region
             JAVA_TOOL_OPTIONS = "-XX:+TieredCompilation -XX:TieredStopAtLevel=1"
          }
     }
