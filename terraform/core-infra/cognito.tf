@@ -34,6 +34,14 @@ resource "aws_cognito_user_pool" "ContentPubUserPool" {
       max_length = 256
     }
   }
+
+   schema {
+    name                     = "isAdmin"
+    attribute_data_type      = "Boolean"
+    mutable                  = false
+    required                 = false
+    developer_only_attribute = false
+  }
 }
 
 # without secret

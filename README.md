@@ -109,3 +109,8 @@ Copy build folder into artifacts
 Run terraform
 
     terraform apply -var="project_name=javawebdevelopmentcom"  -var="aws_profile=javathlon" -var="aws_region=eu-central-1"
+
+### Create initial user
+
+    cd initialuser
+    terraform apply -var="aws_profile=javathlon" -var="aws_region=eu-central-1" -var="user_email=yourusername@mailprovider.com"
