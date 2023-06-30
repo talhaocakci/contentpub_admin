@@ -527,6 +527,7 @@ class _FileUploadWithDropState extends State<FileUploadWithDrop> {
       uploadMessage = "Upload is completed successfully";
       uploadInProgress = false;
       uploadedFileUrl = remoteFileUrl;
+      fileAccessible = true;
     });
 
     widget.onComplete(uploadedFile);

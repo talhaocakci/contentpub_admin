@@ -50,6 +50,7 @@ resource "aws_iam_role" "StripeLibraryIamRole" {
     name = "stripeLibrary"
     assume_role_policy = "{\"Version\":\"2012-10-17\",\"Statement\":[{\"Effect\":\"Allow\",\"Principal\":{\"Service\":\"lambda.amazonaws.com\"},\"Action\":\"sts:AssumeRole\"}]}"
     max_session_duration = 3600
+    managed_policy_arns = [aws_iam_policy.s3PresignerPolicy.arn]
 }
 
 resource "aws_lambda_permission" "StripeLibraryApiPermission" {
