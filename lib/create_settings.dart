@@ -1,4 +1,4 @@
-import 'package:contentpub_admin/models/editable/editables.dart';
+import 'package:contentpub_admin/custom_models/editable/editables.dart';
 import 'package:flutter/material.dart';
 
 class CreateSettingsWidget extends StatefulWidget {

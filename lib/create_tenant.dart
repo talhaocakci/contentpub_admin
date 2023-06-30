@@ -4,7 +4,7 @@ import 'package:contentpub_admin/create_settings.dart';
 import 'package:contentpub_admin/file_upload.dart';
 import 'package:contentpub_admin/models/ModelProvider.dart';
 import 'package:contentpub_admin/models/Tenant.dart';
-import 'package:contentpub_admin/models/editable/editables.dart';
+import 'package:contentpub_admin/custom_models/editable/editables.dart';
 
 import 'package:flutter/material.dart';
 import 'package:uuid/uuid.dart';

@@ -7,7 +7,7 @@ import 'package:contentpub_admin/models/ContentType.dart';
 import 'package:contentpub_admin/models/Course.dart';
 import 'package:contentpub_admin/models/Lesson.dart';
 import 'package:contentpub_admin/models/Section.dart';
-import 'package:contentpub_admin/models/editable/editables.dart';
+import 'package:contentpub_admin/custom_models/editable/editables.dart';
 import 'package:flutter/material.dart';
 import 'package:uuid/uuid.dart';
 import 'package:simple_markdown_editor/simple_markdown_editor.dart';

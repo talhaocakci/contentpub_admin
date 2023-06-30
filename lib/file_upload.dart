@@ -7,7 +7,7 @@ import 'package:chunked_stream/chunked_stream.dart';
 import 'package:contentpub_admin/aws_s3.dart';
 import 'package:contentpub_admin/flutter_flow/flutter_flow_icon_button.dart';
 import 'package:contentpub_admin/flutter_flow/flutter_flow_theme.dart';
-import 'package:contentpub_admin/models/api/presign_response.dart';
+import 'package:contentpub_admin/custom_models/api/presign_response.dart';
 import 'package:contentpub_admin/state_container.dart';
 import 'package:contentpub_admin/video_player.dart';
 
@@ -473,7 +473,8 @@ class _FileUploadWithDropState extends State<FileUploadWithDrop> {
 
     String apiRoot = StateContainer.of(context).apiRootUrl ?? '';
 
-    final initUri = Uri.parse("$apiRoot/presign?bucket=$bucket&key=$key");
+    //remote directory is implicitly contentId at the moment. Need to change it later on 
+    final initUri = Uri.parse("$apiRoot/presign/${widget.remoteDirectory}?bucket=$bucket&key=$key");
 
     final headers = <String, String>{
       'Content-Type': 'application/json',
@@ -484,6 +485,10 @@ class _FileUploadWithDropState extends State<FileUploadWithDrop> {
 
     if (response.statusCode == 200) {
       return jsonDecode(response.body)['url'];
+    } else {
+        setState(() {
+        uploadMessage = "Could not generate access url for the file";
+      });
     }
 
     return 'https://$bucket.s3.amazonaws.com/$key';
@@ -499,6 +504,11 @@ class _FileUploadWithDropState extends State<FileUploadWithDrop> {
     String originalUrl = remoteFileUrl;
 
     if (visibility == 'restricted') {
+
+       setState(() {
+        uploadMessage = "Generating your access url for the file";
+      });
+
       remoteFileUrl =
           await retrievePresignedUrlForRead(bucket, '$uploadDest/$fileName');
 
@@ -514,6 +524,7 @@ class _FileUploadWithDropState extends State<FileUploadWithDrop> {
     print('result of upload: ${uploadedFile.remoteUrl}');
 
     setState(() {
+      uploadMessage = "Upload is completed successfully";
       uploadInProgress = false;
       uploadedFileUrl = remoteFileUrl;
     });
