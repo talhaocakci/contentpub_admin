@@ -43,7 +43,6 @@ class StateContainerState extends State<StateContainer> {
   String? apiRootUrl;
   String? apigatewayId;
   String? region;
-  String? customerUrl;
 
   bool _isLoading = true;
   late AuthUser authUser;
@@ -84,6 +83,12 @@ class StateContainerState extends State<StateContainer> {
     try {
       // amplify plugins
 
+      final authPlugin = AmplifyAuthCognito();
+      // add Amplify plugins
+      await Amplify.addPlugins([authPlugin]);
+      final apiPlugin = AmplifyAPI(modelProvider: ModelProvider.instance);
+      await Amplify.addPlugins([apiPlugin]);
+
       var input =
           await rootBundle.loadString('assets/projectconfiguration.json');
 
@@ -95,9 +100,6 @@ class StateContainerState extends State<StateContainer> {
       apigatewayId = map['apigatewayId'];
       region = map['region'];
 
-      customerUrl =
-          "https://$apigatewayId.execute-api.$region.amazonaws.com/$environment/customer";
-
       apiRootUrl =
           'https://$apigatewayId.execute-api.$region.amazonaws.com/$environment';
 
@@ -105,6 +107,29 @@ class StateContainerState extends State<StateContainer> {
       //var themeJson = json.decode(themeStr);
 
       //theme = ThemeDecoder.decodeThemeData(themeJson) ?? ThemeData();
+
+      if (!kIsWeb) {
+        final dataStorePlugin =
+            AmplifyDataStore(modelProvider: ModelProvider.instance);
+
+        await Amplify.addPlugins([dataStorePlugin]);
+      }
+
+      // configure Amplify
+      //
+      // note that Amplify cannot be configured more than once!
+      await Amplify.configure(amplifyconfig);
+
+      bool isSignedIn = await isUserSignedIn();
+
+      if (isSignedIn) {
+        processAuthUser();
+      }
+      // Do not forget to import the following for StreamSubscription
+
+      Amplify.Hub.listen(HubChannel.Auth, (dynamic event) {
+        processAuthEvents(event);
+      });
     } catch (e) {
       // error handling can be improved for sure!
       // but this will be sufficient for the purposes of this tutorial
@@ -138,6 +163,131 @@ class StateContainerState extends State<StateContainer> {
     String bucket = "$projectName-$environment-$visibility";
 
     return bucket;
+  }
+
+  void processAuthUser() async {
+    authUser = await getCurrentUser();
+
+    List<AuthUserAttribute> authUserAttributes =
+        await Amplify.Auth.fetchUserAttributes();
+
+    String email = "";
+    for (var a in authUserAttributes) {
+      print(a.userAttributeKey);
+      print(a.value);
+      if (a.userAttributeKey.key == 'email') {
+        email = a.value;
+      }
+    }
+
+    List<Customer?> customerList = await getCustomerObject(email);
+    Customer customer;
+    print('Customer list: $customerList}');
+    if (customerList.isEmpty) {
+      print('Customer list is empty');
+
+      // stripe customer generation and putting into session
+
+      String customerUrl =
+          "https://$apigatewayId.execute-api.$region.amazonaws.com/$environment/customer";
+
+      http.Response initResponse = await http.post(Uri.parse(customerUrl),
+          body: jsonEncode(
+              <String, String>{'email': email, 'name': authUser.username}));
+
+      print('Customer stripe sonuce geldi ${initResponse.body}');
+
+      final String stripeId = jsonDecode(initResponse.body)['stripeId'];
+
+      print('Stripe customer id: ${stripeId}');
+
+      customer = Customer(
+          userName: authUser.username,
+          stripeId: stripeId,
+          email: email,
+          purchases: List.empty());
+
+      print('Customer kaydedilecek');
+      // bunu API ile yap ki webde de calissin:
+
+      saveCustomerObject(customer);
+      print('Customer kaydedildi');
+    } else {
+      customer = customerList.elementAt(0)!;
+    }
+  }
+
+  void processAuthEvents(HubEvent hubEvent) async {
+    print(hubEvent.eventName);
+
+    switch (hubEvent.eventName) {
+      case 'SIGNED_IN':
+        print('HubEvent payload ${hubEvent.payload}');
+
+        processAuthUser();
+        break;
+      case 'SIGNED_OUT':
+        print('USER IS SIGNED OUT');
+        break;
+      case 'SESSION_EXPIRED':
+        print('SESSION HAS EXPIRED');
+        break;
+      case 'USER_DELETED':
+        print('USER HAS BEEN DELETED');
+        break;
+    }
+  }
+
+  Future<List<Customer?>> getCustomerObject(String email) async {
+    String graphQLDocument = '''query MyQuery {
+  listCustomers(filter: {email: {eq: "$email"}}) {
+    items {
+      id
+      email
+      stripeId
+      userName
+      updatedAt
+      createDate
+      purchases {
+        items {
+          id
+          purchaseBundleId
+          purchaseTenantId
+          purchaseTime
+          purchaseType
+          source
+          stripePaymentIntentId
+          stripePriceId
+          stripeProductId
+          validTill
+        }
+      }
+    }
+  }
+}
+''';
+
+    GraphQLRequest request = GraphQLRequest(document: graphQLDocument);
+
+    var operation = await Amplify.API.query(request: request);
+
+    var response = await operation.response;
+
+    var data = response.data;
+
+    var json = jsonDecode(data!)['listCustomers']['items'] as List;
+
+    List<Customer> list = json.map((e) => Customer.fromJson(e)).toList();
+
+    return list;
+  }
+
+  saveCustomerObject(Customer customer) async {
+    final bundleSaveRequest = ModelMutations.create(customer);
+    await Amplify.API.mutate(request: bundleSaveRequest);
+
+    print(customer.id);
+    print(customer.stripeId);
   }
 }
 
