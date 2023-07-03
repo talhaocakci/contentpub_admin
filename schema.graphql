@@ -49,7 +49,12 @@ type Tenant @model @auth(rules: [{allow: private}]) {
   description: String
 }
 
-type Content @model @auth(rules: [{allow: private}]) {
+type Content @model @auth(
+  rules: [
+    {allow: private},
+    {allow: public, provider:iam, operations:[read]}
+    ]
+  ) {
   id: ID!
   name: String
   description: String

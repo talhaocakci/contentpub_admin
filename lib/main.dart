@@ -1,4 +1,4 @@
-import 'package:contentpub_admin/dashboard_widget.dart';
+import 'package:contentpub_admin/mainpage.dart';
 import 'package:contentpub_admin/state_container.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -51,7 +51,7 @@ class _MyAppState extends State<MyApp> {
       supportedLocales: const [Locale('en', '')],
       theme: ThemeData(brightness: Brightness.light),
       themeMode: _themeMode,
-      home: const DashboardWidget(),
+      home: MainPageWidget(),
     );
   }
 }
