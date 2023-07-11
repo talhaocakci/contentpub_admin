@@ -4,6 +4,11 @@ variable "project_name" {
 }
 
 
+variable "app_local_folder" {
+  type        = string
+  description = "Point to the root of app (contentpub_client) folder"
+}
+
 module "file_extensions" {
   source  = "reifnir/mime-map/null"
 }

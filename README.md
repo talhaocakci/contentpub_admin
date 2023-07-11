@@ -96,9 +96,9 @@ Replace assets/projectconfiguration.json file with real values
 
 ### Stripe enablement
 
-cd /terraform/stripe
+    cd /terraform/stripe
 
-terraform apply -var="aws_profile=javathlon" -var="aws_region=eu-central-1" -var-file="stripe.tfvars" -var="project_name=javawebdevelopmentcom"  -var="api_gateway_id=52tguxv5x3" -var="appsync_api_id=byvg4tqeyfalpdtoo6a4tlkyta"  -var="app_url=www.javawebdevelopment.com"
+    terraform apply -var="aws_profile=javathlon" -var="aws_region=eu-central-1" -var-file="stripe.tfvars" -var="project_name=javawebdevelopmentcom"  -var="api_gateway_id=52tguxv5x3" -var="appsync_api_id=byvg4tqeyfalpdtoo6a4tlkyta"  -var="app_url=www.javawebdevelopment.com"
 
 ### Deployment
 
@@ -106,11 +106,11 @@ Copy build folder into artifacts
     
     cp -a build/web/. terraform/deployment/artifacts/
 
-Run terraform
+Run terraform under /terraform/deployment
 
-    terraform apply -var="project_name=javawebdevelopmentcom"  -var="aws_profile=javathlon" -var="aws_region=eu-central-1"
+    terraform apply -var="project_name=javawebdevelopment.com"  -var="aws_profile=javathlon" -var="aws_region=eu-central-1"
 
 ### Create initial user
 
     cd initialuser
-    terraform apply -var="aws_profile=javathlon" -var="aws_region=eu-central-1" -var="user_email=yourusername@mailprovider.com"
+    terraform apply -var="aws_profile=javathlon" -var="aws_region=eu-central-1" -var="user_email=yourusername@mailprovider.com" -var="app_local_folder=/Users/tocakci/projects/contentpub_client"

@@ -5,6 +5,14 @@ resource "aws_s3_bucket" "admin_bucket" {
 
 }
 
+resource "aws_s3_bucket_public_access_block" "AdminDeploymentProdAccess" {
+    bucket = aws_s3_bucket.admin_bucket.bucket
+    block_public_acls       = false
+    block_public_policy     = false
+    ignore_public_acls      = false
+    restrict_public_buckets = false
+}
+
 resource "aws_s3_bucket_policy" "admin_deployment-policy" {
   bucket = aws_s3_bucket.admin_bucket.bucket
   policy = templatefile("s3-policy.json", { bucket = "admin.${var.project_name}" })
