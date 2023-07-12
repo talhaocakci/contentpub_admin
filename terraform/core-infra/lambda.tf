@@ -26,7 +26,7 @@ variable "appsync_api_id" {
 
 variable "app_url" {
   type = string
-  description = "Domain name such as www.mysite.com"
+  description = "Domain name such as http://www.mysite.com or https://www.mysite.com   Used in stripe callbacks"
 }
 
 resource "aws_s3_object" "GeneralLambdaSourceCode" {

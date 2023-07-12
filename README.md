@@ -70,7 +70,7 @@ run model generation on project root, you will see models under lib folder.
 ### Creating Rest of the AWS infrastructure
 Run following sh command to create 
 
-    terraform apply -var="project_name=javawebdevelopmentcom" -var="aws_profile=javathlon" -var="app_url=www.javawebdevelopment.com" -var="custom_domain=www.javawebdevelopment.com" -var="appsync_api_id=byvg4tqeyfalpdtoo6a4tlkyta"  -var="aws_region=eu-central-1"
+    terraform apply -var="project_name=javawebdevelopmentcom" -var="aws_profile=javathlon" -var="app_url=http://www.javawebdevelopment.com" -var="custom_domain=www.javawebdevelopment.com" -var="appsync_api_id=byvg4tqeyfalpdtoo6a4tlkyta"  -var="aws_region=eu-central-1"
 
 This command will ask you the profile name you created before. Provide the information when requested. ContentPub does not ask for your AWS secrets, they are securely managed in your local machine.
 
@@ -98,7 +98,7 @@ Replace assets/projectconfiguration.json file with real values
 
     cd /terraform/stripe
 
-    terraform apply -var="aws_profile=javathlon" -var="aws_region=eu-central-1" -var-file="stripe.tfvars" -var="project_name=javawebdevelopmentcom"  -var="api_gateway_id=52tguxv5x3" -var="appsync_api_id=byvg4tqeyfalpdtoo6a4tlkyta"  -var="app_url=www.javawebdevelopment.com"
+    terraform apply -var="aws_profile=javathlon" -var="aws_region=eu-central-1" -var-file="stripe.tfvars" -var="project_name=javawebdevelopmentcom"  -var="api_gateway_id=52tguxv5x3" -var="appsync_api_id=byvg4tqeyfalpdtoo6a4tlkyta"  -var="app_url=http://www.javawebdevelopment.com"
 
 ### Deployment
 
@@ -108,9 +108,9 @@ Copy build folder into artifacts
 
 Run terraform under /terraform/deployment
 
-    terraform apply -var="project_name=javawebdevelopment.com"  -var="aws_profile=javathlon" -var="aws_region=eu-central-1"
+    terraform apply -var="aws_profile=javathlon" -var="aws_region=eu-central-1"  -var="app_local_folder=/Users/tocakci/projects/contentpub_client" -var="project_name=javawebdevelopment.com"
 
 ### Create initial user
 
     cd initialuser
-    terraform apply -var="aws_profile=javathlon" -var="aws_region=eu-central-1" -var="user_email=yourusername@mailprovider.com" -var="app_local_folder=/Users/tocakci/projects/contentpub_client"
+    terraform apply -var="aws_profile=javathlon" -var="aws_region=eu-central-1" -var="user_email=yourusername@mailprovider.com"

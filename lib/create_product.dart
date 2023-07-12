@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:amplify_api/amplify_api.dart';
+import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
 import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:contentpub_admin/create_price.dart';
 import 'package:contentpub_admin/flutter_flow/flutter_flow_theme.dart';
@@ -628,8 +629,16 @@ class _CreateProductWidgetState extends State<CreateProductWidget> {
 
     print(body);
 
+    AuthSession session = await getCurrentSession();
+
+    var tokens = (session as CognitoAuthSession).userPoolTokens;
+    var idToken = tokens?.idToken;
+
+    String rawIdToken = idToken!.raw;
+
     final headers = <String, String>{
       'Content-Type': 'application/json',
+      'Authorization': rawIdToken
     };
 
     http.Response initResponse =
@@ -646,5 +655,11 @@ class _CreateProductWidgetState extends State<CreateProductWidget> {
           content:
               Text('Product is published, we wish you a successful product!')),
     );
+  }
+
+  Future<AuthSession> getCurrentSession() async {
+    final session = await Amplify.Auth.fetchAuthSession(
+        options: CognitoSessionOptions(getAWSCredentials: false));
+    return session;
   }
 }

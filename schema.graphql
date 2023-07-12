@@ -73,7 +73,11 @@ type Content @model @auth(
   fileSize: String
 }
 
-type Bundle @model @auth(rules: [{allow: private}]) {
+type Bundle @model @auth(
+  rules: [
+    {allow: private},
+    {allow: public, provider:iam, operations:[read]}
+    ]) {
   id: ID!
   name: String
   description: String
