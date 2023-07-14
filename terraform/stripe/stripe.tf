@@ -25,9 +25,14 @@ variable "stripe_api_secret" {
    description = "Stripe webhook id"
  }
 
- variable "appsync_api_id" {
+variable "appsync_api_id" {
   type = string
   description = "Appsync api id - Set after creating the appsync grapghq"
+}
+
+variable "graphql_endpoint_id" {
+  type = string
+  description = " XXX  in XXXXX.appsync-api.eu-central-1.amazonaws.com/graphql"
 }
 
 variable "api_gateway_id" {
@@ -52,7 +57,8 @@ resource "aws_iam_role" "StripeLibraryIamRole" {
     max_session_duration = 3600
     managed_policy_arns = [
       aws_iam_policy.s3PresignerPolicy.arn,
-      "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+      "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
+      "arn:aws:iam::aws:policy/AmazonDynamoDBFullAccess"
       ]
 }
 
@@ -78,7 +84,7 @@ resource "aws_lambda_function" "StripeLambda" {
     ]
     s3_bucket = "${var.project_name}-staging-lambda"
     s3_key = aws_s3_object.StripeLibrarySourceCode.key
-    memory_size = 256
+    memory_size = 512
     role = aws_iam_role.StripeLibraryIamRole.arn
     runtime = "java11"
     timeout = 20
@@ -88,6 +94,7 @@ resource "aws_lambda_function" "StripeLambda" {
             stripe_webhook_id = var.stripe_webhook_id
             stripe_api_secret = var.stripe_api_secret
             appsync_api_id = var.appsync_api_id
+            graphql_endpoint_id = var.graphql_endpoint_id
             app_url = var.app_url
             aws_region = var.aws_region
             JAVA_TOOL_OPTIONS = "-XX:+TieredCompilation -XX:TieredStopAtLevel=1"

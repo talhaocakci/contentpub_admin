@@ -70,7 +70,8 @@ run model generation on project root, you will see models under lib folder.
 ### Creating Rest of the AWS infrastructure
 Run following sh command to create 
 
-    terraform apply -var="project_name=javawebdevelopmentcom" -var="aws_profile=javathlon" -var="app_url=http://www.javawebdevelopment.com" -var="custom_domain=www.javawebdevelopment.com" -var="appsync_api_id=byvg4tqeyfalpdtoo6a4tlkyta"  -var="aws_region=eu-central-1"
+    terraform apply -var="project_name=javawebdevelopmentcom" -var="aws_profile=javathlon" -var="app_url=http://www.javawebdevelopment.com" -var="custom_domain=www.javawebdevelopment.com" 
+     -var="graphql_endpoint_id=4gri4izgmvbuxffnfvxbj35cd4" -var="appsync_api_id=cwhapzkma5aq7ijjhtuncbaioa"  -var="aws_region=eu-central-1"
 
 This command will ask you the profile name you created before. Provide the information when requested. ContentPub does not ask for your AWS secrets, they are securely managed in your local machine.
 
@@ -98,7 +99,7 @@ Replace assets/projectconfiguration.json file with real values
 
     cd /terraform/stripe
 
-    terraform apply -var="aws_profile=javathlon" -var="aws_region=eu-central-1" -var-file="stripe.tfvars" -var="project_name=javawebdevelopmentcom"  -var="api_gateway_id=52tguxv5x3" -var="appsync_api_id=byvg4tqeyfalpdtoo6a4tlkyta"  -var="app_url=http://www.javawebdevelopment.com"
+    terraform apply -var="aws_profile=javathlon" -var="aws_region=eu-central-1" -var-file="stripe.tfvars" -var="project_name=javawebdevelopmentcom"  -var="api_gateway_id=52tguxv5x3" -var="graphql_endpoint_id=4gri4izgmvbuxffnfvxbj35cd4" -var="appsync_api_id=cwhapzkma5aq7ijjhtuncbaioa"    -var="app_url=http://www.javawebdevelopment.com"
 
 ### Deployment
 

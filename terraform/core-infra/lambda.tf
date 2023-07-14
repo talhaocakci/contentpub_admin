@@ -24,6 +24,11 @@ variable "appsync_api_id" {
   description = "Appsync api id - Set after creating the appsync grapghq"
 }
 
+variable "graphql_endpoint_id" {
+  type = string
+  description = " XXX  in XXXXX.appsync-api.eu-central-1.amazonaws.com/graphql"
+}
+
 variable "app_url" {
   type = string
   description = "Domain name such as http://www.mysite.com or https://www.mysite.com   Used in stripe callbacks"
@@ -53,6 +58,7 @@ resource "aws_lambda_function" "S3PresignerLambda" {
     variables = {
       aws_region = var.aws_region
       appsync_api_id = var.appsync_api_id
+      graphql_endpoint_id = var.graphql_endpoint_id
       JAVA_TOOL_OPTIONS = "-XX:+TieredCompilation -XX:TieredStopAtLevel=1"
     }
   }
