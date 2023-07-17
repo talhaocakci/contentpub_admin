@@ -115,3 +115,10 @@ Run terraform under /terraform/deployment
 
     cd initialuser
     terraform apply -var="aws_profile=javathlon" -var="aws_region=eu-central-1" -var="user_email=yourusername@mailprovider.com"
+
+
+ ### HTTPS and CloudFront distribution
+ Create a SSL certificate with AWS certificate manager
+ Create a Cloudfront distribution for www and admin
+ Point to the Cloudfron distribution from Route53 CNAME record   
+ Create an invalidation with "/*" path after every deployment
