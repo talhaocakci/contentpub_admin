@@ -4,7 +4,6 @@ import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
 import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:async/async.dart';
 import 'package:chunked_stream/chunked_stream.dart';
-import 'package:contentpub_admin/aws_s3.dart';
 import 'package:contentpub_admin/flutter_flow/flutter_flow_icon_button.dart';
 import 'package:contentpub_admin/flutter_flow/flutter_flow_theme.dart';
 import 'package:contentpub_admin/custom_models/api/presign_response.dart';
@@ -18,7 +17,6 @@ import 'package:flutter_dropzone/flutter_dropzone.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'dart:async';
-import 'dart:io';
 
 import 'package:xml/xml.dart';
 
@@ -146,7 +144,7 @@ class _FileUploadWithDropState extends State<FileUploadWithDrop> {
                     SizedBox(height: 150, child: buildZone2(context)),
                     Container(
                         alignment: Alignment.center,
-                        child: Text('Drop file here')),
+                        child: const Text('Drop file here')),
                     Container(
                         alignment: Alignment.topRight,
                         child: FlutterFlowIconButton(
@@ -213,7 +211,7 @@ class _FileUploadWithDropState extends State<FileUploadWithDrop> {
                                         width: double.infinity,
                                         decoration: BoxDecoration(
                                             image: DecorationImage(
-                                                alignment: Alignment(-.2, 0),
+                                                alignment: const Alignment(-.2, 0),
                                                 image: NetworkImage(
                                                     uploadedFileUrl ?? ''),
                                                 fit: BoxFit.fill)))
@@ -289,20 +287,20 @@ class _FileUploadWithDropState extends State<FileUploadWithDrop> {
     String bucket = "$projectName-$environment-$visibility";
 
     String extension = ev.name.substring(ev.name.lastIndexOf('.'));
-    String filename = '${remoteFileName}${extension}';
+    String filename = '$remoteFileName$extension';
 
     String uploadDest = remoteDirectory;
 
     String remoteFileUrl =
-        'https://$bucket.s3.amazonaws.com/$uploadDest/${filename}';
+        'https://$bucket.s3.amazonaws.com/$uploadDest/$filename';
 
     uploadedFileUrl = remoteFileUrl;
 
-    print('ev.name: ${filename}');
+    print('ev.name: $filename');
 
     int fileSize = await getFileSize(controller, ev);
 
-    print('size: ${fileSize}');
+    print('size: $fileSize');
 
     setState(() {
       uploadInProgress = true;
@@ -535,7 +533,7 @@ class _FileUploadWithDropState extends State<FileUploadWithDrop> {
 
   void printprogress(int bytes, int totalBytes, String remoteFileUrl) {
     setState(() {
-      uploadMessage = 'uploaded ${bytes} of ${totalBytes}';
+      uploadMessage = 'uploaded $bytes of $totalBytes';
     });
 
     if (bytes == totalBytes) {
@@ -548,7 +546,7 @@ void updateDuration(int duration) {}
 
 Future<int> getFileSize(DropzoneViewController controller, dynamic ev) async {
   int size = await controller.getFileSize(ev);
-  print("size: ${size}");
+  print("size: $size");
   return size;
 }
 

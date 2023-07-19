@@ -52,6 +52,8 @@ class _CreateProductWidgetState extends State<CreateProductWidget> {
     editableBundle = EditableBundle(id: widget.bundleId);
 
     if (widget.bundleId == '') {
+      editableBundle?.id = uuid.v4();
+
       priceOneTime = EditablePrice(
         id: '',
         purchaseType: PurchaseType.ONE_TIME,
@@ -106,13 +108,13 @@ class _CreateProductWidgetState extends State<CreateProductWidget> {
                     onStepCancel: cancel,
                     steps: <Step>[
                       Step(
-                        title: new Text('Bundle description'),
+                        title: const Text('Bundle description'),
                         content: Form(
                             key: _formKey,
                             child: Column(
                               children: <Widget>[
                                 TextFormField(
-                                  decoration: InputDecoration(
+                                  decoration: const InputDecoration(
                                     hintText:
                                         'eg: All courses bundle, All X courses, My Single X course',
                                     label: Text(
@@ -134,7 +136,7 @@ class _CreateProductWidgetState extends State<CreateProductWidget> {
                                   onChanged: (newValue) {
                                     editableBundle!.description = newValue;
                                   },
-                                  decoration: InputDecoration(
+                                  decoration: const InputDecoration(
                                     hintText:
                                         'eg: Contains all video courses and 1 hour session per month',
                                     label: Text(
@@ -158,7 +160,7 @@ class _CreateProductWidgetState extends State<CreateProductWidget> {
                             : StepState.disabled,
                       ),
                       Step(
-                        title: new Text('Prices'),
+                        title: const Text('Prices'),
                         content: SizedBox(
                           height: 300,
                           child: Column(
@@ -233,7 +235,7 @@ class _CreateProductWidgetState extends State<CreateProductWidget> {
                                 : StepState.disabled,
                       ),
                       Step(
-                        title: new Text('Contents'),
+                        title: const Text('Contents'),
                         content: SizedBox(
                             height: 500,
                             width: 200,
@@ -317,7 +319,7 @@ class _CreateProductWidgetState extends State<CreateProductWidget> {
                             : StepState.disabled,
                       ),
                       Step(
-                        title: new Text('Publish'),
+                        title: const Text('Publish'),
                         content: bundleToPublish != null
                             ? SizedBox(
                                 height: 300,
@@ -328,18 +330,18 @@ class _CreateProductWidgetState extends State<CreateProductWidget> {
                                         'Unknown name'),
                                     Text(bundleToPublish!.description ??
                                         'Unknown description'),
-                                    Text('Prices'),
+                                    const Text('Prices'),
                                     for (var p in bundleToPublish!.prices ??
                                         List.empty())
                                       Text(p.amount.toString()),
-                                    Text('Contents'),
+                                    const Text('Contents'),
                                     for (var c in bundleToPublish!.contents ??
                                         List.empty())
                                       Text((c as BundleContent).content.name ??
                                           'Unknown name')
                                   ],
                                 ))
-                            : Text('Bundle is not ready'),
+                            : const Text('Bundle is not ready'),
                         isActive: _currentStep >= 0 && editableBundle != null,
                         state:
                             _currentStep >= 2 && editableBundle?.prices != null
@@ -353,8 +355,8 @@ class _CreateProductWidgetState extends State<CreateProductWidget> {
             )),
       ),
       floatingActionButton: FloatingActionButton(
-        child: const Icon(Icons.list),
         onPressed: switchStepsType,
+        child: const Icon(Icons.list),
       ),
     );
   }
@@ -363,7 +365,7 @@ class _CreateProductWidgetState extends State<CreateProductWidget> {
     const getBundle = 'getBundle';
 
     String graphQLQuery = '''query GetBundle {
-            getBundle(id: "${bundleId}") {
+            getBundle(id: "$bundleId") {
               
               id
               isAllAccess

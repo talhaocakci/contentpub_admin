@@ -15,7 +15,7 @@ import '../models/ModelProvider.dart';
 class StateContainer extends StatefulWidget {
   final Widget child;
 
-  StateContainer({
+  StateContainer({super.key, 
     required this.child,
   });
 
@@ -137,10 +137,6 @@ class StateContainerState extends State<StateContainer> {
     }
   }
 
-  @override
-  void dispose() {
-    super.dispose();
-  }
 
   Future<bool> isUserSignedIn() async {
     final result = await Amplify.Auth.fetchAuthSession();
@@ -199,7 +195,7 @@ class StateContainerState extends State<StateContainer> {
 
       final String stripeId = jsonDecode(initResponse.body)['stripeId'];
 
-      print('Stripe customer id: ${stripeId}');
+      print('Stripe customer id: $stripeId');
 
       customer = Customer(
           userName: authUser.username,

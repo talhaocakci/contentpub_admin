@@ -1,11 +1,7 @@
 import 'package:amazon_cognito_identity_dart_2/sig_v4.dart';
 import 'package:amplify_api/amplify_api.dart';
 import 'package:http/http.dart' as http;
-import 'package:http/http.dart';
 
-import 'acl.dart';
-import 'multipart_request.dart';
-import 'package:http_parser/http_parser.dart';
 
 /// Convenience class for uploading files to AWS S3
 class AwsS3 {
@@ -49,5 +45,6 @@ class AwsS3 {
       print(e);
       return '';
     }
+    return null;
   }
 }

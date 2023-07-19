@@ -1,8 +1,5 @@
-import 'package:contentpub_admin/course/create_course.dart';
 import 'package:contentpub_admin/flutter_flow/flutter_flow_theme.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
 
 class BoxedButtonWidget extends StatefulWidget {
   final Widget goToWidget;

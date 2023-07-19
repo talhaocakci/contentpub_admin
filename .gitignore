@@ -100,3 +100,5 @@ amplifytools.xcconfig
 .secret-*
 **.sample
 #amplify-do-not-edit-end
+macos/Flutter/GeneratedPluginRegistrant.swift
+.vscode/launch.json

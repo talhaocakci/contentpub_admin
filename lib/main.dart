@@ -8,10 +8,12 @@ import 'flutter_flow/internationalization.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  runApp(StateContainer(child: MyApp()));
+  runApp(StateContainer(child: const MyApp()));
 }
 
 class MyApp extends StatefulWidget {
+  const MyApp({super.key});
+
   // This widget is the root of your application.
   @override
   State<MyApp> createState() => _MyAppState();
@@ -24,10 +26,6 @@ class _MyAppState extends State<MyApp> {
   Locale? _locale;
   ThemeMode _themeMode = ThemeMode.system;
 
-  @override
-  void initState() {
-    super.initState();
-  }
 
   void setLocale(String language) {
     setState(() => _locale = createLocale(language));

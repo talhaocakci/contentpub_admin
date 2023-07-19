@@ -1,12 +1,10 @@
 import 'package:amplify_authenticator/amplify_authenticator.dart';
-import 'package:contentpub_admin/course/create_course.dart';
 import 'package:contentpub_admin/create_coworker.dart';
 import 'package:contentpub_admin/create_product.dart';
 import 'package:contentpub_admin/create_tenant.dart';
 import 'package:contentpub_admin/list_contents.dart';
 
 import '../flutter_flow/flutter_flow_theme.dart';
-import '../flutter_flow/flutter_flow_util.dart';
 import 'dart:ui';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
@@ -63,7 +61,7 @@ class _DashboardWidgetState extends State<DashboardWidget> {
                         child: Container(
                           width: 100,
                           height: 100,
-                          decoration: BoxDecoration(
+                          decoration: const BoxDecoration(
                             color: Color(0x59000000),
                           ),
                           child: Column(
@@ -72,7 +70,7 @@ class _DashboardWidgetState extends State<DashboardWidget> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Padding(
-                                padding: EdgeInsetsDirectional.fromSTEB(
+                                padding: const EdgeInsetsDirectional.fromSTEB(
                                     24, 70, 24, 44),
                                 child: Column(
                                   mainAxisSize: MainAxisSize.max,
@@ -89,7 +87,7 @@ class _DashboardWidgetState extends State<DashboardWidget> {
                                           ),
                                     ),
                                     Padding(
-                                      padding: EdgeInsetsDirectional.fromSTEB(
+                                      padding: const EdgeInsetsDirectional.fromSTEB(
                                           0, 4, 0, 0),
                                       child: Text(
                                         'Andres, M.',
@@ -97,7 +95,7 @@ class _DashboardWidgetState extends State<DashboardWidget> {
                                             .bodyText2
                                             .override(
                                               fontFamily: 'Brazila',
-                                              color: Color(0xFFD5DBDF),
+                                              color: const Color(0xFFD5DBDF),
                                               useGoogleFonts: false,
                                             ),
                                       ),
@@ -113,11 +111,11 @@ class _DashboardWidgetState extends State<DashboardWidget> {
                                   ),
                                   child: Container(
                                     width: double.infinity,
-                                    decoration: BoxDecoration(
+                                    decoration: const BoxDecoration(
                                       color: Color(0x87000000),
                                     ),
                                     child: Padding(
-                                      padding: EdgeInsetsDirectional.fromSTEB(
+                                      padding: const EdgeInsetsDirectional.fromSTEB(
                                           12, 12, 12, 12),
                                       child: Row(
                                         mainAxisSize: MainAxisSize.max,
@@ -131,7 +129,7 @@ class _DashboardWidgetState extends State<DashboardWidget> {
                                                   CrossAxisAlignment.start,
                                               children: [
                                                 Padding(
-                                                  padding: EdgeInsetsDirectional
+                                                  padding: const EdgeInsetsDirectional
                                                       .fromSTEB(8, 0, 0, 4),
                                                   child: Text(
                                                     'Current Meeting',
@@ -148,7 +146,7 @@ class _DashboardWidgetState extends State<DashboardWidget> {
                                                   ),
                                                 ),
                                                 Padding(
-                                                  padding: EdgeInsetsDirectional
+                                                  padding: const EdgeInsetsDirectional
                                                       .fromSTEB(8, 0, 0, 0),
                                                   child: Text(
                                                     'Design Review',
@@ -167,26 +165,26 @@ class _DashboardWidgetState extends State<DashboardWidget> {
                                           ),
                                           Padding(
                                             padding:
-                                                EdgeInsetsDirectional.fromSTEB(
+                                                const EdgeInsetsDirectional.fromSTEB(
                                                     20, 0, 20, 0),
                                             child: Container(
                                               width: 2,
                                               height: 100,
                                               decoration: BoxDecoration(
-                                                color: Color(0x32E0E3E7),
+                                                color: const Color(0x32E0E3E7),
                                                 borderRadius:
                                                     BorderRadius.circular(5),
                                               ),
                                             ),
                                           ),
-                                          Icon(
+                                          const Icon(
                                             Icons.access_time_rounded,
                                             color: Colors.white,
                                             size: 32,
                                           ),
                                           Padding(
                                             padding:
-                                                EdgeInsetsDirectional.fromSTEB(
+                                                const EdgeInsetsDirectional.fromSTEB(
                                                     0, 0, 24, 0),
                                             child: Column(
                                               mainAxisSize: MainAxisSize.max,
@@ -196,7 +194,7 @@ class _DashboardWidgetState extends State<DashboardWidget> {
                                                   CrossAxisAlignment.start,
                                               children: [
                                                 Padding(
-                                                  padding: EdgeInsetsDirectional
+                                                  padding: const EdgeInsetsDirectional
                                                       .fromSTEB(8, 0, 0, 4),
                                                   child: Text(
                                                     'Elapsed Time',
@@ -213,7 +211,7 @@ class _DashboardWidgetState extends State<DashboardWidget> {
                                                   ),
                                                 ),
                                                 Padding(
-                                                  padding: EdgeInsetsDirectional
+                                                  padding: const EdgeInsetsDirectional
                                                       .fromSTEB(8, 0, 0, 0),
                                                   child: Text(
                                                     '5:32.20',
@@ -246,7 +244,7 @@ class _DashboardWidgetState extends State<DashboardWidget> {
                         children: [
                           Padding(
                             padding:
-                                EdgeInsetsDirectional.fromSTEB(16, 12, 0, 0),
+                                const EdgeInsetsDirectional.fromSTEB(16, 12, 0, 0),
                             child: Text(
                               'Next Meeting Times',
                               style: FlutterFlowTheme.of(context).bodyText2,
@@ -261,14 +259,14 @@ class _DashboardWidgetState extends State<DashboardWidget> {
                             ),
                             child: Padding(
                               padding:
-                                  EdgeInsetsDirectional.fromSTEB(0, 4, 0, 0),
+                                  const EdgeInsetsDirectional.fromSTEB(0, 4, 0, 0),
                               child: ListView(
                                 padding: EdgeInsets.zero,
                                 shrinkWrap: true,
                                 scrollDirection: Axis.horizontal,
                                 children: [
                                   Padding(
-                                    padding: EdgeInsetsDirectional.fromSTEB(
+                                    padding: const EdgeInsetsDirectional.fromSTEB(
                                         16, 8, 8, 8),
                                     child: Container(
                                       width: 160,
@@ -277,7 +275,7 @@ class _DashboardWidgetState extends State<DashboardWidget> {
                                         color: FlutterFlowTheme.of(context)
                                             .secondaryBackground,
                                         boxShadow: [
-                                          BoxShadow(
+                                          const BoxShadow(
                                             blurRadius: 3,
                                             color: Color(0x33000000),
                                             offset: Offset(0, 1),
@@ -286,7 +284,7 @@ class _DashboardWidgetState extends State<DashboardWidget> {
                                         borderRadius: BorderRadius.circular(12),
                                       ),
                                       child: Padding(
-                                        padding: EdgeInsetsDirectional.fromSTEB(
+                                        padding: const EdgeInsetsDirectional.fromSTEB(
                                             12, 8, 12, 8),
                                         child: Column(
                                           mainAxisSize: MainAxisSize.max,
@@ -319,7 +317,7 @@ class _DashboardWidgetState extends State<DashboardWidget> {
                                     ),
                                   ),
                                   Padding(
-                                    padding: EdgeInsetsDirectional.fromSTEB(
+                                    padding: const EdgeInsetsDirectional.fromSTEB(
                                         0, 8, 8, 8),
                                     child: Container(
                                       width: 160,
@@ -328,7 +326,7 @@ class _DashboardWidgetState extends State<DashboardWidget> {
                                         color: FlutterFlowTheme.of(context)
                                             .secondaryBackground,
                                         boxShadow: [
-                                          BoxShadow(
+                                          const BoxShadow(
                                             blurRadius: 3,
                                             color: Color(0x33000000),
                                             offset: Offset(0, 1),
@@ -337,7 +335,7 @@ class _DashboardWidgetState extends State<DashboardWidget> {
                                         borderRadius: BorderRadius.circular(12),
                                       ),
                                       child: Padding(
-                                        padding: EdgeInsetsDirectional.fromSTEB(
+                                        padding: const EdgeInsetsDirectional.fromSTEB(
                                             12, 8, 12, 8),
                                         child: Column(
                                           mainAxisSize: MainAxisSize.max,
@@ -370,7 +368,7 @@ class _DashboardWidgetState extends State<DashboardWidget> {
                                     ),
                                   ),
                                   Padding(
-                                    padding: EdgeInsetsDirectional.fromSTEB(
+                                    padding: const EdgeInsetsDirectional.fromSTEB(
                                         0, 8, 8, 8),
                                     child: Container(
                                       width: 160,
@@ -379,7 +377,7 @@ class _DashboardWidgetState extends State<DashboardWidget> {
                                         color: FlutterFlowTheme.of(context)
                                             .secondaryBackground,
                                         boxShadow: [
-                                          BoxShadow(
+                                          const BoxShadow(
                                             blurRadius: 3,
                                             color: Color(0x33000000),
                                             offset: Offset(0, 1),
@@ -388,7 +386,7 @@ class _DashboardWidgetState extends State<DashboardWidget> {
                                         borderRadius: BorderRadius.circular(12),
                                       ),
                                       child: Padding(
-                                        padding: EdgeInsetsDirectional.fromSTEB(
+                                        padding: const EdgeInsetsDirectional.fromSTEB(
                                             12, 8, 12, 8),
                                         child: Column(
                                           mainAxisSize: MainAxisSize.max,
@@ -426,7 +424,7 @@ class _DashboardWidgetState extends State<DashboardWidget> {
                           ),
                           Padding(
                             padding:
-                                EdgeInsetsDirectional.fromSTEB(16, 4, 0, 0),
+                                const EdgeInsetsDirectional.fromSTEB(16, 4, 0, 0),
                             child: Text(
                               'Quick Links',
                               style: FlutterFlowTheme.of(context).bodyText2,
@@ -434,7 +432,7 @@ class _DashboardWidgetState extends State<DashboardWidget> {
                           ),
                           Padding(
                             padding:
-                                EdgeInsetsDirectional.fromSTEB(24, 12, 0, 0),
+                                const EdgeInsetsDirectional.fromSTEB(24, 12, 0, 0),
                             child: Wrap(
                               spacing: 8,
                               runSpacing: 8,
@@ -452,7 +450,7 @@ class _DashboardWidgetState extends State<DashboardWidget> {
                                     color: FlutterFlowTheme.of(context)
                                         .secondaryColor,
                                     boxShadow: [
-                                      BoxShadow(
+                                      const BoxShadow(
                                         blurRadius: 3,
                                         color: Color(0x33000000),
                                         offset: Offset(0, 1),
@@ -466,10 +464,10 @@ class _DashboardWidgetState extends State<DashboardWidget> {
                                             context,
                                             MaterialPageRoute(
                                                 builder: (context) =>
-                                                    ListContentsWidget()));
+                                                    const ListContentsWidget()));
                                       },
                                       child: Padding(
-                                        padding: EdgeInsetsDirectional.fromSTEB(
+                                        padding: const EdgeInsetsDirectional.fromSTEB(
                                             12, 8, 12, 8),
                                         child: Column(
                                           mainAxisSize: MainAxisSize.max,
@@ -478,7 +476,7 @@ class _DashboardWidgetState extends State<DashboardWidget> {
                                           crossAxisAlignment:
                                               CrossAxisAlignment.center,
                                           children: [
-                                            Padding(
+                                            const Padding(
                                               padding: EdgeInsetsDirectional
                                                   .fromSTEB(0, 0, 0, 12),
                                               child: Icon(
@@ -511,7 +509,7 @@ class _DashboardWidgetState extends State<DashboardWidget> {
                                     color: FlutterFlowTheme.of(context)
                                         .primaryColor,
                                     boxShadow: [
-                                      BoxShadow(
+                                      const BoxShadow(
                                         blurRadius: 3,
                                         color: Color(0x33000000),
                                         offset: Offset(0, 1),
@@ -520,7 +518,7 @@ class _DashboardWidgetState extends State<DashboardWidget> {
                                     borderRadius: BorderRadius.circular(12),
                                   ),
                                   child: Padding(
-                                    padding: EdgeInsetsDirectional.fromSTEB(
+                                    padding: const EdgeInsetsDirectional.fromSTEB(
                                         12, 8, 12, 8),
                                     child: Column(
                                       mainAxisSize: MainAxisSize.max,
@@ -529,7 +527,7 @@ class _DashboardWidgetState extends State<DashboardWidget> {
                                       crossAxisAlignment:
                                           CrossAxisAlignment.center,
                                       children: [
-                                        Padding(
+                                        const Padding(
                                           padding:
                                               EdgeInsetsDirectional.fromSTEB(
                                                   0, 0, 0, 12),
@@ -561,7 +559,7 @@ class _DashboardWidgetState extends State<DashboardWidget> {
                                     color: FlutterFlowTheme.of(context)
                                         .secondaryColor,
                                     boxShadow: [
-                                      BoxShadow(
+                                      const BoxShadow(
                                         blurRadius: 3,
                                         color: Color(0x33000000),
                                         offset: Offset(0, 1),
@@ -575,12 +573,12 @@ class _DashboardWidgetState extends State<DashboardWidget> {
                                             context,
                                             MaterialPageRoute(
                                                 builder: (context) =>
-                                                    CreateTenantWidget(
+                                                    const CreateTenantWidget(
                                                       tenantId: '',
                                                     )));
                                       },
                                       child: Padding(
-                                        padding: EdgeInsetsDirectional.fromSTEB(
+                                        padding: const EdgeInsetsDirectional.fromSTEB(
                                             12, 8, 12, 8),
                                         child: Column(
                                           mainAxisSize: MainAxisSize.max,
@@ -589,7 +587,7 @@ class _DashboardWidgetState extends State<DashboardWidget> {
                                           crossAxisAlignment:
                                               CrossAxisAlignment.center,
                                           children: [
-                                            Padding(
+                                            const Padding(
                                               padding: EdgeInsetsDirectional
                                                   .fromSTEB(0, 0, 0, 12),
                                               child: Icon(
@@ -622,7 +620,7 @@ class _DashboardWidgetState extends State<DashboardWidget> {
                                     color: FlutterFlowTheme.of(context)
                                         .secondaryColor,
                                     boxShadow: [
-                                      BoxShadow(
+                                      const BoxShadow(
                                         blurRadius: 3,
                                         color: Color(0x33000000),
                                         offset: Offset(0, 1),
@@ -636,12 +634,12 @@ class _DashboardWidgetState extends State<DashboardWidget> {
                                             context,
                                             MaterialPageRoute(
                                                 builder: (context) =>
-                                                    CreateAuthorWidget(
+                                                    const CreateAuthorWidget(
                                                       coworkerId: '',
                                                     )));
                                       },
                                       child: Padding(
-                                        padding: EdgeInsetsDirectional.fromSTEB(
+                                        padding: const EdgeInsetsDirectional.fromSTEB(
                                             12, 8, 12, 8),
                                         child: Column(
                                           mainAxisSize: MainAxisSize.max,
@@ -650,7 +648,7 @@ class _DashboardWidgetState extends State<DashboardWidget> {
                                           crossAxisAlignment:
                                               CrossAxisAlignment.center,
                                           children: [
-                                            Padding(
+                                            const Padding(
                                               padding: EdgeInsetsDirectional
                                                   .fromSTEB(0, 0, 0, 12),
                                               child: Icon(
@@ -683,7 +681,7 @@ class _DashboardWidgetState extends State<DashboardWidget> {
                                     color: FlutterFlowTheme.of(context)
                                         .primaryText,
                                     boxShadow: [
-                                      BoxShadow(
+                                      const BoxShadow(
                                         blurRadius: 3,
                                         color: Color(0x33000000),
                                         offset: Offset(0, 1),
@@ -692,7 +690,7 @@ class _DashboardWidgetState extends State<DashboardWidget> {
                                     borderRadius: BorderRadius.circular(12),
                                   ),
                                   child: Padding(
-                                    padding: EdgeInsetsDirectional.fromSTEB(
+                                    padding: const EdgeInsetsDirectional.fromSTEB(
                                         12, 8, 12, 8),
                                     child: Column(
                                       mainAxisSize: MainAxisSize.max,
@@ -703,7 +701,7 @@ class _DashboardWidgetState extends State<DashboardWidget> {
                                       children: [
                                         Padding(
                                           padding:
-                                              EdgeInsetsDirectional.fromSTEB(
+                                              const EdgeInsetsDirectional.fromSTEB(
                                                   0, 0, 0, 12),
                                           child: Icon(
                                             Icons.group_add_rounded,
@@ -736,7 +734,7 @@ class _DashboardWidgetState extends State<DashboardWidget> {
                                     color: FlutterFlowTheme.of(context)
                                         .primaryText,
                                     boxShadow: [
-                                      BoxShadow(
+                                      const BoxShadow(
                                         blurRadius: 3,
                                         color: Color(0x33000000),
                                         offset: Offset(0, 1),
@@ -750,12 +748,12 @@ class _DashboardWidgetState extends State<DashboardWidget> {
                                             context,
                                             MaterialPageRoute(
                                                 builder: (context) =>
-                                                    CreateProductWidget(
+                                                    const CreateProductWidget(
                                                       bundleId: '',
                                                     )));
                                       },
                                       child: Padding(
-                                        padding: EdgeInsetsDirectional.fromSTEB(
+                                        padding: const EdgeInsetsDirectional.fromSTEB(
                                             12, 8, 12, 8),
                                         child: Column(
                                           mainAxisSize: MainAxisSize.max,
@@ -765,7 +763,7 @@ class _DashboardWidgetState extends State<DashboardWidget> {
                                               CrossAxisAlignment.center,
                                           children: [
                                             Padding(
-                                              padding: EdgeInsetsDirectional
+                                              padding: const EdgeInsetsDirectional
                                                   .fromSTEB(0, 0, 0, 12),
                                               child: Icon(
                                                 Icons.attach_money_rounded,

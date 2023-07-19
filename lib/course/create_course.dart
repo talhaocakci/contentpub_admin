@@ -30,7 +30,7 @@ class _CreateCourseWidgetState extends State<CreateCourseWidget> {
   String? coverPhotoUrl;
   String? promoVideoUrl;
 
-  TextEditingController _descriptionController = TextEditingController();
+  final TextEditingController _descriptionController = TextEditingController();
 
   bool? switchListTileValue;
   final scaffoldKey = GlobalKey<ScaffoldState>();
@@ -59,7 +59,7 @@ class _CreateCourseWidgetState extends State<CreateCourseWidget> {
 
   Future<EditableCourse> _initCourse() async {
     course = await getCourse(course!.id);
-    print('in initCourse: ${course}');
+    print('in initCourse: $course');
 
     editableCourse =
         course != null ? EditableCourse.toEditable(course!) : EditableCourse();
@@ -80,10 +80,6 @@ class _CreateCourseWidgetState extends State<CreateCourseWidget> {
     return editableCourse!;
   }
 
-  @override
-  void dispose() {
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -133,7 +129,7 @@ class _CreateCourseWidgetState extends State<CreateCourseWidget> {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Padding(
-                                  padding: EdgeInsets.all(50),
+                                  padding: const EdgeInsets.all(50),
                                   child: Text('Basic Information :',
                                       style:
                                           FlutterFlowTheme.of(context).title1)),
@@ -157,7 +153,7 @@ class _CreateCourseWidgetState extends State<CreateCourseWidget> {
                                     hintStyle:
                                         FlutterFlowTheme.of(context).bodyText2,
                                     enabledBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(
+                                      borderSide: const BorderSide(
                                         color: Colors.black87,
                                         width: 2,
                                       ),
@@ -172,13 +168,13 @@ class _CreateCourseWidgetState extends State<CreateCourseWidget> {
                                       borderRadius: BorderRadius.circular(8),
                                     ),
                                     errorBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(
+                                      borderSide: const BorderSide(
                                         width: 2,
                                       ),
                                       borderRadius: BorderRadius.circular(8),
                                     ),
                                     focusedErrorBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(
+                                      borderSide: const BorderSide(
                                         width: 2,
                                       ),
                                       borderRadius: BorderRadius.circular(8),
@@ -202,7 +198,7 @@ class _CreateCourseWidgetState extends State<CreateCourseWidget> {
                                     hintStyle:
                                         FlutterFlowTheme.of(context).bodyText2,
                                     enabledBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(
+                                      borderSide: const BorderSide(
                                         color: Colors.black87,
                                         width: 2,
                                       ),
@@ -217,14 +213,14 @@ class _CreateCourseWidgetState extends State<CreateCourseWidget> {
                                       borderRadius: BorderRadius.circular(8),
                                     ),
                                     errorBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(
+                                      borderSide: const BorderSide(
                                         color: Color(0x00000000),
                                         width: 2,
                                       ),
                                       borderRadius: BorderRadius.circular(8),
                                     ),
                                     focusedErrorBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(
+                                      borderSide: const BorderSide(
                                         color: Color(0x00000000),
                                         width: 2,
                                       ),
@@ -251,18 +247,18 @@ class _CreateCourseWidgetState extends State<CreateCourseWidget> {
                               ]),
                               Padding(
                                 padding:
-                                    EdgeInsetsDirectional.fromSTEB(0, 1, 0, 0),
+                                    const EdgeInsetsDirectional.fromSTEB(0, 1, 0, 0),
                                 child: Container(
                                   //width: MediaQuery.of(context).size.width / 2,
 
                                   child: Padding(
-                                    padding: EdgeInsetsDirectional.fromSTEB(
+                                    padding: const EdgeInsetsDirectional.fromSTEB(
                                         0, 0, 0, 20),
                                     child: Column(
                                       mainAxisSize: MainAxisSize.max,
                                       children: [
                                         Padding(
-                                            padding: EdgeInsets.all(50),
+                                            padding: const EdgeInsets.all(50),
                                             child: Text('Cover photo :',
                                                 style:
                                                     FlutterFlowTheme.of(context)
@@ -292,7 +288,7 @@ class _CreateCourseWidgetState extends State<CreateCourseWidget> {
                                           ],
                                         ),
                                         Padding(
-                                            padding: EdgeInsets.all(50),
+                                            padding: const EdgeInsets.all(50),
                                             child: Text('Promo video :',
                                                 style:
                                                     FlutterFlowTheme.of(context)
@@ -328,7 +324,7 @@ class _CreateCourseWidgetState extends State<CreateCourseWidget> {
                                         Row(children: [
                                           if (course!.id != '')
                                             Padding(
-                                              padding: EdgeInsets.only(
+                                              padding: const EdgeInsets.only(
                                                   right: 10, top: 20),
                                               child: FFButtonWidget(
                                                 onPressed: () {
@@ -341,9 +337,9 @@ class _CreateCourseWidgetState extends State<CreateCourseWidget> {
                                                 text: 'Edit Curricilum',
                                               ),
                                             ),
-                                          Spacer(),
+                                          const Spacer(),
                                           Padding(
-                                            padding: EdgeInsets.only(
+                                            padding: const EdgeInsets.only(
                                                 left: 10, top: 20),
                                             child: FFButtonWidget(
                                               onPressed: () {
@@ -366,7 +362,7 @@ class _CreateCourseWidgetState extends State<CreateCourseWidget> {
                           ),
                         ))));
           }
-          return Text('Loading');
+          return const Text('Loading');
         },
       ),
     );
@@ -458,14 +454,14 @@ class _CreateCourseWidgetState extends State<CreateCourseWidget> {
 
       course = course!.copyWith(Sections: [section]);
 
-      print('Course to save ${course}');
+      print('Course to save $course');
 
       final courseSaveRequest = ModelMutations.create(course!);
 
       var response =
           await Amplify.API.mutate(request: courseSaveRequest).response;
 
-      print('Saved course ${response}');
+      print('Saved course $response');
       print('Saved course errors: ${response.errors}');
 
       print('Retrieved course id: ${course!.id}');
@@ -481,7 +477,7 @@ class _CreateCourseWidgetState extends State<CreateCourseWidget> {
       await Amplify.API.mutate(request: contentSaveRequest).response;
 
       print('Course id ${course!.id}');
-      print('Course id ${course}');
+      print('Course id $course');
 
       isNewCourse = false;
     }

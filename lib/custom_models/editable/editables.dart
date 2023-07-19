@@ -1,15 +1,4 @@
-import 'package:contentpub_admin/create_product.dart';
-import 'package:contentpub_admin/models/Bundle.dart';
-import 'package:contentpub_admin/models/Content.dart';
-import 'package:contentpub_admin/models/Course.dart';
-import 'package:contentpub_admin/models/Lesson.dart';
-import 'package:contentpub_admin/models/Coworker.dart';
 import 'package:contentpub_admin/models/ModelProvider.dart';
-import 'package:contentpub_admin/models/Price.dart';
-import 'package:contentpub_admin/models/PurchaseType.dart';
-import 'package:contentpub_admin/models/RecurrenceType.dart';
-import 'package:contentpub_admin/models/Section.dart';
-import 'package:flutter/foundation.dart';
 
 class EditableCourse {
   String? id;
@@ -88,8 +77,8 @@ class EditableSection {
   EditableSection(
       {required this.courseID,
       required this.name,
-      this.dirty: true,
-      this.newItem: true});
+      this.dirty = true,
+      this.newItem = true});
 
   static Section fromEditable(EditableSection editable) {
     List<Lesson>? editableLessons = (editable.Lessons != null)
@@ -146,8 +135,8 @@ class EditableLesson {
       required this.name,
       this.duration,
       this.id,
-      this.dirty: true,
-      this.newItem: true});
+      this.dirty = true,
+      this.newItem = true});
 
   static Lesson fromEditable(EditableLesson editable) {
     return Lesson(

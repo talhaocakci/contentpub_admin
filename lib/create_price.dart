@@ -16,9 +16,7 @@ class _CreatePriceWidgetState extends State<CreatePriceWidget>
     with AutomaticKeepAliveClientMixin {
   @override
   void initState() {
-    if (widget.price.currency == null) {
-      widget.price.currency = 'USD';
-    }
+    widget.price.currency ??= 'USD';
 
     super.initState();
   }
@@ -34,7 +32,7 @@ class _CreatePriceWidgetState extends State<CreatePriceWidget>
               child: Column(
                 children: <Widget>[
                   TextFormField(
-                    decoration: InputDecoration(
+                    decoration: const InputDecoration(
                       hintText: 'eg: 9.99 or 9 or 10.50',
                       label: Text('Price as numeric value'),
                     ),

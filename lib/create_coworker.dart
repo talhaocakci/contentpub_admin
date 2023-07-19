@@ -1,12 +1,8 @@
 import 'package:amplify_api/amplify_api.dart';
 import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:contentpub_admin/file_upload.dart';
-import 'package:contentpub_admin/models/Content.dart';
-import 'package:contentpub_admin/models/ContentType.dart';
 import 'package:contentpub_admin/models/Coworker.dart';
-import 'package:contentpub_admin/models/Lesson.dart';
 import 'package:contentpub_admin/models/ModelProvider.dart';
-import 'package:contentpub_admin/models/Section.dart';
 import 'package:contentpub_admin/custom_models//editable/editables.dart';
 import 'package:flutter/material.dart';
 import 'package:uuid/uuid.dart';
@@ -47,7 +43,7 @@ class _CreateAuthorWidgetState extends State<CreateAuthorWidget> {
 
   Future<EditableCoworker> _initCoworker() async {
     coworker = await getCoworker(widget.coworkerId);
-    print('in init coworker: ${coworker}');
+    print('in init coworker: $coworker');
 
     editableCoworker = EditableCoworker.toEditable(coworker!);
 
@@ -67,10 +63,6 @@ class _CreateAuthorWidgetState extends State<CreateAuthorWidget> {
     return editableCoworker!;
   }
 
-  @override
-  void dispose() {
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -120,7 +112,7 @@ class _CreateAuthorWidgetState extends State<CreateAuthorWidget> {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Padding(
-                                  padding: EdgeInsets.all(50),
+                                  padding: const EdgeInsets.all(50),
                                   child: Text('Basic Information :',
                                       style:
                                           FlutterFlowTheme.of(context).title1)),
@@ -144,7 +136,7 @@ class _CreateAuthorWidgetState extends State<CreateAuthorWidget> {
                                     hintStyle:
                                         FlutterFlowTheme.of(context).bodyText2,
                                     enabledBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(
+                                      borderSide: const BorderSide(
                                         color: Colors.black87,
                                         width: 2,
                                       ),
@@ -159,13 +151,13 @@ class _CreateAuthorWidgetState extends State<CreateAuthorWidget> {
                                       borderRadius: BorderRadius.circular(8),
                                     ),
                                     errorBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(
+                                      borderSide: const BorderSide(
                                         width: 2,
                                       ),
                                       borderRadius: BorderRadius.circular(8),
                                     ),
                                     focusedErrorBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(
+                                      borderSide: const BorderSide(
                                         width: 2,
                                       ),
                                       borderRadius: BorderRadius.circular(8),
@@ -190,7 +182,7 @@ class _CreateAuthorWidgetState extends State<CreateAuthorWidget> {
                                     hintStyle:
                                         FlutterFlowTheme.of(context).bodyText2,
                                     enabledBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(
+                                      borderSide: const BorderSide(
                                         color: Colors.black87,
                                         width: 2,
                                       ),
@@ -205,14 +197,14 @@ class _CreateAuthorWidgetState extends State<CreateAuthorWidget> {
                                       borderRadius: BorderRadius.circular(8),
                                     ),
                                     errorBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(
+                                      borderSide: const BorderSide(
                                         color: Color(0x00000000),
                                         width: 2,
                                       ),
                                       borderRadius: BorderRadius.circular(8),
                                     ),
                                     focusedErrorBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(
+                                      borderSide: const BorderSide(
                                         color: Color(0x00000000),
                                         width: 2,
                                       ),
@@ -244,26 +236,26 @@ class _CreateAuthorWidgetState extends State<CreateAuthorWidget> {
                                     hintStyle:
                                         FlutterFlowTheme.of(context).bodyText2,
                                     enabledBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(
+                                      borderSide: const BorderSide(
                                         color: Colors.black87,
                                         width: 2,
                                       ),
                                       borderRadius: BorderRadius.circular(8),
                                     ),
                                     focusedBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(
+                                      borderSide: const BorderSide(
                                         width: 2,
                                       ),
                                       borderRadius: BorderRadius.circular(8),
                                     ),
                                     errorBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(
+                                      borderSide: const BorderSide(
                                         width: 2,
                                       ),
                                       borderRadius: BorderRadius.circular(8),
                                     ),
                                     focusedErrorBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(
+                                      borderSide: const BorderSide(
                                         width: 2,
                                       ),
                                       borderRadius: BorderRadius.circular(8),
@@ -275,18 +267,18 @@ class _CreateAuthorWidgetState extends State<CreateAuthorWidget> {
                               ]),
                               Padding(
                                 padding:
-                                    EdgeInsetsDirectional.fromSTEB(0, 1, 0, 0),
+                                    const EdgeInsetsDirectional.fromSTEB(0, 1, 0, 0),
                                 child: Container(
                                   //width: MediaQuery.of(context).size.width / 2,
 
                                   child: Padding(
-                                    padding: EdgeInsetsDirectional.fromSTEB(
+                                    padding: const EdgeInsetsDirectional.fromSTEB(
                                         0, 0, 0, 20),
                                     child: Column(
                                       mainAxisSize: MainAxisSize.max,
                                       children: [
                                         Padding(
-                                            padding: EdgeInsets.all(50),
+                                            padding: const EdgeInsets.all(50),
                                             child: Text('Cover photo :',
                                                 style:
                                                     FlutterFlowTheme.of(context)
@@ -316,9 +308,9 @@ class _CreateAuthorWidgetState extends State<CreateAuthorWidget> {
                                           ],
                                         ),
                                         Row(children: [
-                                          Spacer(),
+                                          const Spacer(),
                                           Padding(
-                                            padding: EdgeInsets.only(
+                                            padding: const EdgeInsets.only(
                                                 left: 10, top: 20),
                                             child: FFButtonWidget(
                                               onPressed: () {
@@ -341,7 +333,7 @@ class _CreateAuthorWidgetState extends State<CreateAuthorWidget> {
                           ),
                         ))));
           }
-          return Text('Loading');
+          return const Text('Loading');
         },
       ),
     );

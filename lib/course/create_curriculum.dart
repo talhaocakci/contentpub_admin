@@ -93,7 +93,7 @@ class CurriculumCreateWidgetState extends State<CurriculumCreateWidget> {
                               course = course;
                             });
                           },
-                          child: Text('Add Lesson')),
+                          child: const Text('Add Lesson')),
                       initiallyExpanded: (course?.Sections as List).length == 1,
                       title: Text(section.name ?? 'Please insert title',
                           style: TextStyle(
@@ -108,7 +108,7 @@ class CurriculumCreateWidgetState extends State<CurriculumCreateWidget> {
                       children: <Widget>[
                         for (var lesson in section.Lessons)
                           Padding(
-                              padding: EdgeInsets.only(left: 50),
+                              padding: const EdgeInsets.only(left: 50),
                               child: ExpansionTile(
                                 initiallyExpanded:
                                     (section?.Lessons as List).length == 1,
@@ -133,8 +133,8 @@ class CurriculumCreateWidgetState extends State<CurriculumCreateWidget> {
                                       mainAxisSize: MainAxisSize.max,
                                       children: [
                                         Padding(
-                                            padding: EdgeInsets.all(20),
-                                            child: Container(
+                                            padding: const EdgeInsets.all(20),
+                                            child: SizedBox(
                                                 width: 300,
                                                 child: FileUploadWithDrop(
                                                   remoteDirectory: course!.id,

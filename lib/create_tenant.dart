@@ -3,7 +3,6 @@ import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:contentpub_admin/create_settings.dart';
 import 'package:contentpub_admin/file_upload.dart';
 import 'package:contentpub_admin/models/ModelProvider.dart';
-import 'package:contentpub_admin/models/Tenant.dart';
 import 'package:contentpub_admin/custom_models/editable/editables.dart';
 
 import 'package:flutter/material.dart';
@@ -58,7 +57,7 @@ class _CreateTenantWidgetState extends State<CreateTenantWidget> {
 
     tenant = await getTenant(widget.tenantId);
     editableTenant = EditableTenant.toEditable(tenant!);
-    print('in init tenant: ${tenant}');
+    print('in init tenant: $tenant');
 
     setState(() {});
 
@@ -71,10 +70,6 @@ class _CreateTenantWidgetState extends State<CreateTenantWidget> {
     return editableTenant!;
   }
 
-  @override
-  void dispose() {
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -121,20 +116,20 @@ class _CreateTenantWidgetState extends State<CreateTenantWidget> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Padding(
-                    padding: EdgeInsetsDirectional.fromSTEB(0, 1, 0, 0),
+                    padding: const EdgeInsetsDirectional.fromSTEB(0, 1, 0, 0),
                     child: Container(
                       //width: MediaQuery.of(context).size.width / 2,
-                      margin: EdgeInsets.all(50),
+                      margin: const EdgeInsets.all(50),
                       decoration: BoxDecoration(
                         color: FlutterFlowTheme.of(context).secondaryBackground,
                         boxShadow: [
-                          BoxShadow(
+                          const BoxShadow(
                             blurRadius: 5,
                             color: Color(0x430F1113),
                             offset: Offset(0, 2),
                           )
                         ],
-                        borderRadius: BorderRadius.only(
+                        borderRadius: const BorderRadius.only(
                           bottomLeft: Radius.circular(8),
                           bottomRight: Radius.circular(8),
                           topLeft: Radius.circular(0),
@@ -142,13 +137,13 @@ class _CreateTenantWidgetState extends State<CreateTenantWidget> {
                         ),
                       ),
                       child: Padding(
-                        padding: EdgeInsetsDirectional.fromSTEB(0, 0, 0, 20),
+                        padding: const EdgeInsetsDirectional.fromSTEB(0, 0, 0, 20),
                         child: Column(
                           mainAxisSize: MainAxisSize.max,
                           children: [
                             Padding(
                               padding:
-                                  EdgeInsetsDirectional.fromSTEB(8, 8, 8, 8),
+                                  const EdgeInsetsDirectional.fromSTEB(8, 8, 8, 8),
                               child: Row(
                                 mainAxisSize: MainAxisSize.max,
                                 children: [
@@ -182,7 +177,7 @@ class _CreateTenantWidgetState extends State<CreateTenantWidget> {
                                               BorderRadius.circular(8),
                                         ),
                                         errorBorder: OutlineInputBorder(
-                                          borderSide: BorderSide(
+                                          borderSide: const BorderSide(
                                             color: Color(0x00000000),
                                             width: 2,
                                           ),
@@ -190,7 +185,7 @@ class _CreateTenantWidgetState extends State<CreateTenantWidget> {
                                               BorderRadius.circular(8),
                                         ),
                                         focusedErrorBorder: OutlineInputBorder(
-                                          borderSide: BorderSide(
+                                          borderSide: const BorderSide(
                                             color: Color(0x00000000),
                                             width: 2,
                                           ),
@@ -208,7 +203,7 @@ class _CreateTenantWidgetState extends State<CreateTenantWidget> {
                             ),
                             Padding(
                               padding:
-                                  EdgeInsetsDirectional.fromSTEB(8, 8, 8, 8),
+                                  const EdgeInsetsDirectional.fromSTEB(8, 8, 8, 8),
                               child: Row(
                                 mainAxisSize: MainAxisSize.max,
                                 children: [
@@ -243,7 +238,7 @@ class _CreateTenantWidgetState extends State<CreateTenantWidget> {
                                               BorderRadius.circular(8),
                                         ),
                                         errorBorder: OutlineInputBorder(
-                                          borderSide: BorderSide(
+                                          borderSide: const BorderSide(
                                             color: Color(0x00000000),
                                             width: 2,
                                           ),
@@ -251,7 +246,7 @@ class _CreateTenantWidgetState extends State<CreateTenantWidget> {
                                               BorderRadius.circular(8),
                                         ),
                                         focusedErrorBorder: OutlineInputBorder(
-                                          borderSide: BorderSide(
+                                          borderSide: const BorderSide(
                                             color: Color(0x00000000),
                                             width: 2,
                                           ),
@@ -267,7 +262,7 @@ class _CreateTenantWidgetState extends State<CreateTenantWidget> {
                                 ],
                               ),
                             ),
-                            Text('Cover photo:'),
+                            const Text('Cover photo:'),
                             Row(
                               mainAxisSize: MainAxisSize.max,
                               children: [
@@ -289,7 +284,7 @@ class _CreateTenantWidgetState extends State<CreateTenantWidget> {
                                 ),
                               ],
                             ),
-                            Text('Promo video :'),
+                            const Text('Promo video :'),
                             Row(
                               mainAxisSize: MainAxisSize.max,
                               children: [
@@ -311,7 +306,7 @@ class _CreateTenantWidgetState extends State<CreateTenantWidget> {
                                 ),
                               ],
                             ),
-                            Text('Settings'),
+                            const Text('Settings'),
                             SizedBox(
                               height: 300,
                               child: Column(
@@ -375,7 +370,7 @@ class _CreateTenantWidgetState extends State<CreateTenantWidget> {
                             ),
                             Row(children: [
                               Padding(
-                                padding: EdgeInsetsDirectional.fromSTEB(
+                                padding: const EdgeInsetsDirectional.fromSTEB(
                                     0, 12, 0, 12),
                                 child: FFButtonWidget(
                                   onPressed: () {
@@ -388,7 +383,7 @@ class _CreateTenantWidgetState extends State<CreateTenantWidget> {
                                   options: FFButtonOptions(
                                     width: 300,
                                     height: 50,
-                                    color: Color(0xFF4B39EF),
+                                    color: const Color(0xFF4B39EF),
                                     textStyle: FlutterFlowTheme.of(context)
                                         .bodyText2
                                         .override(
@@ -398,7 +393,7 @@ class _CreateTenantWidgetState extends State<CreateTenantWidget> {
                                           fontWeight: FontWeight.normal,
                                         ),
                                     elevation: 3,
-                                    borderSide: BorderSide(
+                                    borderSide: const BorderSide(
                                       color: Colors.transparent,
                                       width: 1,
                                     ),
@@ -415,7 +410,7 @@ class _CreateTenantWidgetState extends State<CreateTenantWidget> {
               ),
             ));
           }
-          return Text('Loading');
+          return const Text('Loading');
         },
       ),
     );
@@ -423,7 +418,7 @@ class _CreateTenantWidgetState extends State<CreateTenantWidget> {
 
   Future<Tenant?> getTenant(String id) async {
     String graphQLQuery = '''query MyQuery {
-          getTenant(id: "${id}") {
+          getTenant(id: "$id") {
             coverPhotoUrl
             createdAt
             description
@@ -543,9 +538,9 @@ class _CreateTenantWidgetState extends State<CreateTenantWidget> {
         print(response.errors);
       }
 
-      if (t!.productionConfiguration != null) {
+      if (t.productionConfiguration != null) {
         TenantConfiguration c =
-            t!.productionConfiguration ?? TenantConfiguration(id: t.id);
+            t.productionConfiguration ?? TenantConfiguration(id: t.id);
 
         final confSaveRequest = ModelMutations.update(c);
 

@@ -6,7 +6,6 @@ import 'package:contentpub_admin/models/Content.dart';
 import 'package:contentpub_admin/models/ContentType.dart';
 
 import '../flutter_flow/flutter_flow_theme.dart';
-import '../flutter_flow/flutter_flow_util.dart';
 import '../flutter_flow/flutter_flow_widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -54,7 +53,7 @@ class _ListContentsWidgetState extends State<ListContentsWidget> {
           elevation: 0,
         ),
         body: Row(children: [
-          Spacer(),
+          const Spacer(),
           SizedBox(
             width: 600,
             child: SingleChildScrollView(
@@ -77,8 +76,8 @@ class _ListContentsWidgetState extends State<ListContentsWidget> {
                       ],
                     ),
                   ),
-                  Padding(
-                    padding: const EdgeInsetsDirectional.fromSTEB(0, 4, 1, 0),
+                  const Padding(
+                    padding: EdgeInsetsDirectional.fromSTEB(0, 4, 1, 0),
                     child: SingleChildScrollView(
                       scrollDirection: Axis.horizontal,
                       child: Row(
@@ -114,7 +113,7 @@ class _ListContentsWidgetState extends State<ListContentsWidget> {
                     padding: const EdgeInsetsDirectional.fromSTEB(0, 0, 0, 50),
                     child: contents.isEmpty
                         ? Padding(
-                            padding: EdgeInsets.all(50),
+                            padding: const EdgeInsets.all(50),
                             child: Text(
                                 'It is time to create something fantastic and to share with the world',
                                 style: FlutterFlowTheme.of(context)
@@ -130,7 +129,7 @@ class _ListContentsWidgetState extends State<ListContentsWidget> {
                                 Padding(
                                   padding: const EdgeInsetsDirectional.fromSTEB(
                                       16, 8, 16, 0),
-                                  child: Container(
+                                  child: SizedBox(
                                     width: double.infinity,
                                     height: 200,
                                     child: Padding(
@@ -206,7 +205,7 @@ class _ListContentsWidgetState extends State<ListContentsWidget> {
                                                                     (context) =>
                                                                         CreateCourseWidget(
                                                                           courseId:
-                                                                              content!.objectId ?? '',
+                                                                              content.objectId ?? '',
                                                                         )));
                                                       } else {
                                                         Navigator.push(
@@ -251,17 +250,16 @@ class _ListContentsWidgetState extends State<ListContentsWidget> {
                                                       print(
                                                           'before action isPublished: ${content!.isPublished}');
                                                       // publish the content
-                                                      if ((content!
-                                                                  .isPublished ??
+                                                      if ((content.isPublished ??
                                                               false) ==
                                                           false) {
                                                         publishTheContent(
-                                                            content!,
+                                                            content,
                                                             true,
                                                             false);
                                                       } else {
                                                         publishTheContent(
-                                                            content!,
+                                                            content,
                                                             false,
                                                             true);
                                                       }
@@ -316,7 +314,7 @@ class _ListContentsWidgetState extends State<ListContentsWidget> {
               ),
             ),
           ),
-          Spacer()
+          const Spacer()
         ]));
   }
 

@@ -14,10 +14,6 @@ class CreateSettingsWidget extends StatefulWidget {
 
 class _CreateSettingsWidgetState extends State<CreateSettingsWidget>
     with AutomaticKeepAliveClientMixin {
-  @override
-  void initState() {
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +26,7 @@ class _CreateSettingsWidgetState extends State<CreateSettingsWidget>
               child: Column(
                 children: <Widget>[
                   TextFormField(
-                    decoration: InputDecoration(
+                    decoration: const InputDecoration(
                       // hintText: 'eg: 9.99 or 9 or 10.50',
                       label: Text('Stripe secret key'),
                     ),

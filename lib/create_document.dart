@@ -1,13 +1,7 @@
 import 'package:amplify_api/amplify_api.dart';
 import 'package:amplify_flutter/amplify_flutter.dart';
-import 'package:contentpub_admin/course/create_curriculum.dart';
 import 'package:contentpub_admin/file_upload.dart';
-import 'package:contentpub_admin/models/Content.dart';
-import 'package:contentpub_admin/models/ContentType.dart';
-import 'package:contentpub_admin/models/Course.dart';
-import 'package:contentpub_admin/models/Lesson.dart';
 import 'package:contentpub_admin/models/ModelProvider.dart';
-import 'package:contentpub_admin/models/Section.dart';
 import 'package:contentpub_admin/custom_models/editable/editables.dart';
 import 'package:flutter/material.dart';
 import 'package:uuid/uuid.dart';
@@ -58,7 +52,7 @@ class _CreateDocumentWidgetState extends State<CreateDocumentWidget> {
 
     content = await getContent(widget.contentId);
     editableContent = EditableContent.toEditable(content!);
-    print('in init content: ${content}');
+    print('in init content: $content');
 
     setState(() {});
 
@@ -71,10 +65,6 @@ class _CreateDocumentWidgetState extends State<CreateDocumentWidget> {
     return editableContent!;
   }
 
-  @override
-  void dispose() {
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -121,20 +111,20 @@ class _CreateDocumentWidgetState extends State<CreateDocumentWidget> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Padding(
-                    padding: EdgeInsetsDirectional.fromSTEB(0, 1, 0, 0),
+                    padding: const EdgeInsetsDirectional.fromSTEB(0, 1, 0, 0),
                     child: Container(
                       //width: MediaQuery.of(context).size.width / 2,
-                      margin: EdgeInsets.all(50),
+                      margin: const EdgeInsets.all(50),
                       decoration: BoxDecoration(
                         color: FlutterFlowTheme.of(context).secondaryBackground,
                         boxShadow: [
-                          BoxShadow(
+                          const BoxShadow(
                             blurRadius: 5,
                             color: Color(0x430F1113),
                             offset: Offset(0, 2),
                           )
                         ],
-                        borderRadius: BorderRadius.only(
+                        borderRadius: const BorderRadius.only(
                           bottomLeft: Radius.circular(8),
                           bottomRight: Radius.circular(8),
                           topLeft: Radius.circular(0),
@@ -142,13 +132,13 @@ class _CreateDocumentWidgetState extends State<CreateDocumentWidget> {
                         ),
                       ),
                       child: Padding(
-                        padding: EdgeInsetsDirectional.fromSTEB(0, 0, 0, 20),
+                        padding: const EdgeInsetsDirectional.fromSTEB(0, 0, 0, 20),
                         child: Column(
                           mainAxisSize: MainAxisSize.max,
                           children: [
                             Padding(
                               padding:
-                                  EdgeInsetsDirectional.fromSTEB(8, 8, 8, 8),
+                                  const EdgeInsetsDirectional.fromSTEB(8, 8, 8, 8),
                               child: Row(
                                 mainAxisSize: MainAxisSize.max,
                                 children: [
@@ -183,7 +173,7 @@ class _CreateDocumentWidgetState extends State<CreateDocumentWidget> {
                                               BorderRadius.circular(8),
                                         ),
                                         errorBorder: OutlineInputBorder(
-                                          borderSide: BorderSide(
+                                          borderSide: const BorderSide(
                                             color: Color(0x00000000),
                                             width: 2,
                                           ),
@@ -191,7 +181,7 @@ class _CreateDocumentWidgetState extends State<CreateDocumentWidget> {
                                               BorderRadius.circular(8),
                                         ),
                                         focusedErrorBorder: OutlineInputBorder(
-                                          borderSide: BorderSide(
+                                          borderSide: const BorderSide(
                                             color: Color(0x00000000),
                                             width: 2,
                                           ),
@@ -209,7 +199,7 @@ class _CreateDocumentWidgetState extends State<CreateDocumentWidget> {
                             ),
                             Padding(
                               padding:
-                                  EdgeInsetsDirectional.fromSTEB(8, 8, 8, 8),
+                                  const EdgeInsetsDirectional.fromSTEB(8, 8, 8, 8),
                               child: Row(
                                 mainAxisSize: MainAxisSize.max,
                                 children: [
@@ -245,7 +235,7 @@ class _CreateDocumentWidgetState extends State<CreateDocumentWidget> {
                                               BorderRadius.circular(8),
                                         ),
                                         errorBorder: OutlineInputBorder(
-                                          borderSide: BorderSide(
+                                          borderSide: const BorderSide(
                                             color: Color(0x00000000),
                                             width: 2,
                                           ),
@@ -253,7 +243,7 @@ class _CreateDocumentWidgetState extends State<CreateDocumentWidget> {
                                               BorderRadius.circular(8),
                                         ),
                                         focusedErrorBorder: OutlineInputBorder(
-                                          borderSide: BorderSide(
+                                          borderSide: const BorderSide(
                                             color: Color(0x00000000),
                                             width: 2,
                                           ),
@@ -269,13 +259,13 @@ class _CreateDocumentWidgetState extends State<CreateDocumentWidget> {
                                 ],
                               ),
                             ),
-                            Text("Your file"),
+                            const Text("Your file"),
                             Row(
                               mainAxisSize: MainAxisSize.max,
                               children: [
                                 Expanded(
                                   child: FileUploadWithDrop(
-                                      remoteDirectory: '${editableContent!.id}',
+                                      remoteDirectory: editableContent!.id,
                                       remoteFileName: 'file1',
                                       isPublic: false,
                                       remoteUrl: editableContent?.s3Url,
@@ -291,13 +281,13 @@ class _CreateDocumentWidgetState extends State<CreateDocumentWidget> {
                                 ),
                               ],
                             ),
-                            Text('Cover photo:'),
+                            const Text('Cover photo:'),
                             Row(
                               mainAxisSize: MainAxisSize.max,
                               children: [
                                 Expanded(
                                   child: FileUploadWithDrop(
-                                      remoteDirectory: '${editableContent!.id}',
+                                      remoteDirectory: editableContent!.id,
                                       remoteFileName: 'cover-photo',
                                       isPublic: true,
                                       remoteUrl: editableContent?.photoUrl,
@@ -313,13 +303,13 @@ class _CreateDocumentWidgetState extends State<CreateDocumentWidget> {
                                 ),
                               ],
                             ),
-                            Text('Promo video :'),
+                            const Text('Promo video :'),
                             Row(
                               mainAxisSize: MainAxisSize.max,
                               children: [
                                 Expanded(
                                   child: FileUploadWithDrop(
-                                      remoteDirectory: '${editableContent!.id}',
+                                      remoteDirectory: editableContent!.id,
                                       remoteFileName: 'promo-video',
                                       isPublic: true,
                                       fileType: FileType.VIDEO,
@@ -335,7 +325,7 @@ class _CreateDocumentWidgetState extends State<CreateDocumentWidget> {
                                 ),
                               ],
                             ),
-                            Text('Authors'),
+                            const Text('Authors'),
                             Row(
                               children: [
                                 for (var contentCoworker
@@ -352,7 +342,7 @@ class _CreateDocumentWidgetState extends State<CreateDocumentWidget> {
                                     ],
                                     onChanged: (value) {
                                       print(
-                                          'author selection changed ${value}');
+                                          'author selection changed $value');
 
                                       ContentCoworker cc = ContentCoworker(
                                           id: '${content!.id}--${value!.id}}',
@@ -368,7 +358,7 @@ class _CreateDocumentWidgetState extends State<CreateDocumentWidget> {
                             ),
                             Row(children: [
                               Padding(
-                                padding: EdgeInsetsDirectional.fromSTEB(
+                                padding: const EdgeInsetsDirectional.fromSTEB(
                                     0, 12, 0, 12),
                                 child: FFButtonWidget(
                                   onPressed: () {
@@ -381,7 +371,7 @@ class _CreateDocumentWidgetState extends State<CreateDocumentWidget> {
                                   options: FFButtonOptions(
                                     width: 300,
                                     height: 50,
-                                    color: Color(0xFF4B39EF),
+                                    color: const Color(0xFF4B39EF),
                                     textStyle: FlutterFlowTheme.of(context)
                                         .bodyText2
                                         .override(
@@ -391,7 +381,7 @@ class _CreateDocumentWidgetState extends State<CreateDocumentWidget> {
                                           fontWeight: FontWeight.normal,
                                         ),
                                     elevation: 3,
-                                    borderSide: BorderSide(
+                                    borderSide: const BorderSide(
                                       color: Colors.transparent,
                                       width: 1,
                                     ),
@@ -408,7 +398,7 @@ class _CreateDocumentWidgetState extends State<CreateDocumentWidget> {
               ),
             ));
           }
-          return Text('Loading');
+          return const Text('Loading');
         },
       ),
     );
@@ -418,7 +408,7 @@ class _CreateDocumentWidgetState extends State<CreateDocumentWidget> {
     const getContent = 'getContent';
 
     String graphQLQuery = '''query MyQuery2 {
-              getContent(id: "${id}") {
+              getContent(id: "$id") {
                 id
                 isArchived
                 isPublished

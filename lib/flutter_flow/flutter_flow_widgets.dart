@@ -91,7 +91,7 @@ class _FFButtonWidgetState extends State<FFButtonWidget> {
 
     Widget textWidget = loading
         ? Center(
-            child: Container(
+            child: SizedBox(
               width: 23,
               height: 23,
               child: CircularProgressIndicator(
@@ -188,7 +188,7 @@ class _FFButtonWidgetState extends State<FFButtonWidget> {
     );
 
     if (widget.icon != null || widget.iconData != null) {
-      return Container(
+      return SizedBox(
         height: widget.options!.height,
         width: widget.options!.width,
         child: ElevatedButton.icon(
@@ -209,7 +209,7 @@ class _FFButtonWidgetState extends State<FFButtonWidget> {
       );
     }
 
-    return Container(
+    return SizedBox(
       height: widget.options!.height,
       width: widget.options!.width,
       child: ElevatedButton(
