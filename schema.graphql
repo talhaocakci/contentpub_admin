@@ -15,7 +15,11 @@ type TenantConfiguration @model @auth(rules: [{allow: private}]) {
   contentpubApiKey: String
 }
 
-type Price @model @auth(rules: [{allow: private}]) {
+type Price @model @auth(
+  rules: [
+    {allow: private},
+    {allow: public, provider:iam, operations:[read]}
+    ]) {
   id: ID!
   stripePriceId: String
   purchaseType: PurchaseType
