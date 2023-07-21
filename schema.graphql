@@ -176,6 +176,7 @@ type Lesson @model @auth(
   videoFileSize: String
   type: LessonType
   customLessonType: String
+  customContent: String
 }
 
 type Course @model @auth(
