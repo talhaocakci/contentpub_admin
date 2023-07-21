@@ -1,4 +1,8 @@
-type Coworker @model @auth(rules: [{allow: private}]) {
+type Coworker @model @auth(
+  rules: [
+    {allow: private},
+    {allow: public, provider:iam, operations:[read]}
+    ]) {
   id: ID!
   email: String
   displayName: String
@@ -31,7 +35,11 @@ type Price @model @auth(
   trialPeriod: Int
 }
 
-type Section @model @auth(rules: [{allow: private}]) {
+type Section @model @auth(
+  rules: [
+    {allow: private},
+    {allow: public, provider:iam, operations:[read]}
+    ]) {
   id: ID!
   name: String
   description: String
@@ -130,6 +138,13 @@ enum ContentType {
   ONLINE_SESSION
 }
 
+enum LessonType {
+  VIDEO,
+  TEXT,
+  QUIZ
+  CUSTOM  
+}
+
 type Purchase @model @auth(rules: [{allow: private}]) {
   id: ID!
   purchaseTime: AWSDate
@@ -146,7 +161,11 @@ type Purchase @model @auth(rules: [{allow: private}]) {
   cancellationDate: AWSDate
 }
 
-type Lesson @model @auth(rules: [{allow: private}]) {
+type Lesson @model @auth(
+  rules: [
+    {allow: private},
+    {allow: public, provider:iam, operations:[read]}
+    ]) {
   id: ID!
   name: String
   description: String
@@ -155,6 +174,8 @@ type Lesson @model @auth(rules: [{allow: private}]) {
   sectionID: ID! @index(name: "bySection")
   order: Int
   videoFileSize: String
+  type: LessonType
+  customLessonType: String
 }
 
 type Course @model @auth(
