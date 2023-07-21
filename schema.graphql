@@ -157,7 +157,11 @@ type Lesson @model @auth(rules: [{allow: private}]) {
   videoFileSize: String
 }
 
-type Course @model @auth(rules: [{allow: private}]) {
+type Course @model @auth(
+  rules: [
+    {allow: private},
+    {allow: public, provider:iam, operations:[read]}
+    ]) {
   id: ID!
   title: String
   description: String
