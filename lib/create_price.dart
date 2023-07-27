@@ -33,6 +33,18 @@ class _CreatePriceWidgetState extends State<CreatePriceWidget>
                 children: <Widget>[
                   TextFormField(
                     decoration: const InputDecoration(
+                      hintText: 'eg: 3',
+                      label: Text('Trial days from 0 to 31'),
+                    ),
+                    onChanged: (value) {
+                      if (value != '') {
+                        widget.price.trialDays = int.parse(value);
+                        print('trial days: ${widget.price.trialDays}');
+                      }
+                    },
+                  ),
+                  TextFormField(
+                    decoration: const InputDecoration(
                       hintText: 'eg: 9.99 or 9 or 10.50',
                       label: Text('Price as numeric value'),
                     ),

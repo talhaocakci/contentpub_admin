@@ -174,6 +174,10 @@ class EditableBundle {
   List<BundleContent>? contents;
   List<EditablePrice>? prices;
   bool? isAllAccess;
+  bool? isAllCourses;
+  bool? isAllDocuments;
+  bool? isPublished;
+  bool? isArchived;
   String? stripeProductId;
 
   EditableBundle({required this.id});
@@ -189,7 +193,11 @@ class EditableBundle {
     editable.isFree = bundle.isFree;
     editable.contents = bundle.contents ?? List.empty();
     editable.prices = editablePrices;
-    editable.isAllAccess = bundle.isAllAccess;
+    editable.isAllCourses = bundle.isAllCourses;
+    editable.isAllDocuments = bundle.isAllDocuments;
+    editable.isPublished = bundle.isPublished;
+    editable.isFree = bundle.isFree;
+
     editable.stripeProductId = bundle.stripeProductId;
 
     return editable;
@@ -207,7 +215,9 @@ class EditableBundle {
         isFree: editable.isFree,
         contents: editable.contents,
         prices: prices,
-        isAllAccess: editable.isAllAccess,
+        isAllCourses: editable.isAllCourses,
+        isAllDocuments: editable.isAllDocuments,
+        isPublished: editable.isPublished,
         stripeProductId: editable.stripeProductId);
 
     return b;
@@ -220,6 +230,7 @@ class EditablePrice {
   PurchaseType? purchaseType;
   RecurrenceType? recurrenceType;
   int? recurrenceInterval;
+  int? trialDays;
   String? currency;
   double? amount;
   String? bundleID;
@@ -228,6 +239,7 @@ class EditablePrice {
       {required this.id,
       this.purchaseType,
       this.recurrenceType,
+      this.trialDays,
       this.recurrenceInterval});
 
   static EditablePrice toEditable(Price price) {
@@ -239,6 +251,7 @@ class EditablePrice {
     editable.amount = price.amount;
     editable.bundleID = price.bundleID;
     editable.recurrenceInterval = price.recurrenceInterval;
+    editable.trialDays = price.trialPeriod;
     return editable;
   }
 
@@ -251,7 +264,8 @@ class EditablePrice {
         purchaseType: editable.purchaseType,
         recurrenceType: editable.recurrenceType,
         recurrenceInterval: editable.recurrenceInterval,
-        stripePriceId: editable.stripePriceId);
+        stripePriceId: editable.stripePriceId,
+        trialPeriod: editable.trialDays);
   }
 }
 

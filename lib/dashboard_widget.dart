@@ -33,6 +33,9 @@ class _DashboardWidgetState extends State<DashboardWidget> {
         key: scaffoldKey,
         backgroundColor: FlutterFlowTheme.of(context).primaryBackground,
         body: Authenticator(
+            signInForm: SignInForm(
+              includeDefaultSocialProviders: false,
+            ),
             child: MaterialApp(
                 // theme: theme,
                 builder: Authenticator.builder(),
@@ -45,394 +48,13 @@ class _DashboardWidgetState extends State<DashboardWidget> {
                     mainAxisSize: MainAxisSize.max,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Container(
-                        width: double.infinity,
-                        height: 100,
-                        decoration: BoxDecoration(
-                          color:
-                              FlutterFlowTheme.of(context).secondaryBackground,
-                          image: DecorationImage(
-                            fit: BoxFit.cover,
-                            image: CachedNetworkImageProvider(
-                              'https://images.unsplash.com/photo-1504297050568-910d24c426d3?ixlib=rb-1.2.1&ixid=MnwxMjA3fDF8MHxlZGl0b3JpYWwtZmVlZHwxfHx8ZW58MHx8fHw%3D&auto=format&fit=crop&w=200&q=60',
-                            ),
-                          ),
-                        ),
-                        child: Container(
-                          width: 100,
-                          height: 100,
-                          decoration: const BoxDecoration(
-                            color: Color(0x59000000),
-                          ),
-                          child: Column(
-                            mainAxisSize: MainAxisSize.max,
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Padding(
-                                padding: const EdgeInsetsDirectional.fromSTEB(
-                                    24, 70, 24, 44),
-                                child: Column(
-                                  mainAxisSize: MainAxisSize.max,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      'Happy Monday',
-                                      style: FlutterFlowTheme.of(context)
-                                          .title1
-                                          .override(
-                                            fontFamily: 'Brazila',
-                                            color: Colors.white,
-                                            useGoogleFonts: false,
-                                          ),
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsetsDirectional.fromSTEB(
-                                          0, 4, 0, 0),
-                                      child: Text(
-                                        'Andres, M.',
-                                        style: FlutterFlowTheme.of(context)
-                                            .bodyText2
-                                            .override(
-                                              fontFamily: 'Brazila',
-                                              color: const Color(0xFFD5DBDF),
-                                              useGoogleFonts: false,
-                                            ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              ClipRRect(
-                                child: BackdropFilter(
-                                  filter: ImageFilter.blur(
-                                    sigmaX: 6,
-                                    sigmaY: 7,
-                                  ),
-                                  child: Container(
-                                    width: double.infinity,
-                                    decoration: const BoxDecoration(
-                                      color: Color(0x87000000),
-                                    ),
-                                    child: Padding(
-                                      padding: const EdgeInsetsDirectional.fromSTEB(
-                                          12, 12, 12, 12),
-                                      child: Row(
-                                        mainAxisSize: MainAxisSize.max,
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.start,
-                                        children: [
-                                          Expanded(
-                                            child: Column(
-                                              mainAxisSize: MainAxisSize.max,
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                Padding(
-                                                  padding: const EdgeInsetsDirectional
-                                                      .fromSTEB(8, 0, 0, 4),
-                                                  child: Text(
-                                                    'Current Meeting',
-                                                    style: FlutterFlowTheme.of(
-                                                            context)
-                                                        .bodyText2
-                                                        .override(
-                                                          fontFamily: 'Brazila',
-                                                          color: Colors.white,
-                                                          fontWeight:
-                                                              FontWeight.normal,
-                                                          useGoogleFonts: false,
-                                                        ),
-                                                  ),
-                                                ),
-                                                Padding(
-                                                  padding: const EdgeInsetsDirectional
-                                                      .fromSTEB(8, 0, 0, 0),
-                                                  child: Text(
-                                                    'Design Review',
-                                                    style: FlutterFlowTheme.of(
-                                                            context)
-                                                        .title1
-                                                        .override(
-                                                          fontFamily: 'Brazila',
-                                                          color: Colors.white,
-                                                          useGoogleFonts: false,
-                                                        ),
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                          Padding(
-                                            padding:
-                                                const EdgeInsetsDirectional.fromSTEB(
-                                                    20, 0, 20, 0),
-                                            child: Container(
-                                              width: 2,
-                                              height: 100,
-                                              decoration: BoxDecoration(
-                                                color: const Color(0x32E0E3E7),
-                                                borderRadius:
-                                                    BorderRadius.circular(5),
-                                              ),
-                                            ),
-                                          ),
-                                          const Icon(
-                                            Icons.access_time_rounded,
-                                            color: Colors.white,
-                                            size: 32,
-                                          ),
-                                          Padding(
-                                            padding:
-                                                const EdgeInsetsDirectional.fromSTEB(
-                                                    0, 0, 24, 0),
-                                            child: Column(
-                                              mainAxisSize: MainAxisSize.max,
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                Padding(
-                                                  padding: const EdgeInsetsDirectional
-                                                      .fromSTEB(8, 0, 0, 4),
-                                                  child: Text(
-                                                    'Elapsed Time',
-                                                    style: FlutterFlowTheme.of(
-                                                            context)
-                                                        .bodyText2
-                                                        .override(
-                                                          fontFamily: 'Brazila',
-                                                          color: Colors.white,
-                                                          fontWeight:
-                                                              FontWeight.normal,
-                                                          useGoogleFonts: false,
-                                                        ),
-                                                  ),
-                                                ),
-                                                Padding(
-                                                  padding: const EdgeInsetsDirectional
-                                                      .fromSTEB(8, 0, 0, 0),
-                                                  child: Text(
-                                                    '5:32.20',
-                                                    style: FlutterFlowTheme.of(
-                                                            context)
-                                                        .title2
-                                                        .override(
-                                                          fontFamily: 'Brazila',
-                                                          color: Colors.white,
-                                                          useGoogleFonts: false,
-                                                        ),
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
                       Column(
                         mainAxisSize: MainAxisSize.max,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Padding(
-                            padding:
-                                const EdgeInsetsDirectional.fromSTEB(16, 12, 0, 0),
-                            child: Text(
-                              'Next Meeting Times',
-                              style: FlutterFlowTheme.of(context).bodyText2,
-                            ),
-                          ),
-                          Container(
-                            width: double.infinity,
-                            height: 120,
-                            decoration: BoxDecoration(
-                              color: FlutterFlowTheme.of(context)
-                                  .primaryBackground,
-                            ),
-                            child: Padding(
-                              padding:
-                                  const EdgeInsetsDirectional.fromSTEB(0, 4, 0, 0),
-                              child: ListView(
-                                padding: EdgeInsets.zero,
-                                shrinkWrap: true,
-                                scrollDirection: Axis.horizontal,
-                                children: [
-                                  Padding(
-                                    padding: const EdgeInsetsDirectional.fromSTEB(
-                                        16, 8, 8, 8),
-                                    child: Container(
-                                      width: 160,
-                                      height: 100,
-                                      decoration: BoxDecoration(
-                                        color: FlutterFlowTheme.of(context)
-                                            .secondaryBackground,
-                                        boxShadow: [
-                                          const BoxShadow(
-                                            blurRadius: 3,
-                                            color: Color(0x33000000),
-                                            offset: Offset(0, 1),
-                                          )
-                                        ],
-                                        borderRadius: BorderRadius.circular(12),
-                                      ),
-                                      child: Padding(
-                                        padding: const EdgeInsetsDirectional.fromSTEB(
-                                            12, 8, 12, 8),
-                                        child: Column(
-                                          mainAxisSize: MainAxisSize.max,
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Text(
-                                              '2:30pm',
-                                              style:
-                                                  FlutterFlowTheme.of(context)
-                                                      .title2,
-                                            ),
-                                            Text(
-                                              'Standup',
-                                              style:
-                                                  FlutterFlowTheme.of(context)
-                                                      .bodyText2
-                                                      .override(
-                                                        fontFamily: 'Brazila',
-                                                        fontWeight:
-                                                            FontWeight.normal,
-                                                        useGoogleFonts: false,
-                                                      ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsetsDirectional.fromSTEB(
-                                        0, 8, 8, 8),
-                                    child: Container(
-                                      width: 160,
-                                      height: 100,
-                                      decoration: BoxDecoration(
-                                        color: FlutterFlowTheme.of(context)
-                                            .secondaryBackground,
-                                        boxShadow: [
-                                          const BoxShadow(
-                                            blurRadius: 3,
-                                            color: Color(0x33000000),
-                                            offset: Offset(0, 1),
-                                          )
-                                        ],
-                                        borderRadius: BorderRadius.circular(12),
-                                      ),
-                                      child: Padding(
-                                        padding: const EdgeInsetsDirectional.fromSTEB(
-                                            12, 8, 12, 8),
-                                        child: Column(
-                                          mainAxisSize: MainAxisSize.max,
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Text(
-                                              '3:00pm',
-                                              style:
-                                                  FlutterFlowTheme.of(context)
-                                                      .title2,
-                                            ),
-                                            Text(
-                                              'Design Review',
-                                              style:
-                                                  FlutterFlowTheme.of(context)
-                                                      .bodyText2
-                                                      .override(
-                                                        fontFamily: 'Brazila',
-                                                        fontWeight:
-                                                            FontWeight.normal,
-                                                        useGoogleFonts: false,
-                                                      ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsetsDirectional.fromSTEB(
-                                        0, 8, 8, 8),
-                                    child: Container(
-                                      width: 160,
-                                      height: 100,
-                                      decoration: BoxDecoration(
-                                        color: FlutterFlowTheme.of(context)
-                                            .secondaryBackground,
-                                        boxShadow: [
-                                          const BoxShadow(
-                                            blurRadius: 3,
-                                            color: Color(0x33000000),
-                                            offset: Offset(0, 1),
-                                          )
-                                        ],
-                                        borderRadius: BorderRadius.circular(12),
-                                      ),
-                                      child: Padding(
-                                        padding: const EdgeInsetsDirectional.fromSTEB(
-                                            12, 8, 12, 8),
-                                        child: Column(
-                                          mainAxisSize: MainAxisSize.max,
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Text(
-                                              '4:45pm',
-                                              style:
-                                                  FlutterFlowTheme.of(context)
-                                                      .title2,
-                                            ),
-                                            Text(
-                                              'Design Review',
-                                              style:
-                                                  FlutterFlowTheme.of(context)
-                                                      .bodyText2
-                                                      .override(
-                                                        fontFamily: 'Brazila',
-                                                        fontWeight:
-                                                            FontWeight.normal,
-                                                        useGoogleFonts: false,
-                                                      ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                          Padding(
-                            padding:
-                                const EdgeInsetsDirectional.fromSTEB(16, 4, 0, 0),
-                            child: Text(
-                              'Quick Links',
-                              style: FlutterFlowTheme.of(context).bodyText2,
-                            ),
-                          ),
-                          Padding(
-                            padding:
-                                const EdgeInsetsDirectional.fromSTEB(24, 12, 0, 0),
+                            padding: const EdgeInsetsDirectional.fromSTEB(
+                                24, 12, 0, 0),
                             child: Wrap(
                               spacing: 8,
                               runSpacing: 8,
@@ -467,8 +89,8 @@ class _DashboardWidgetState extends State<DashboardWidget> {
                                                     const ListContentsWidget()));
                                       },
                                       child: Padding(
-                                        padding: const EdgeInsetsDirectional.fromSTEB(
-                                            12, 8, 12, 8),
+                                        padding: const EdgeInsetsDirectional
+                                            .fromSTEB(12, 8, 12, 8),
                                         child: Column(
                                           mainAxisSize: MainAxisSize.max,
                                           mainAxisAlignment:
@@ -518,8 +140,9 @@ class _DashboardWidgetState extends State<DashboardWidget> {
                                     borderRadius: BorderRadius.circular(12),
                                   ),
                                   child: Padding(
-                                    padding: const EdgeInsetsDirectional.fromSTEB(
-                                        12, 8, 12, 8),
+                                    padding:
+                                        const EdgeInsetsDirectional.fromSTEB(
+                                            12, 8, 12, 8),
                                     child: Column(
                                       mainAxisSize: MainAxisSize.max,
                                       mainAxisAlignment:
@@ -578,8 +201,8 @@ class _DashboardWidgetState extends State<DashboardWidget> {
                                                     )));
                                       },
                                       child: Padding(
-                                        padding: const EdgeInsetsDirectional.fromSTEB(
-                                            12, 8, 12, 8),
+                                        padding: const EdgeInsetsDirectional
+                                            .fromSTEB(12, 8, 12, 8),
                                         child: Column(
                                           mainAxisSize: MainAxisSize.max,
                                           mainAxisAlignment:
@@ -639,8 +262,8 @@ class _DashboardWidgetState extends State<DashboardWidget> {
                                                     )));
                                       },
                                       child: Padding(
-                                        padding: const EdgeInsetsDirectional.fromSTEB(
-                                            12, 8, 12, 8),
+                                        padding: const EdgeInsetsDirectional
+                                            .fromSTEB(12, 8, 12, 8),
                                         child: Column(
                                           mainAxisSize: MainAxisSize.max,
                                           mainAxisAlignment:
@@ -690,8 +313,9 @@ class _DashboardWidgetState extends State<DashboardWidget> {
                                     borderRadius: BorderRadius.circular(12),
                                   ),
                                   child: Padding(
-                                    padding: const EdgeInsetsDirectional.fromSTEB(
-                                        12, 8, 12, 8),
+                                    padding:
+                                        const EdgeInsetsDirectional.fromSTEB(
+                                            12, 8, 12, 8),
                                     child: Column(
                                       mainAxisSize: MainAxisSize.max,
                                       mainAxisAlignment:
@@ -700,9 +324,8 @@ class _DashboardWidgetState extends State<DashboardWidget> {
                                           CrossAxisAlignment.center,
                                       children: [
                                         Padding(
-                                          padding:
-                                              const EdgeInsetsDirectional.fromSTEB(
-                                                  0, 0, 0, 12),
+                                          padding: const EdgeInsetsDirectional
+                                              .fromSTEB(0, 0, 0, 12),
                                           child: Icon(
                                             Icons.group_add_rounded,
                                             color: FlutterFlowTheme.of(context)
@@ -753,8 +376,8 @@ class _DashboardWidgetState extends State<DashboardWidget> {
                                                     )));
                                       },
                                       child: Padding(
-                                        padding: const EdgeInsetsDirectional.fromSTEB(
-                                            12, 8, 12, 8),
+                                        padding: const EdgeInsetsDirectional
+                                            .fromSTEB(12, 8, 12, 8),
                                         child: Column(
                                           mainAxisSize: MainAxisSize.max,
                                           mainAxisAlignment:
@@ -763,8 +386,9 @@ class _DashboardWidgetState extends State<DashboardWidget> {
                                               CrossAxisAlignment.center,
                                           children: [
                                             Padding(
-                                              padding: const EdgeInsetsDirectional
-                                                  .fromSTEB(0, 0, 0, 12),
+                                              padding:
+                                                  const EdgeInsetsDirectional
+                                                      .fromSTEB(0, 0, 0, 12),
                                               child: Icon(
                                                 Icons.attach_money_rounded,
                                                 color:

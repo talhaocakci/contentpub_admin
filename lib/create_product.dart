@@ -6,8 +6,8 @@ import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:contentpub_admin/create_price.dart';
 import 'package:contentpub_admin/flutter_flow/flutter_flow_theme.dart';
 import 'package:contentpub_admin/models/ModelProvider.dart';
-import 'package:contentpub_admin/custom_models/api/PublishProductModel.dart';
 import 'package:contentpub_admin/custom_models/editable/editables.dart';
+import 'package:contentpub_admin/product_summary.dart';
 import 'package:contentpub_admin/state_container.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_multi_select_items/flutter_multi_select_items.dart';
@@ -40,6 +40,8 @@ class _CreateProductWidgetState extends State<CreateProductWidget> {
   late EditablePrice priceOneYear;
 
   Bundle? bundleToPublish;
+
+  bool savedBefore = false;
 
   final contentTypes = ContentType.values.toList();
 
@@ -242,18 +244,34 @@ class _CreateProductWidgetState extends State<CreateProductWidget> {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: <Widget>[
-                                /*Expanded(
-                                    child: CheckboxListTile(
-                                  title: Text("All courses"), //    <-- label
-                                  value: false,
-                                  onChanged: (newValue) {},
-                                )),
-                                Expanded(
-                                    child: CheckboxListTile(
-                                  title: Text("All documents"), //    <-- label
-                                  value: false,
-                                  onChanged: (newValue) {},
-                                )),*/
+                                Row(
+                                  children: [
+                                    Text('All courses'),
+                                    Checkbox(
+                                        value: editableBundle?.isAllCourses ??
+                                            false,
+                                        onChanged: (newValue) {
+                                          setState(() {
+                                            editableBundle?.isAllCourses =
+                                                newValue!;
+                                          });
+                                        })
+                                  ],
+                                ),
+                                Row(
+                                  children: [
+                                    Text('All files'),
+                                    Checkbox(
+                                        value: editableBundle?.isAllDocuments ??
+                                            false,
+                                        onChanged: (newValue) {
+                                          setState(() {
+                                            editableBundle?.isAllDocuments =
+                                                newValue!;
+                                          });
+                                        })
+                                  ],
+                                ),
                                 Expanded(
                                     child: MultiSelectCheckList(
                                   //maxSelectableCount: 5,
@@ -321,26 +339,9 @@ class _CreateProductWidgetState extends State<CreateProductWidget> {
                       Step(
                         title: const Text('Publish'),
                         content: bundleToPublish != null
-                            ? SizedBox(
-                                height: 300,
-                                child: Column(
-                                  children: <Widget>[
-                                    const Text('Basic Information'),
-                                    Text(bundleToPublish!.name ??
-                                        'Unknown name'),
-                                    Text(bundleToPublish!.description ??
-                                        'Unknown description'),
-                                    const Text('Prices'),
-                                    for (var p in bundleToPublish!.prices ??
-                                        List.empty())
-                                      Text(p.amount.toString()),
-                                    const Text('Contents'),
-                                    for (var c in bundleToPublish!.contents ??
-                                        List.empty())
-                                      Text((c as BundleContent).content.name ??
-                                          'Unknown name')
-                                  ],
-                                ))
+                            ? ProductSummary(
+                                bundle: bundleToPublish ?? Bundle(),
+                              )
                             : const Text('Bundle is not ready'),
                         isActive: _currentStep >= 0 && editableBundle != null,
                         state:
@@ -369,10 +370,14 @@ class _CreateProductWidgetState extends State<CreateProductWidget> {
               
               id
               isAllAccess
+              isAllCourses
+              isAllDocuments
               isFree
               name
               stripeProductId
               description
+              createdAt
+              updatedAt
               contents {
                   items {
                     contentId
@@ -380,6 +385,8 @@ class _CreateProductWidgetState extends State<CreateProductWidget> {
                     content {
                       id
                       name
+                      description
+                      type
                     }
                   }
                 }
@@ -393,6 +400,7 @@ class _CreateProductWidgetState extends State<CreateProductWidget> {
                   recurrenceType
                   stripePriceId
                   recurrenceInterval
+                  trialPeriod
                 }
               }
             }
@@ -554,8 +562,13 @@ class _CreateProductWidgetState extends State<CreateProductWidget> {
 
     final Bundle b = EditableBundle.fromEditable(editable);
 
-    final bundleSaveRequest = ModelMutations.create(b);
-    await Amplify.API.mutate(request: bundleSaveRequest);
+    if (!savedBefore) {
+      final bundleSaveRequest = ModelMutations.create(b);
+      await Amplify.API.mutate(request: bundleSaveRequest);
+    } else {
+      final saveRequest = ModelMutations.update(b);
+      await Amplify.API.mutate(request: saveRequest).response;
+    }
 
     if (b.contents != null) {
       for (BundleContent contentBundle in b.contents ?? List.empty()) {
@@ -589,7 +602,10 @@ class _CreateProductWidgetState extends State<CreateProductWidget> {
       }
     }
 
-    print(b.id);
+    setState(() {
+      editable = EditableBundle.toEditable(b);
+      savedBefore = true;
+    });
   }
 
   savePrices() async {
@@ -607,26 +623,7 @@ class _CreateProductWidgetState extends State<CreateProductWidget> {
     final initUri = Uri.parse(
         "${StateContainer.of(context).apigatewayBaseUrl()}/product/publish");
 
-    Product product = Product();
-    product.id = bundleToPublish!.id;
-    product.name = bundleToPublish!.name;
-    product.description = bundleToPublish!.description;
-
-    product.priceList = bundleToPublish!.prices!.map((price) {
-      ProductPrice productPrice = ProductPrice(id: price.id);
-      productPrice.currency = price.currency;
-      productPrice.amount = price.amount;
-      productPrice.intervalCount = price.recurrenceInterval;
-      productPrice.interval = price.recurrenceType?.name ?? '';
-      productPrice.purchaseType = price.purchaseType?.name ?? '';
-
-      return productPrice;
-    }).toList();
-
-    PublishProductModel publishProductModel =
-        PublishProductModel(product: product);
-
-    String body = '{"product":${jsonEncode(product)}}';
+    String body = '{"product":${jsonEncode(bundleToPublish)}}';
     //encode Map to JSON
 
     print(body);
@@ -647,10 +644,6 @@ class _CreateProductWidgetState extends State<CreateProductWidget> {
         await http.post(initUri, body: body, headers: headers);
 
     print('response: ${initResponse.body}');
-
-    var p = Product.fromJson(jsonDecode(initResponse.body));
-
-    print(p.stripeProductId);
 
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(

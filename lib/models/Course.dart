@@ -338,6 +338,12 @@ class Course extends Model {
           ModelOperation.UPDATE,
           ModelOperation.DELETE,
           ModelOperation.READ
+        ]),
+      AuthRule(
+        authStrategy: AuthStrategy.PUBLIC,
+        provider: AuthRuleProvider.IAM,
+        operations: [
+          ModelOperation.READ
         ])
     ];
     
