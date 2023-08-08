@@ -2,7 +2,7 @@
   "swagger" : "2.0",
   "info" : {
     "version" : "2023-01-18T21:19:17Z",
-    "title" : "javawebdevelopmentcom-api"
+    "title" : "contentpubio-api"
   },
   "host" : "uuqopdakf7.execute-api.eu-central-1.amazonaws.com",
   "basePath" : "/production",
@@ -218,7 +218,7 @@
           }
         },
         "security" : [ {
-          "javawebdevelopmentcom-EndUserAuthorizer" : [ ]
+          "contentpubio-EndUserAuthorizer" : [ ]
         } ],
         "x-amazon-apigateway-integration" : {
           "type" : "aws_proxy",
@@ -300,7 +300,7 @@
           }
         },
         "security" : [ {
-          "javawebdevelopmentcom-EndUserAuthorizer" : [ ]
+          "contentpubio-EndUserAuthorizer" : [ ]
         } ],
         "x-amazon-apigateway-integration" : {
           "type" : "aws_proxy",
@@ -760,7 +760,7 @@
     }
   },
   "securityDefinitions" : {
-    "javawebdevelopmentcom-EndUserAuthorizer" : {
+    "contentpubio-EndUserAuthorizer" : {
       "type" : "apiKey",
       "name" : "Authorization",
       "in" : "header",
