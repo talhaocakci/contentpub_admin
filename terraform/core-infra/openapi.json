@@ -4,7 +4,7 @@
     "version" : "2023-01-18T21:19:17Z",
     "title" : "contentpubio-api"
   },
-  "host" : "uuqopdakf7.execute-api.eu-central-1.amazonaws.com",
+  "host" : "uuqopdakf7.execute-api.${AWS::Region}.amazonaws.com",
   "basePath" : "/production",
   "schemes" : [ "https" ],
   "paths" : {
@@ -27,7 +27,7 @@
         "x-amazon-apigateway-integration" : {
           "type" : "aws_proxy",
           "httpMethod" : "POST",
-          "uri" : "arn:aws:apigateway:eu-central-1:lambda:path/2015-03-31/functions/arn:aws:lambda:eu-central-1:348467063208:function:stripeFunctions/invocations",
+          "uri" : "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:stripeFunctions/invocations",
           "responses" : {
             "default" : {
               "statusCode" : "200",
@@ -100,7 +100,7 @@
         "x-amazon-apigateway-integration" : {
           "type" : "aws_proxy",
           "httpMethod" : "POST",
-          "uri" : "arn:aws:apigateway:eu-central-1:lambda:path/2015-03-31/functions/arn:aws:lambda:eu-central-1:348467063208:function:stripeFunctions/invocations",
+          "uri" : "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:stripeFunctions/invocations",
           "responses" : {
             "default" : {
               "statusCode" : "200",
@@ -223,7 +223,7 @@
         "x-amazon-apigateway-integration" : {
           "type" : "aws_proxy",
           "httpMethod" : "POST",
-          "uri" : "arn:aws:apigateway:eu-central-1:lambda:path/2015-03-31/functions/arn:aws:lambda:eu-central-1:348467063208:function:s3PresignerFunction/invocations",
+          "uri" : "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:s3PresignerFunction/invocations",
           "responses" : {
             "default" : {
               "statusCode" : "200",
@@ -305,7 +305,7 @@
         "x-amazon-apigateway-integration" : {
           "type" : "aws_proxy",
           "httpMethod" : "POST",
-          "uri" : "arn:aws:apigateway:eu-central-1:lambda:path/2015-03-31/functions/arn:aws:lambda:eu-central-1:348467063208:function:s3PresignerFunction/invocations",
+          "uri" : "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:s3PresignerFunction/invocations",
           "responses" : {
             "default" : {
               "statusCode" : "200",
@@ -336,7 +336,7 @@
         "x-amazon-apigateway-integration" : {
           "type" : "aws_proxy",
           "httpMethod" : "POST",
-          "uri" : "arn:aws:apigateway:eu-central-1:lambda:path/2015-03-31/functions/arn:aws:lambda:eu-central-1:348467063208:function:s3PresignerFunction/invocations",
+          "uri" : "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:s3PresignerFunction/invocations",
           "responses" : {
             "default" : {
               "statusCode" : "200",
@@ -409,7 +409,7 @@
         "x-amazon-apigateway-integration" : {
           "type" : "aws_proxy",
           "httpMethod" : "POST",
-          "uri" : "arn:aws:apigateway:eu-central-1:lambda:path/2015-03-31/functions/arn:aws:lambda:eu-central-1:348467063208:function:stripeFunctions/invocations",
+          "uri" : "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:stripeFunctions/invocations",
           "responses" : {
             "default" : {
               "statusCode" : "200",
@@ -488,7 +488,7 @@
         "x-amazon-apigateway-integration" : {
           "type" : "aws",
           "httpMethod" : "POST",
-          "uri" : "arn:aws:apigateway:eu-central-1:lambda:path/2015-03-31/functions/arn:aws:lambda:eu-central-1:348467063208:function:stripeFunctions/invocations",
+          "uri" : "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:stripeFunctions/invocations",
           "responses" : {
             "default" : {
               "statusCode" : "200",
@@ -567,7 +567,7 @@
         "x-amazon-apigateway-integration" : {
           "type" : "aws_proxy",
           "httpMethod" : "POST",
-          "uri" : "arn:aws:apigateway:eu-central-1:lambda:path/2015-03-31/functions/arn:aws:lambda:eu-central-1:348467063208:function:stripeFunctions/invocations",
+          "uri" : "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:stripeFunctions/invocations",
           "responses" : {
             "default" : {
               "statusCode" : "200",
@@ -640,7 +640,7 @@
         "x-amazon-apigateway-integration" : {
           "type" : "aws_proxy",
           "httpMethod" : "POST",
-          "uri" : "arn:aws:apigateway:eu-central-1:lambda:path/2015-03-31/functions/arn:aws:lambda:eu-central-1:348467063208:function:stripeFunctions/invocations",
+          "uri" : "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:stripeFunctions/invocations",
           "responses" : {
             "default" : {
               "statusCode" : "200",
@@ -713,7 +713,7 @@
         "x-amazon-apigateway-integration" : {
           "type" : "aws_proxy",
           "httpMethod" : "POST",
-          "uri" : "arn:aws:apigateway:eu-central-1:lambda:path/2015-03-31/functions/arn:aws:lambda:eu-central-1:348467063208:function:stripeFunctions/invocations",
+          "uri" : "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:stripeFunctions/invocations",
           "passthroughBehavior" : "when_no_match"
         }
       },
@@ -767,7 +767,7 @@
       "x-amazon-apigateway-authtype" : "cognito_user_pools",
       "x-amazon-apigateway-authorizer" : {
         "type" : "cognito_user_pools",
-        "providerARNs" : [ "arn:aws:cognito-idp:eu-central-1:348467063208:userpool/eu-central-1_eu-central-1_JR4g3qGS8" ]
+        "providerARNs" : [ "arn:aws:cognito-idp:${AWS::Region}:${AWS::AccountId}:userpool/${AWS::Region}_${AWS::Region}_JR4g3qGS8" ]
       }
     }
   },
