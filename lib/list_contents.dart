@@ -62,8 +62,7 @@ class _ListContentsWidgetState extends State<ListContentsWidget> {
                 mainAxisSize: MainAxisSize.max,
                 children: [
                   Padding(
-                    padding:
-                        const EdgeInsetsDirectional.fromSTEB(20, 12, 20, 0),
+                    padding: const EdgeInsetsDirectional.fromSTEB(20, 12, 20, 0),
                     child: Row(
                       mainAxisSize: MainAxisSize.max,
                       mainAxisAlignment: MainAxisAlignment.start,
@@ -83,16 +82,21 @@ class _ListContentsWidgetState extends State<ListContentsWidget> {
                       child: Row(
                         mainAxisSize: MainAxisSize.max,
                         children: [
-                          BoxedButtonWidget(
-                              goToWidget: CreateCourseWidget(courseId: ''),
-                              icon: Icons.video_file,
-                              text: 'Video Course'),
+                          BoxedButtonWidget(goToWidget: CreateCourseWidget(courseId: ''), icon: Icons.video_file, text: 'Video Course'),
                           BoxedButtonWidget(
                               goToWidget: CreateDocumentWidget(
                                 contentId: '',
+                                type: ContentType.DOCUMENT,
                               ),
                               icon: Icons.edit_document,
-                              text: 'Document')
+                              text: 'Document'),
+                          BoxedButtonWidget(
+                              goToWidget: CreateDocumentWidget(
+                                contentId: '',
+                                type: ContentType.ARTICLE,
+                              ),
+                              icon: Icons.edit_document,
+                              text: 'Article')
                         ],
                       ),
                     ),
@@ -114,11 +118,8 @@ class _ListContentsWidgetState extends State<ListContentsWidget> {
                     child: contents.isEmpty
                         ? Padding(
                             padding: const EdgeInsets.all(50),
-                            child: Text(
-                                'It is time to create something fantastic and to share with the world',
-                                style: FlutterFlowTheme.of(context)
-                                    .title1
-                                    .copyWith(fontWeight: FontWeight.w400)))
+                            child: Text('It is time to create something fantastic and to share with the world',
+                                style: FlutterFlowTheme.of(context).title1.copyWith(fontWeight: FontWeight.w400)))
                         : ListView(
                             padding: EdgeInsets.zero,
                             primary: false,
@@ -127,96 +128,67 @@ class _ListContentsWidgetState extends State<ListContentsWidget> {
                             children: [
                               for (var content in contents)
                                 Padding(
-                                  padding: const EdgeInsetsDirectional.fromSTEB(
-                                      16, 8, 16, 0),
+                                  padding: const EdgeInsetsDirectional.fromSTEB(16, 8, 16, 0),
                                   child: SizedBox(
                                     width: double.infinity,
                                     height: 200,
                                     child: Padding(
-                                      padding:
-                                          const EdgeInsetsDirectional.fromSTEB(
-                                              0, 120, 0, 0),
+                                      padding: const EdgeInsetsDirectional.fromSTEB(0, 120, 0, 0),
                                       child: Container(
                                         width: 100,
                                         height: 100,
                                         decoration: BoxDecoration(
-                                          color: FlutterFlowTheme.of(context)
-                                              .secondaryBackground,
+                                          color: FlutterFlowTheme.of(context).secondaryBackground,
                                         ),
                                         child: Padding(
-                                          padding: const EdgeInsetsDirectional
-                                              .fromSTEB(16, 0, 16, 0),
+                                          padding: const EdgeInsetsDirectional.fromSTEB(16, 0, 16, 0),
                                           child: Row(
                                             mainAxisSize: MainAxisSize.max,
                                             children: [
                                               Expanded(
                                                 child: Column(
-                                                  mainAxisSize:
-                                                      MainAxisSize.max,
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.center,
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
+                                                  mainAxisSize: MainAxisSize.max,
+                                                  mainAxisAlignment: MainAxisAlignment.center,
+                                                  crossAxisAlignment: CrossAxisAlignment.start,
                                                   children: [
                                                     Text(
-                                                      content?.name ??
-                                                          'Unknown name',
-                                                      style:
-                                                          FlutterFlowTheme.of(
-                                                                  context)
-                                                              .title1,
+                                                      content?.name ?? 'Unknown name',
+                                                      style: FlutterFlowTheme.of(context).title1,
                                                     ),
                                                     Text(
-                                                      content?.type?.name ??
-                                                          'Unknown type',
-                                                      style:
-                                                          FlutterFlowTheme.of(
-                                                                  context)
-                                                              .bodyText1
-                                                              .override(
-                                                                fontFamily:
-                                                                    'Lexend Deca',
-                                                                color: const Color(
-                                                                    0xFF39D2C0),
-                                                                fontSize: 14,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .normal,
-                                                              ),
+                                                      content?.type?.name ?? 'Unknown type',
+                                                      style: FlutterFlowTheme.of(context).bodyText1.override(
+                                                            fontFamily: 'Lexend Deca',
+                                                            color: const Color(0xFF39D2C0),
+                                                            fontSize: 14,
+                                                            fontWeight: FontWeight.normal,
+                                                          ),
                                                     ),
                                                   ],
                                                 ),
                                               ),
                                               Column(
                                                 mainAxisSize: MainAxisSize.max,
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.center,
+                                                mainAxisAlignment: MainAxisAlignment.center,
                                                 children: [
                                                   FFButtonWidget(
                                                     onPressed: () {
-                                                      if (content?.type ==
-                                                          ContentType.COURSE) {
-                                                        print(
-                                                            'Content icindeki object: ${content!.objectId}');
+                                                      if (content?.type == ContentType.COURSE) {
+                                                        print('Content icindeki object: ${content!.objectId}');
                                                         Navigator.push(
                                                             context,
                                                             MaterialPageRoute(
-                                                                builder:
-                                                                    (context) =>
-                                                                        CreateCourseWidget(
-                                                                          courseId:
-                                                                              content.objectId ?? '',
-                                                                        )));
+                                                                builder: (context) => CreateCourseWidget(
+                                                                      courseId: content.objectId ?? '',
+                                                                    )));
                                                       } else {
                                                         Navigator.push(
                                                             context,
                                                             MaterialPageRoute(
-                                                                builder:
-                                                                    (context) =>
-                                                                        CreateDocumentWidget(
-                                                                          contentId:
-                                                                              content!.id,
-                                                                        )));
+                                                                builder: (context) => CreateDocumentWidget(
+                                                                      contentId: content!.id,
+                                                                      type: content.type ?? ContentType.ARTICLE,
+                                                                    )));
                                                       }
                                                     },
                                                     text: 'Edit',
@@ -228,51 +200,34 @@ class _ListContentsWidgetState extends State<ListContentsWidget> {
                                                     options: FFButtonOptions(
                                                       width: 120,
                                                       height: 40,
-                                                      color: const Color(
-                                                          0xFF39D2C0),
-                                                      textStyle:
-                                                          GoogleFonts.getFont(
+                                                      color: const Color(0xFF39D2C0),
+                                                      textStyle: GoogleFonts.getFont(
                                                         'Lexend Deca',
                                                         color: Colors.white,
                                                         fontSize: 14,
                                                       ),
                                                       elevation: 3,
-                                                      borderSide:
-                                                          const BorderSide(
-                                                        color:
-                                                            Colors.transparent,
+                                                      borderSide: const BorderSide(
+                                                        color: Colors.transparent,
                                                         width: 1,
                                                       ),
                                                     ),
                                                   ),
                                                   FFButtonWidget(
                                                     onPressed: () {
-                                                      print(
-                                                          'before action isPublished: ${content!.isPublished}');
+                                                      print('before action isPublished: ${content!.isPublished}');
                                                       // publish the content
-                                                      if ((content.isPublished ??
-                                                              false) ==
-                                                          false) {
-                                                        publishTheContent(
-                                                            content,
-                                                            true,
-                                                            false);
+                                                      if ((content.isPublished ?? false) == false) {
+                                                        publishTheContent(content, true, false);
                                                       } else {
-                                                        publishTheContent(
-                                                            content,
-                                                            false,
-                                                            true);
+                                                        publishTheContent(content, false, true);
                                                       }
                                                       getContents();
                                                       setState(() {
                                                         contents = contents;
                                                       });
                                                     },
-                                                    text:
-                                                        content!.isPublished ??
-                                                                false
-                                                            ? 'Archive'
-                                                            : 'Publish',
+                                                    text: content!.isPublished ?? false ? 'Archive' : 'Publish',
                                                     icon: const Icon(
                                                       Icons.add_rounded,
                                                       color: Colors.white,
@@ -281,19 +236,15 @@ class _ListContentsWidgetState extends State<ListContentsWidget> {
                                                     options: FFButtonOptions(
                                                       width: 120,
                                                       height: 40,
-                                                      color: const Color(
-                                                          0xFF39D2C0),
-                                                      textStyle:
-                                                          GoogleFonts.getFont(
+                                                      color: const Color(0xFF39D2C0),
+                                                      textStyle: GoogleFonts.getFont(
                                                         'Lexend Deca',
                                                         color: Colors.white,
                                                         fontSize: 14,
                                                       ),
                                                       elevation: 3,
-                                                      borderSide:
-                                                          const BorderSide(
-                                                        color:
-                                                            Colors.transparent,
+                                                      borderSide: const BorderSide(
+                                                        color: Colors.transparent,
                                                         width: 1,
                                                       ),
                                                     ),
@@ -318,8 +269,7 @@ class _ListContentsWidgetState extends State<ListContentsWidget> {
         ]));
   }
 
-  Future<void> publishTheContent(
-      Content content, bool isPublished, isArchived) async {
+  Future<void> publishTheContent(Content content, bool isPublished, isArchived) async {
     String updateQuery = '''
      mutation MyMutation {
       updateContent(input: {id: "${content.id}", isPublished: $isPublished, isArchived: $isArchived}) {
@@ -342,8 +292,7 @@ class _ListContentsWidgetState extends State<ListContentsWidget> {
         : 'Archiving the content. Owners will still be able to access it but audience will not be able to buy it anymore';
 
     ScaffoldMessenger.of(context).clearSnackBars();
-    ScaffoldMessenger.of(context)
-        .showSnackBar(SnackBar(content: Text(message)));
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)));
 
     var response = await Amplify.API.mutate(request: request).response;
     print(response.data);
@@ -378,11 +327,7 @@ class _ListContentsWidgetState extends State<ListContentsWidget> {
             }
     ''';
 
-    final request = GraphQLRequest(
-        document: graphQLQuery,
-        modelType: const PaginatedModelType(Content.classType),
-        variables: <String, String>{},
-        decodePath: listContents);
+    final request = GraphQLRequest(document: graphQLQuery, modelType: const PaginatedModelType(Content.classType), variables: <String, String>{}, decodePath: listContents);
 
     try {
       var response = await Amplify.API.query(request: request).response;
@@ -392,9 +337,7 @@ class _ListContentsWidgetState extends State<ListContentsWidget> {
         print(content);
       }
 
-      retrievedContents.sort((a, b) =>
-          (b!.updatedAt ?? TemporalDateTime(DateTime.now()))
-              .compareTo(a!.updatedAt ?? TemporalDateTime(DateTime.now())));
+      retrievedContents.sort((a, b) => (b!.updatedAt ?? TemporalDateTime(DateTime.now())).compareTo(a!.updatedAt ?? TemporalDateTime(DateTime.now())));
 
       retrievedContents.forEach((element) {
         print(element!.updatedAt);

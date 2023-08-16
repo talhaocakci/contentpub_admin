@@ -12,9 +12,9 @@ import '../flutter_flow/flutter_flow_widgets.dart';
 
 class CreateDocumentWidget extends StatefulWidget {
   final String contentId;
+  final ContentType type;
 
-  const CreateDocumentWidget({Key? key, required this.contentId})
-      : super(key: key);
+  const CreateDocumentWidget({Key? key, required this.contentId, required this.type}) : super(key: key);
 
   @override
   _CreateDocumentWidgetState createState() => _CreateDocumentWidgetState();
@@ -64,7 +64,6 @@ class _CreateDocumentWidgetState extends State<CreateDocumentWidget> {
 
     return editableContent!;
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -137,8 +136,7 @@ class _CreateDocumentWidgetState extends State<CreateDocumentWidget> {
                           mainAxisSize: MainAxisSize.max,
                           children: [
                             Padding(
-                              padding:
-                                  const EdgeInsetsDirectional.fromSTEB(8, 8, 8, 8),
+                              padding: const EdgeInsetsDirectional.fromSTEB(8, 8, 8, 8),
                               child: Row(
                                 mainAxisSize: MainAxisSize.max,
                                 children: [
@@ -152,45 +150,37 @@ class _CreateDocumentWidgetState extends State<CreateDocumentWidget> {
                                       obscureText: false,
                                       decoration: InputDecoration(
                                         labelText: 'Title',
-                                        hintStyle: FlutterFlowTheme.of(context)
-                                            .bodyText2,
+                                        hintStyle: FlutterFlowTheme.of(context).bodyText2,
                                         enabledBorder: OutlineInputBorder(
                                           borderSide: BorderSide(
-                                            color: FlutterFlowTheme.of(context)
-                                                .primaryBackground,
+                                            color: FlutterFlowTheme.of(context).primaryBackground,
                                             width: 2,
                                           ),
-                                          borderRadius:
-                                              BorderRadius.circular(8),
+                                          borderRadius: BorderRadius.circular(8),
                                         ),
                                         focusedBorder: OutlineInputBorder(
                                           borderSide: BorderSide(
-                                            color: FlutterFlowTheme.of(context)
-                                                .primaryBackground,
+                                            color: FlutterFlowTheme.of(context).primaryBackground,
                                             width: 2,
                                           ),
-                                          borderRadius:
-                                              BorderRadius.circular(8),
+                                          borderRadius: BorderRadius.circular(8),
                                         ),
                                         errorBorder: OutlineInputBorder(
                                           borderSide: const BorderSide(
                                             color: Color(0x00000000),
                                             width: 2,
                                           ),
-                                          borderRadius:
-                                              BorderRadius.circular(8),
+                                          borderRadius: BorderRadius.circular(8),
                                         ),
                                         focusedErrorBorder: OutlineInputBorder(
                                           borderSide: const BorderSide(
                                             color: Color(0x00000000),
                                             width: 2,
                                           ),
-                                          borderRadius:
-                                              BorderRadius.circular(8),
+                                          borderRadius: BorderRadius.circular(8),
                                         ),
                                       ),
-                                      style: FlutterFlowTheme.of(context)
-                                          .bodyText1,
+                                      style: FlutterFlowTheme.of(context).bodyText1,
                                       maxLines: null,
                                     ),
                                   ),
@@ -198,8 +188,7 @@ class _CreateDocumentWidgetState extends State<CreateDocumentWidget> {
                               ),
                             ),
                             Padding(
-                              padding:
-                                  const EdgeInsetsDirectional.fromSTEB(8, 8, 8, 8),
+                              padding: const EdgeInsetsDirectional.fromSTEB(8, 8, 8, 8),
                               child: Row(
                                 mainAxisSize: MainAxisSize.max,
                                 children: [
@@ -210,77 +199,80 @@ class _CreateDocumentWidgetState extends State<CreateDocumentWidget> {
                                         editableContent!.dirty = true;
                                       },
                                       obscureText: false,
-                                      initialValue:
-                                          editableContent?.description ?? '',
+                                      initialValue: editableContent?.description ?? '',
                                       decoration: InputDecoration(
                                         labelText: 'Description',
-                                        hintStyle: FlutterFlowTheme.of(context)
-                                            .bodyText2,
+                                        hintStyle: FlutterFlowTheme.of(context).bodyText2,
                                         enabledBorder: OutlineInputBorder(
                                           borderSide: BorderSide(
-                                            color: FlutterFlowTheme.of(context)
-                                                .primaryBackground,
+                                            color: FlutterFlowTheme.of(context).primaryBackground,
                                             width: 2,
                                           ),
-                                          borderRadius:
-                                              BorderRadius.circular(8),
+                                          borderRadius: BorderRadius.circular(8),
                                         ),
                                         focusedBorder: OutlineInputBorder(
                                           borderSide: BorderSide(
-                                            color: FlutterFlowTheme.of(context)
-                                                .primaryBackground,
+                                            color: FlutterFlowTheme.of(context).primaryBackground,
                                             width: 2,
                                           ),
-                                          borderRadius:
-                                              BorderRadius.circular(8),
+                                          borderRadius: BorderRadius.circular(8),
                                         ),
                                         errorBorder: OutlineInputBorder(
                                           borderSide: const BorderSide(
                                             color: Color(0x00000000),
                                             width: 2,
                                           ),
-                                          borderRadius:
-                                              BorderRadius.circular(8),
+                                          borderRadius: BorderRadius.circular(8),
                                         ),
                                         focusedErrorBorder: OutlineInputBorder(
                                           borderSide: const BorderSide(
                                             color: Color(0x00000000),
                                             width: 2,
                                           ),
-                                          borderRadius:
-                                              BorderRadius.circular(8),
+                                          borderRadius: BorderRadius.circular(8),
                                         ),
                                       ),
-                                      style: FlutterFlowTheme.of(context)
-                                          .bodyText1,
+                                      style: FlutterFlowTheme.of(context).bodyText1,
                                       maxLines: null,
                                     ),
                                   ),
                                 ],
                               ),
                             ),
-                            const Text("Your file"),
-                            Row(
-                              mainAxisSize: MainAxisSize.max,
-                              children: [
+                            if (widget.type == ContentType.ARTICLE) const Text("Content"),
+                            if (widget.type == ContentType.ARTICLE)
+                              Row(mainAxisSize: MainAxisSize.max, children: [
                                 Expanded(
-                                  child: FileUploadWithDrop(
-                                      remoteDirectory: editableContent!.id,
-                                      remoteFileName: 'file1',
-                                      isPublic: false,
-                                      remoteUrl: editableContent?.s3Url,
-                                      fileType: FileType.OTHER,
-                                      onVideoDurationKnown: (_) {},
-                                      onComplete: (uploadedFile) {
-                                        editableContent?.s3Url =
-                                            uploadedFile.remoteUrl;
-                                      },
-                                      onClear: () {
-                                        print('Clear the object here as well');
-                                      }),
-                                ),
-                              ],
-                            ),
+                                    child: TextFormField(
+                                        initialValue: editableContent?.body ?? '',
+                                        //initialValue: editableContent?.body ?? '',
+                                        onChanged: (value) {
+                                          editableContent?.body = value;
+                                          editableContent!.dirty = true;
+                                        })),
+                              ]),
+                            if (widget.type == ContentType.DOCUMENT) const Text("Your file"),
+                            if (widget.type == ContentType.DOCUMENT)
+                              Row(
+                                mainAxisSize: MainAxisSize.max,
+                                children: [
+                                  Expanded(
+                                    child: FileUploadWithDrop(
+                                        remoteDirectory: editableContent!.id,
+                                        remoteFileName: 'file1',
+                                        isPublic: false,
+                                        remoteUrl: editableContent?.s3Url,
+                                        fileType: FileType.OTHER,
+                                        onVideoDurationKnown: (_) {},
+                                        onComplete: (uploadedFile) {
+                                          editableContent?.s3Url = uploadedFile.remoteUrl;
+                                        },
+                                        onClear: () {
+                                          print('Clear the object here as well');
+                                        }),
+                                  ),
+                                ],
+                              ),
                             const Text('Cover photo:'),
                             Row(
                               mainAxisSize: MainAxisSize.max,
@@ -294,8 +286,7 @@ class _CreateDocumentWidgetState extends State<CreateDocumentWidget> {
                                       fileType: FileType.PICTURE,
                                       onVideoDurationKnown: (_) {},
                                       onComplete: (uploadedFile) {
-                                        editableContent?.photoUrl =
-                                            uploadedFile.remoteUrl;
+                                        editableContent?.photoUrl = uploadedFile.remoteUrl;
                                       },
                                       onClear: () {
                                         print('Clear the object here as well');
@@ -303,6 +294,7 @@ class _CreateDocumentWidgetState extends State<CreateDocumentWidget> {
                                 ),
                               ],
                             ),
+                            if (widget.type == ContentType.DOCUMENT) const Text("Your file"),
                             const Text('Promo video :'),
                             Row(
                               mainAxisSize: MainAxisSize.max,
@@ -315,8 +307,7 @@ class _CreateDocumentWidgetState extends State<CreateDocumentWidget> {
                                       fileType: FileType.VIDEO,
                                       remoteUrl: editableContent?.promoVideoUrl,
                                       onComplete: (uploadedFile) {
-                                        editableContent?.promoVideoUrl =
-                                            uploadedFile.remoteUrl;
+                                        editableContent?.promoVideoUrl = uploadedFile.remoteUrl;
                                       },
                                       onVideoDurationKnown: (_) {},
                                       onClear: () {
@@ -328,29 +319,19 @@ class _CreateDocumentWidgetState extends State<CreateDocumentWidget> {
                             const Text('Authors'),
                             Row(
                               children: [
-                                for (var contentCoworker
-                                    in content!.Coworkers ?? List.empty())
+                                for (var contentCoworker in content!.Coworkers ?? List.empty())
                                   Expanded(
                                       child: DropdownButtonFormField<Coworker>(
                                     value: contentCoworker!.coworker,
                                     items: [
-                                      for (var coworker in coworkers!)
-                                        DropdownMenuItem(
-                                            value: coworker,
-                                            child: Text(coworker!.displayName ??
-                                                'Unknown author')),
+                                      for (var coworker in coworkers!) DropdownMenuItem(value: coworker, child: Text(coworker!.displayName ?? 'Unknown author')),
                                     ],
                                     onChanged: (value) {
-                                      print(
-                                          'author selection changed $value');
+                                      print('author selection changed $value');
 
-                                      ContentCoworker cc = ContentCoworker(
-                                          id: '${content!.id}--${value!.id}}',
-                                          coworker: value,
-                                          content: content!);
+                                      ContentCoworker cc = ContentCoworker(id: '${content!.id}--${value!.id}}', coworker: value, content: content!);
 
-                                      editableContent!.coworkerRelations =
-                                          List.from([cc]);
+                                      editableContent!.coworkerRelations = List.from([cc]);
                                       print(value);
                                     },
                                   ))
@@ -358,8 +339,7 @@ class _CreateDocumentWidgetState extends State<CreateDocumentWidget> {
                             ),
                             Row(children: [
                               Padding(
-                                padding: const EdgeInsetsDirectional.fromSTEB(
-                                    0, 12, 0, 12),
+                                padding: const EdgeInsetsDirectional.fromSTEB(0, 12, 0, 12),
                                 child: FFButtonWidget(
                                   onPressed: () {
                                     saveContent();
@@ -372,9 +352,7 @@ class _CreateDocumentWidgetState extends State<CreateDocumentWidget> {
                                     width: 300,
                                     height: 50,
                                     color: const Color(0xFF4B39EF),
-                                    textStyle: FlutterFlowTheme.of(context)
-                                        .bodyText2
-                                        .override(
+                                    textStyle: FlutterFlowTheme.of(context).bodyText2.override(
                                           fontFamily: 'Lexend Deca',
                                           color: Colors.white,
                                           fontSize: 14,
@@ -420,6 +398,7 @@ class _CreateDocumentWidgetState extends State<CreateDocumentWidget> {
                 s3Url
                 type
                 description
+                body
                  Coworkers {
                   items {
                     contentId
@@ -436,10 +415,7 @@ class _CreateDocumentWidgetState extends State<CreateDocumentWidget> {
             }
     ''';
 
-    final request = GraphQLRequest<Content>(
-        document: graphQLQuery,
-        modelType: Content.classType,
-        decodePath: getContent);
+    final request = GraphQLRequest<Content>(document: graphQLQuery, modelType: Content.classType, decodePath: getContent);
 
     try {
       var response = await Amplify.API.query(request: request).response;
@@ -470,10 +446,7 @@ class _CreateDocumentWidgetState extends State<CreateDocumentWidget> {
       }
     ''';
 
-    final request = GraphQLRequest(
-        document: graphQLQuery,
-        modelType: const PaginatedModelType(Coworker.classType),
-        decodePath: 'listCoworkers');
+    final request = GraphQLRequest(document: graphQLQuery, modelType: const PaginatedModelType(Coworker.classType), decodePath: 'listCoworkers');
 
     try {
       var response = await Amplify.API.query(request: request).response;
@@ -523,12 +496,13 @@ class _CreateDocumentWidgetState extends State<CreateDocumentWidget> {
 
     print('editableContent new ${editableContent!.newItem}');
 
+    editableContent?.type = widget.type;
+
     if (editableContent!.newItem == true) {
       content = EditableContent.fromEditable(editableContent!);
       final contentSaveRequest = ModelMutations.create(content!);
 
-      var response =
-          await Amplify.API.mutate(request: contentSaveRequest).response;
+      var response = await Amplify.API.mutate(request: contentSaveRequest).response;
       print(response.data);
       print(response.errors);
 
@@ -539,8 +513,7 @@ class _CreateDocumentWidgetState extends State<CreateDocumentWidget> {
 
       final contentSaveRequest = ModelMutations.update(content!);
 
-      var response =
-          await Amplify.API.mutate(request: contentSaveRequest).response;
+      var response = await Amplify.API.mutate(request: contentSaveRequest).response;
 
       print(response.data);
       print(response.errors);
@@ -549,8 +522,7 @@ class _CreateDocumentWidgetState extends State<CreateDocumentWidget> {
     }
 
     if (content!.Coworkers != null) {
-      for (ContentCoworker contentCoworker
-          in content!.Coworkers ?? List.empty()) {
+      for (ContentCoworker contentCoworker in content!.Coworkers ?? List.empty()) {
         String graphQLQuery = ''' mutation MyMutation {
               createContentCoworker(
                 input: {

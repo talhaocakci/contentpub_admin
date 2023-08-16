@@ -17,10 +17,7 @@ class EditableCourse {
   bool newItem = false;
 
   static Course fromEditable(EditableCourse editable) {
-    List<Section>? sections = (editable.Sections != null)
-        ? editable.Sections?.map((e) => EditableSection.fromEditable(e))
-            .toList()
-        : List.empty();
+    List<Section>? sections = (editable.Sections != null) ? editable.Sections?.map((e) => EditableSection.fromEditable(e)).toList() : List.empty();
 
     return Course(
         id: editable.id,
@@ -38,9 +35,7 @@ class EditableCourse {
   }
 
   static EditableCourse toEditable(Course course) {
-    List<EditableSection>? sections = (course.Sections != null)
-        ? course.Sections?.map((e) => EditableSection.toEditable(e)).toList()
-        : List.empty();
+    List<EditableSection>? sections = (course.Sections != null) ? course.Sections?.map((e) => EditableSection.toEditable(e)).toList() : List.empty();
 
     sections!.sort((a, b) => (a.order ?? 0).compareTo(b.order ?? 0));
 
@@ -74,16 +69,10 @@ class EditableSection {
   bool dirty = false;
   bool newItem = false;
 
-  EditableSection(
-      {required this.courseID,
-      required this.name,
-      this.dirty = true,
-      this.newItem = true});
+  EditableSection({required this.courseID, required this.name, this.dirty = true, this.newItem = true});
 
   static Section fromEditable(EditableSection editable) {
-    List<Lesson>? editableLessons = (editable.Lessons != null)
-        ? editable.Lessons?.map((e) => EditableLesson.fromEditable(e)).toList()
-        : List.empty();
+    List<Lesson>? editableLessons = (editable.Lessons != null) ? editable.Lessons?.map((e) => EditableLesson.fromEditable(e)).toList() : List.empty();
 
     return Section(
         id: editable.id,
@@ -96,14 +85,11 @@ class EditableSection {
   }
 
   static EditableSection toEditable(Section section) {
-    List<EditableLesson>? editableLessons = (section.Lessons != null)
-        ? section.Lessons?.map((e) => EditableLesson.toEditable(e)).toList()
-        : List.empty();
+    List<EditableLesson>? editableLessons = (section.Lessons != null) ? section.Lessons?.map((e) => EditableLesson.toEditable(e)).toList() : List.empty();
 
     editableLessons!.sort((a, b) => (a.order ?? 0).compareTo(b.order ?? 0));
 
-    EditableSection editableSection =
-        EditableSection(courseID: section.courseID, name: section.name);
+    EditableSection editableSection = EditableSection(courseID: section.courseID, name: section.name);
 
     editableSection.id = section.id;
     editableSection.name = section.name;
@@ -130,13 +116,7 @@ class EditableLesson {
   bool dirty = false;
   bool newItem = false;
 
-  EditableLesson(
-      {required this.sectionID,
-      required this.name,
-      this.duration,
-      this.id,
-      this.dirty = true,
-      this.newItem = true});
+  EditableLesson({required this.sectionID, required this.name, this.duration, this.id, this.dirty = true, this.newItem = true});
 
   static Lesson fromEditable(EditableLesson editable) {
     return Lesson(
@@ -150,8 +130,7 @@ class EditableLesson {
   }
 
   static EditableLesson toEditable(Lesson lesson) {
-    EditableLesson editableLesson =
-        EditableLesson(sectionID: lesson.sectionID, name: lesson.name);
+    EditableLesson editableLesson = EditableLesson(sectionID: lesson.sectionID, name: lesson.name);
 
     editableLesson.description = lesson.description;
     editableLesson.video = lesson.video;
@@ -183,9 +162,7 @@ class EditableBundle {
   EditableBundle({required this.id});
 
   static EditableBundle toEditable(Bundle bundle) {
-    List<EditablePrice>? editablePrices = (bundle.prices != null)
-        ? bundle.prices?.map((e) => EditablePrice.toEditable(e)).toList()
-        : List.empty();
+    List<EditablePrice>? editablePrices = (bundle.prices != null) ? bundle.prices?.map((e) => EditablePrice.toEditable(e)).toList() : List.empty();
 
     EditableBundle editable = EditableBundle(id: bundle.id);
     editable.name = bundle.name;
@@ -204,9 +181,7 @@ class EditableBundle {
   }
 
   static Bundle fromEditable(EditableBundle editable) {
-    List<Price>? prices = (editable.prices != null)
-        ? editable.prices?.map((e) => EditablePrice.fromEditable(e)).toList()
-        : List.empty();
+    List<Price>? prices = (editable.prices != null) ? editable.prices?.map((e) => EditablePrice.fromEditable(e)).toList() : List.empty();
 
     Bundle b = Bundle(
         id: editable.id,
@@ -235,12 +210,7 @@ class EditablePrice {
   double? amount;
   String? bundleID;
 
-  EditablePrice(
-      {required this.id,
-      this.purchaseType,
-      this.recurrenceType,
-      this.trialDays,
-      this.recurrenceInterval});
+  EditablePrice({required this.id, this.purchaseType, this.recurrenceType, this.trialDays, this.recurrenceInterval});
 
   static EditablePrice toEditable(Price price) {
     EditablePrice editable = EditablePrice(id: price.id);
@@ -279,6 +249,7 @@ class EditableContent {
   String? owner;
   String? photoUrl;
   String? promoVideoUrl;
+  String? body;
   int? duration;
   List<ContentCoworker>? coworkerRelations;
   bool? isPublished = false;
@@ -290,8 +261,7 @@ class EditableContent {
   EditableContent({required this.id, required this.type, this.newItem});
 
   static EditableContent toEditable(Content content) {
-    EditableContent editable = EditableContent(
-        id: content.id, type: content.type ?? ContentType.DOCUMENT);
+    EditableContent editable = EditableContent(id: content.id, type: content.type ?? ContentType.DOCUMENT);
 
     editable.name = content.name;
     editable.description = content.description;
@@ -304,6 +274,7 @@ class EditableContent {
     editable.isPublished = content.isPublished;
     editable.isArchived = content.isArchived;
     editable.coworkerRelations = content.Coworkers;
+    editable.body = content.body;
 
     return editable;
   }
@@ -321,6 +292,7 @@ class EditableContent {
         promoVideoUrl: editable.promoVideoUrl,
         isPublished: editable.isPublished,
         Coworkers: editable.coworkerRelations,
+        body: editable.body,
         isArchived: editable.isArchived);
 
     return content;
@@ -336,20 +308,10 @@ class EditableCoworker {
   bool dirty = false;
   bool newItem = false;
 
-  EditableCoworker(
-      {required this.id,
-      this.email,
-      this.displayName,
-      this.photoUrl,
-      this.description});
+  EditableCoworker({required this.id, this.email, this.displayName, this.photoUrl, this.description});
 
   static Coworker fromEditable(EditableCoworker editable) {
-    return Coworker(
-        id: editable.id,
-        displayName: editable.displayName,
-        description: editable.description,
-        photoUrl: editable.photoUrl,
-        email: editable.email);
+    return Coworker(id: editable.id, displayName: editable.displayName, description: editable.description, photoUrl: editable.photoUrl, email: editable.email);
   }
 
   static EditableCoworker toEditable(Coworker coworker) {
@@ -376,10 +338,8 @@ class EditableTenant {
   EditableTenant({required this.id});
 
   static Tenant fromEditable(EditableTenant editable) {
-    var staging = EditableTenantConfiguration.fromEditable(
-        editable.testingConfiguration!);
-    var prod = EditableTenantConfiguration.fromEditable(
-        editable.productionConfiguration!);
+    var staging = EditableTenantConfiguration.fromEditable(editable.testingConfiguration!);
+    var prod = EditableTenantConfiguration.fromEditable(editable.productionConfiguration!);
 
     return Tenant(
         id: editable.coverPhotoUrl = editable.coverPhotoUrl,
@@ -400,13 +360,11 @@ class EditableTenant {
     editable.description = tenant.description;
     editable.coverPhotoUrl = tenant.coverPhotoUrl;
 
-    editable.testingConfiguration = tenant.testingConfiguration != null
-        ? EditableTenantConfiguration.toEditable(tenant.testingConfiguration!)
-        : EditableTenantConfiguration(id: '${tenant.id}-testing');
+    editable.testingConfiguration =
+        tenant.testingConfiguration != null ? EditableTenantConfiguration.toEditable(tenant.testingConfiguration!) : EditableTenantConfiguration(id: '${tenant.id}-testing');
 
-    editable.productionConfiguration = tenant.testingConfiguration != null
-        ? EditableTenantConfiguration.toEditable(tenant.testingConfiguration!)
-        : EditableTenantConfiguration(id: '${tenant.id}-prod');
+    editable.productionConfiguration =
+        tenant.testingConfiguration != null ? EditableTenantConfiguration.toEditable(tenant.testingConfiguration!) : EditableTenantConfiguration(id: '${tenant.id}-prod');
 
     return editable;
   }
@@ -422,8 +380,7 @@ class EditableTenantConfiguration {
   EditableTenantConfiguration({required this.id});
 
   static EditableTenantConfiguration toEditable(TenantConfiguration conf) {
-    EditableTenantConfiguration editable =
-        EditableTenantConfiguration(id: conf.id);
+    EditableTenantConfiguration editable = EditableTenantConfiguration(id: conf.id);
     editable.contentpubApiKey = conf.contentpubApiKey;
     editable.stripeSecretKey = conf.stripeSecretKey;
     editable.stripeWebhookSecretKey = conf.stripeWebhookSecretKey;
@@ -431,8 +388,7 @@ class EditableTenantConfiguration {
     return editable;
   }
 
-  static TenantConfiguration fromEditable(
-      EditableTenantConfiguration editable) {
+  static TenantConfiguration fromEditable(EditableTenantConfiguration editable) {
     return TenantConfiguration(
         id: editable.id,
         contentpubApiKey: editable.contentpubApiKey,
