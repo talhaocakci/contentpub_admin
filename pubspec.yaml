@@ -71,6 +71,7 @@ dependencies:
   xml: ^6.2.2
   chunked_stream: ^1.4.1
   async: ^2.10.0
+  super_editor: ^0.2.6
 
 dev_dependencies:
   flutter_test:

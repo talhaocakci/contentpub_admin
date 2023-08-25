@@ -4,6 +4,7 @@ import 'package:contentpub_admin/file_upload.dart';
 import 'package:contentpub_admin/models/ModelProvider.dart';
 import 'package:contentpub_admin/custom_models/editable/editables.dart';
 import 'package:flutter/material.dart';
+import 'package:super_editor/super_editor.dart';
 import 'package:uuid/uuid.dart';
 
 import '../flutter_flow/flutter_flow_icon_button.dart';
@@ -33,6 +34,25 @@ class _CreateDocumentWidgetState extends State<CreateDocumentWidget> {
   List<Coworker?>? coworkers;
 
   String? coworkerId;
+
+// With a MutableDocument, create a DocumentEditor, which knows how
+// to apply changes to the MutableDocument.
+  final docEditor = DocumentEditor(
+      document: MutableDocument(
+    nodes: [
+      ParagraphNode(
+        id: DocumentEditor.createNodeId(),
+        text: AttributedText(text: 'This is a header'),
+        metadata: {
+          'blockType': header1Attribution,
+        },
+      ),
+      ParagraphNode(
+        id: DocumentEditor.createNodeId(),
+        text: AttributedText(text: 'This is the first paragraph'),
+      ),
+    ],
+  ));
 
   @override
   void initState() {
@@ -244,12 +264,20 @@ class _CreateDocumentWidgetState extends State<CreateDocumentWidget> {
                               Row(mainAxisSize: MainAxisSize.max, children: [
                                 Expanded(
                                     child: TextFormField(
+                                        maxLines: 100,
                                         initialValue: editableContent?.body ?? '',
                                         //initialValue: editableContent?.body ?? '',
                                         onChanged: (value) {
                                           editableContent?.body = value;
                                           editableContent!.dirty = true;
                                         })),
+                              ]),
+                            if (widget.type == ContentType.ARTICLE)
+                              Row(mainAxisSize: MainAxisSize.max, children: [
+                                Expanded(
+                                    child: SuperEditor(
+                                  editor: docEditor,
+                                )),
                               ]),
                             if (widget.type == ContentType.DOCUMENT) const Text("Your file"),
                             if (widget.type == ContentType.DOCUMENT)
@@ -342,6 +370,7 @@ class _CreateDocumentWidgetState extends State<CreateDocumentWidget> {
                                 padding: const EdgeInsetsDirectional.fromSTEB(0, 12, 0, 12),
                                 child: FFButtonWidget(
                                   onPressed: () {
+                                    //print(docEditor.document.getNodeAt(0));
                                     saveContent();
                                     // save course here
 

@@ -160,8 +160,9 @@ type Purchase @model @auth(rules: [{allow: private}]) {
   tenant: TenantConfiguration @hasOne
   isActive: Boolean
   cancellationDate: AWSDate
-  amount: Float,
+  amount: Float
   currency: String
+  subscriptionId: String
 }
 
 type Lesson @model @auth(

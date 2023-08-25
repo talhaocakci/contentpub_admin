@@ -43,6 +43,7 @@ class Purchase extends Model {
   final TemporalDate? _cancellationDate;
   final double? _amount;
   final String? _currency;
+  final String? _subscriptionId;
   final TemporalDateTime? _createdAt;
   final TemporalDateTime? _updatedAt;
   final String? _purchaseBundleId;
@@ -126,6 +127,10 @@ class Purchase extends Model {
     return _currency;
   }
   
+  String? get subscriptionId {
+    return _subscriptionId;
+  }
+  
   TemporalDateTime? get createdAt {
     return _createdAt;
   }
@@ -142,9 +147,9 @@ class Purchase extends Model {
     return _purchaseTenantId;
   }
   
-  const Purchase._internal({required this.id, purchaseTime, validTill, source, stripePaymentIntentId, stripePriceId, purchaseType, required customerID, bundle, stripeProductId, tenant, isActive, cancellationDate, amount, currency, createdAt, updatedAt, purchaseBundleId, purchaseTenantId}): _purchaseTime = purchaseTime, _validTill = validTill, _source = source, _stripePaymentIntentId = stripePaymentIntentId, _stripePriceId = stripePriceId, _purchaseType = purchaseType, _customerID = customerID, _bundle = bundle, _stripeProductId = stripeProductId, _tenant = tenant, _isActive = isActive, _cancellationDate = cancellationDate, _amount = amount, _currency = currency, _createdAt = createdAt, _updatedAt = updatedAt, _purchaseBundleId = purchaseBundleId, _purchaseTenantId = purchaseTenantId;
+  const Purchase._internal({required this.id, purchaseTime, validTill, source, stripePaymentIntentId, stripePriceId, purchaseType, required customerID, bundle, stripeProductId, tenant, isActive, cancellationDate, amount, currency, subscriptionId, createdAt, updatedAt, purchaseBundleId, purchaseTenantId}): _purchaseTime = purchaseTime, _validTill = validTill, _source = source, _stripePaymentIntentId = stripePaymentIntentId, _stripePriceId = stripePriceId, _purchaseType = purchaseType, _customerID = customerID, _bundle = bundle, _stripeProductId = stripeProductId, _tenant = tenant, _isActive = isActive, _cancellationDate = cancellationDate, _amount = amount, _currency = currency, _subscriptionId = subscriptionId, _createdAt = createdAt, _updatedAt = updatedAt, _purchaseBundleId = purchaseBundleId, _purchaseTenantId = purchaseTenantId;
   
-  factory Purchase({String? id, TemporalDate? purchaseTime, TemporalDate? validTill, Source? source, String? stripePaymentIntentId, String? stripePriceId, PurchaseType? purchaseType, required String customerID, Bundle? bundle, String? stripeProductId, TenantConfiguration? tenant, bool? isActive, TemporalDate? cancellationDate, double? amount, String? currency, String? purchaseBundleId, String? purchaseTenantId}) {
+  factory Purchase({String? id, TemporalDate? purchaseTime, TemporalDate? validTill, Source? source, String? stripePaymentIntentId, String? stripePriceId, PurchaseType? purchaseType, required String customerID, Bundle? bundle, String? stripeProductId, TenantConfiguration? tenant, bool? isActive, TemporalDate? cancellationDate, double? amount, String? currency, String? subscriptionId, String? purchaseBundleId, String? purchaseTenantId}) {
     return Purchase._internal(
       id: id == null ? UUID.getUUID() : id,
       purchaseTime: purchaseTime,
@@ -161,6 +166,7 @@ class Purchase extends Model {
       cancellationDate: cancellationDate,
       amount: amount,
       currency: currency,
+      subscriptionId: subscriptionId,
       purchaseBundleId: purchaseBundleId,
       purchaseTenantId: purchaseTenantId);
   }
@@ -188,6 +194,7 @@ class Purchase extends Model {
       _cancellationDate == other._cancellationDate &&
       _amount == other._amount &&
       _currency == other._currency &&
+      _subscriptionId == other._subscriptionId &&
       _purchaseBundleId == other._purchaseBundleId &&
       _purchaseTenantId == other._purchaseTenantId;
   }
@@ -213,6 +220,7 @@ class Purchase extends Model {
     buffer.write("cancellationDate=" + (_cancellationDate != null ? _cancellationDate!.format() : "null") + ", ");
     buffer.write("amount=" + (_amount != null ? _amount!.toString() : "null") + ", ");
     buffer.write("currency=" + "$_currency" + ", ");
+    buffer.write("subscriptionId=" + "$_subscriptionId" + ", ");
     buffer.write("createdAt=" + (_createdAt != null ? _createdAt!.format() : "null") + ", ");
     buffer.write("updatedAt=" + (_updatedAt != null ? _updatedAt!.format() : "null") + ", ");
     buffer.write("purchaseBundleId=" + "$_purchaseBundleId" + ", ");
@@ -222,7 +230,7 @@ class Purchase extends Model {
     return buffer.toString();
   }
   
-  Purchase copyWith({TemporalDate? purchaseTime, TemporalDate? validTill, Source? source, String? stripePaymentIntentId, String? stripePriceId, PurchaseType? purchaseType, String? customerID, Bundle? bundle, String? stripeProductId, TenantConfiguration? tenant, bool? isActive, TemporalDate? cancellationDate, double? amount, String? currency, String? purchaseBundleId, String? purchaseTenantId}) {
+  Purchase copyWith({TemporalDate? purchaseTime, TemporalDate? validTill, Source? source, String? stripePaymentIntentId, String? stripePriceId, PurchaseType? purchaseType, String? customerID, Bundle? bundle, String? stripeProductId, TenantConfiguration? tenant, bool? isActive, TemporalDate? cancellationDate, double? amount, String? currency, String? subscriptionId, String? purchaseBundleId, String? purchaseTenantId}) {
     return Purchase._internal(
       id: id,
       purchaseTime: purchaseTime ?? this.purchaseTime,
@@ -239,6 +247,7 @@ class Purchase extends Model {
       cancellationDate: cancellationDate ?? this.cancellationDate,
       amount: amount ?? this.amount,
       currency: currency ?? this.currency,
+      subscriptionId: subscriptionId ?? this.subscriptionId,
       purchaseBundleId: purchaseBundleId ?? this.purchaseBundleId,
       purchaseTenantId: purchaseTenantId ?? this.purchaseTenantId);
   }
@@ -263,17 +272,18 @@ class Purchase extends Model {
       _cancellationDate = json['cancellationDate'] != null ? TemporalDate.fromString(json['cancellationDate']) : null,
       _amount = (json['amount'] as num?)?.toDouble(),
       _currency = json['currency'],
+      _subscriptionId = json['subscriptionId'],
       _createdAt = json['createdAt'] != null ? TemporalDateTime.fromString(json['createdAt']) : null,
       _updatedAt = json['updatedAt'] != null ? TemporalDateTime.fromString(json['updatedAt']) : null,
       _purchaseBundleId = json['purchaseBundleId'],
       _purchaseTenantId = json['purchaseTenantId'];
   
   Map<String, dynamic> toJson() => {
-    'id': id, 'purchaseTime': _purchaseTime?.format(), 'validTill': _validTill?.format(), 'source': enumToString(_source), 'stripePaymentIntentId': _stripePaymentIntentId, 'stripePriceId': _stripePriceId, 'purchaseType': enumToString(_purchaseType), 'customerID': _customerID, 'bundle': _bundle?.toJson(), 'stripeProductId': _stripeProductId, 'tenant': _tenant?.toJson(), 'isActive': _isActive, 'cancellationDate': _cancellationDate?.format(), 'amount': _amount, 'currency': _currency, 'createdAt': _createdAt?.format(), 'updatedAt': _updatedAt?.format(), 'purchaseBundleId': _purchaseBundleId, 'purchaseTenantId': _purchaseTenantId
+    'id': id, 'purchaseTime': _purchaseTime?.format(), 'validTill': _validTill?.format(), 'source': enumToString(_source), 'stripePaymentIntentId': _stripePaymentIntentId, 'stripePriceId': _stripePriceId, 'purchaseType': enumToString(_purchaseType), 'customerID': _customerID, 'bundle': _bundle?.toJson(), 'stripeProductId': _stripeProductId, 'tenant': _tenant?.toJson(), 'isActive': _isActive, 'cancellationDate': _cancellationDate?.format(), 'amount': _amount, 'currency': _currency, 'subscriptionId': _subscriptionId, 'createdAt': _createdAt?.format(), 'updatedAt': _updatedAt?.format(), 'purchaseBundleId': _purchaseBundleId, 'purchaseTenantId': _purchaseTenantId
   };
   
   Map<String, Object?> toMap() => {
-    'id': id, 'purchaseTime': _purchaseTime, 'validTill': _validTill, 'source': _source, 'stripePaymentIntentId': _stripePaymentIntentId, 'stripePriceId': _stripePriceId, 'purchaseType': _purchaseType, 'customerID': _customerID, 'bundle': _bundle, 'stripeProductId': _stripeProductId, 'tenant': _tenant, 'isActive': _isActive, 'cancellationDate': _cancellationDate, 'amount': _amount, 'currency': _currency, 'createdAt': _createdAt, 'updatedAt': _updatedAt, 'purchaseBundleId': _purchaseBundleId, 'purchaseTenantId': _purchaseTenantId
+    'id': id, 'purchaseTime': _purchaseTime, 'validTill': _validTill, 'source': _source, 'stripePaymentIntentId': _stripePaymentIntentId, 'stripePriceId': _stripePriceId, 'purchaseType': _purchaseType, 'customerID': _customerID, 'bundle': _bundle, 'stripeProductId': _stripeProductId, 'tenant': _tenant, 'isActive': _isActive, 'cancellationDate': _cancellationDate, 'amount': _amount, 'currency': _currency, 'subscriptionId': _subscriptionId, 'createdAt': _createdAt, 'updatedAt': _updatedAt, 'purchaseBundleId': _purchaseBundleId, 'purchaseTenantId': _purchaseTenantId
   };
 
   static final QueryModelIdentifier<PurchaseModelIdentifier> MODEL_IDENTIFIER = QueryModelIdentifier<PurchaseModelIdentifier>();
@@ -296,6 +306,7 @@ class Purchase extends Model {
   static final QueryField CANCELLATIONDATE = QueryField(fieldName: "cancellationDate");
   static final QueryField AMOUNT = QueryField(fieldName: "amount");
   static final QueryField CURRENCY = QueryField(fieldName: "currency");
+  static final QueryField SUBSCRIPTIONID = QueryField(fieldName: "subscriptionId");
   static final QueryField PURCHASEBUNDLEID = QueryField(fieldName: "purchaseBundleId");
   static final QueryField PURCHASETENANTID = QueryField(fieldName: "purchaseTenantId");
   static var schema = Model.defineSchema(define: (ModelSchemaDefinition modelSchemaDefinition) {
@@ -401,6 +412,12 @@ class Purchase extends Model {
     
     modelSchemaDefinition.addField(ModelFieldDefinition.field(
       key: Purchase.CURRENCY,
+      isRequired: false,
+      ofType: ModelFieldType(ModelFieldTypeEnum.string)
+    ));
+    
+    modelSchemaDefinition.addField(ModelFieldDefinition.field(
+      key: Purchase.SUBSCRIPTIONID,
       isRequired: false,
       ofType: ModelFieldType(ModelFieldTypeEnum.string)
     ));
