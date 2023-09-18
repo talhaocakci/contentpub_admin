@@ -33,7 +33,7 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
     // or the internet.
 
     _controller = VideoPlayerController.network(widget.videoUrl,
-        videoPlayerOptions: VideoPlayerOptions(allowBackgroundPlayback: true));
+        videoPlayerOptions: VideoPlayerOptions(allowBackgroundPlayback: true, ));
 
     // Initialize the controller and store the Future for later use.
 

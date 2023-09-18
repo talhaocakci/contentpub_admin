@@ -14,8 +14,7 @@ import '../flutter_flow/flutter_flow_widgets.dart';
 class CreateAuthorWidget extends StatefulWidget {
   final String coworkerId;
 
-  const CreateAuthorWidget({Key? key, required this.coworkerId})
-      : super(key: key);
+  const CreateAuthorWidget({Key? key, required this.coworkerId}) : super(key: key);
 
   @override
   _CreateAuthorWidgetState createState() => _CreateAuthorWidgetState();
@@ -26,7 +25,7 @@ class _CreateAuthorWidgetState extends State<CreateAuthorWidget> {
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
   Coworker? coworker;
-  EditableCoworker? editableCoworker = EditableCoworker(id: '');
+  late EditableCoworker? editableCoworker = EditableCoworker(id: '');
 
   @override
   void initState() {
@@ -58,11 +57,10 @@ class _CreateAuthorWidgetState extends State<CreateAuthorWidget> {
   }
 
   Future<EditableCoworker> _initPage() async {
-    // editableCoworker = EditableCoworker.toEditable(coworker!);
+    editableCoworker = EditableCoworker.toEditable(coworker!);
 
     return editableCoworker!;
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -111,11 +109,7 @@ class _CreateAuthorWidgetState extends State<CreateAuthorWidget> {
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Padding(
-                                  padding: const EdgeInsets.all(50),
-                                  child: Text('Basic Information :',
-                                      style:
-                                          FlutterFlowTheme.of(context).title1)),
+                              Padding(padding: const EdgeInsets.all(50), child: Text('Basic Information :', style: FlutterFlowTheme.of(context).title1)),
                               Row(mainAxisSize: MainAxisSize.max, children: [
                                 Expanded(
                                     child: TextFormField(
@@ -132,9 +126,8 @@ class _CreateAuthorWidgetState extends State<CreateAuthorWidget> {
                                     return null;
                                   },
                                   decoration: InputDecoration(
-                                    labelText: 'Title',
-                                    hintStyle:
-                                        FlutterFlowTheme.of(context).bodyText2,
+                                    labelText: 'Display name',
+                                    hintStyle: FlutterFlowTheme.of(context).bodyText2,
                                     enabledBorder: OutlineInputBorder(
                                       borderSide: const BorderSide(
                                         color: Colors.black87,
@@ -144,8 +137,7 @@ class _CreateAuthorWidgetState extends State<CreateAuthorWidget> {
                                     ),
                                     focusedBorder: OutlineInputBorder(
                                       borderSide: BorderSide(
-                                        color: FlutterFlowTheme.of(context)
-                                            .primaryBackground,
+                                        color: FlutterFlowTheme.of(context).primaryBackground,
                                         width: 2,
                                       ),
                                       borderRadius: BorderRadius.circular(8),
@@ -175,66 +167,10 @@ class _CreateAuthorWidgetState extends State<CreateAuthorWidget> {
                                     editableCoworker!.dirty = true;
                                   },
                                   obscureText: false,
-                                  initialValue:
-                                      editableCoworker?.description ?? '',
-                                  decoration: InputDecoration(
-                                    labelText: 'Subtitle',
-                                    hintStyle:
-                                        FlutterFlowTheme.of(context).bodyText2,
-                                    enabledBorder: OutlineInputBorder(
-                                      borderSide: const BorderSide(
-                                        color: Colors.black87,
-                                        width: 2,
-                                      ),
-                                      borderRadius: BorderRadius.circular(8),
-                                    ),
-                                    focusedBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                        color: FlutterFlowTheme.of(context)
-                                            .primaryBackground,
-                                        width: 2,
-                                      ),
-                                      borderRadius: BorderRadius.circular(8),
-                                    ),
-                                    errorBorder: OutlineInputBorder(
-                                      borderSide: const BorderSide(
-                                        color: Color(0x00000000),
-                                        width: 2,
-                                      ),
-                                      borderRadius: BorderRadius.circular(8),
-                                    ),
-                                    focusedErrorBorder: OutlineInputBorder(
-                                      borderSide: const BorderSide(
-                                        color: Color(0x00000000),
-                                        width: 2,
-                                      ),
-                                      borderRadius: BorderRadius.circular(8),
-                                    ),
-                                  ),
-                                  style: FlutterFlowTheme.of(context).bodyText1,
-                                  maxLines: null,
-                                ))
-                              ]),
-                              Row(mainAxisSize: MainAxisSize.max, children: [
-                                Expanded(
-                                    child: TextFormField(
-                                  obscureText: false,
-                                  initialValue:
-                                      editableCoworker?.description ?? '',
-                                  onChanged: (value) {
-                                    editableCoworker!.description = value;
-                                    editableCoworker!.dirty = true;
-                                  },
-                                  validator: (value) {
-                                    if (value == null || value.isEmpty) {
-                                      return 'Could you describe your coworker? Audience will need it';
-                                    }
-                                    return null;
-                                  },
+                                  initialValue: editableCoworker?.description ?? '',
                                   decoration: InputDecoration(
                                     labelText: 'Description',
-                                    hintStyle:
-                                        FlutterFlowTheme.of(context).bodyText2,
+                                    hintStyle: FlutterFlowTheme.of(context).bodyText2,
                                     enabledBorder: OutlineInputBorder(
                                       borderSide: const BorderSide(
                                         color: Colors.black87,
@@ -243,66 +179,58 @@ class _CreateAuthorWidgetState extends State<CreateAuthorWidget> {
                                       borderRadius: BorderRadius.circular(8),
                                     ),
                                     focusedBorder: OutlineInputBorder(
-                                      borderSide: const BorderSide(
+                                      borderSide: BorderSide(
+                                        color: FlutterFlowTheme.of(context).primaryBackground,
                                         width: 2,
                                       ),
                                       borderRadius: BorderRadius.circular(8),
                                     ),
                                     errorBorder: OutlineInputBorder(
                                       borderSide: const BorderSide(
+                                        color: Color(0x00000000),
                                         width: 2,
                                       ),
                                       borderRadius: BorderRadius.circular(8),
                                     ),
                                     focusedErrorBorder: OutlineInputBorder(
                                       borderSide: const BorderSide(
+                                        color: Color(0x00000000),
                                         width: 2,
                                       ),
                                       borderRadius: BorderRadius.circular(8),
                                     ),
                                   ),
                                   style: FlutterFlowTheme.of(context).bodyText1,
-                                  maxLines: 20,
-                                )),
+                                  maxLines: null,
+                                ))
                               ]),
                               Padding(
-                                padding:
-                                    const EdgeInsetsDirectional.fromSTEB(0, 1, 0, 0),
+                                padding: const EdgeInsetsDirectional.fromSTEB(0, 1, 0, 0),
                                 child: Container(
                                   //width: MediaQuery.of(context).size.width / 2,
 
                                   child: Padding(
-                                    padding: const EdgeInsetsDirectional.fromSTEB(
-                                        0, 0, 0, 20),
+                                    padding: const EdgeInsetsDirectional.fromSTEB(0, 0, 0, 20),
                                     child: Column(
                                       mainAxisSize: MainAxisSize.max,
                                       children: [
-                                        Padding(
-                                            padding: const EdgeInsets.all(50),
-                                            child: Text('Cover photo :',
-                                                style:
-                                                    FlutterFlowTheme.of(context)
-                                                        .title1)),
+                                        Padding(padding: const EdgeInsets.all(50), child: Text('Cover photo :', style: FlutterFlowTheme.of(context).title1)),
                                         Row(
                                           mainAxisSize: MainAxisSize.max,
                                           children: [
                                             Expanded(
                                               child: FileUploadWithDrop(
                                                   remoteDirectory: 'files',
-                                                  remoteFileName:
-                                                      '${editableCoworker!.id}-profile-photo',
+                                                  remoteFileName: '${editableCoworker!.id}-profile-photo',
                                                   isPublic: true,
-                                                  remoteUrl: editableCoworker
-                                                      ?.photoUrl,
+                                                  remoteUrl: editableCoworker?.photoUrl,
                                                   fileType: FileType.PICTURE,
                                                   onComplete: (uploadedFile) {
-                                                    editableCoworker?.photoUrl =
-                                                        uploadedFile.remoteUrl;
+                                                    editableCoworker?.photoUrl = uploadedFile.remoteUrl;
                                                   },
                                                   onVideoDurationKnown: (_) {},
                                                   onClear: () {
-                                                    print(
-                                                        'Clear the object here as well');
+                                                    print('Clear the object here as well');
                                                   }),
                                             ),
                                           ],
@@ -310,15 +238,13 @@ class _CreateAuthorWidgetState extends State<CreateAuthorWidget> {
                                         Row(children: [
                                           const Spacer(),
                                           Padding(
-                                            padding: const EdgeInsets.only(
-                                                left: 10, top: 20),
+                                            padding: const EdgeInsets.only(left: 10, top: 20),
                                             child: FFButtonWidget(
                                               onPressed: () {
                                                 saveCoworker();
                                                 // save coworker here
 
-                                                print(
-                                                    'Button_Secondary pressed ...');
+                                                print('Button_Secondary pressed ...');
                                               },
                                               text: 'Save Changes',
                                             ),
@@ -410,9 +336,7 @@ class _CreateAuthorWidgetState extends State<CreateAuthorWidget> {
 
       ScaffoldMessenger.of(context).clearSnackBars();
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-            content: Text(
-                'Coworker is created. It can be referenced from contents now')),
+        const SnackBar(content: Text('Coworker is created. It can be referenced from contents now')),
       );
       editableCoworker!.newItem = false;
     } else {

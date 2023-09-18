@@ -15,7 +15,8 @@ import '../models/ModelProvider.dart';
 class StateContainer extends StatefulWidget {
   final Widget child;
 
-  StateContainer({super.key, 
+  StateContainer({
+    super.key,
     required this.child,
   });
 
@@ -23,9 +24,7 @@ class StateContainer extends StatefulWidget {
   // Exactly like MediaQuery.of and Theme.of
   // It basically says 'get the data from the widget of this type.
   static StateContainerState of(BuildContext context) {
-    return (context
-            .dependOnInheritedWidgetOfExactType<_InheritedStateContainer>()!)
-        .data;
+    return (context.dependOnInheritedWidgetOfExactType<_InheritedStateContainer>()!).data;
   }
 
   @override
@@ -43,6 +42,8 @@ class StateContainerState extends State<StateContainer> {
   String? apiRootUrl;
   String? apigatewayId;
   String? region;
+
+  String? coworkerId;
 
   bool _isLoading = true;
   late AuthUser authUser;
@@ -89,8 +90,7 @@ class StateContainerState extends State<StateContainer> {
       final apiPlugin = AmplifyAPI(modelProvider: ModelProvider.instance);
       await Amplify.addPlugins([apiPlugin]);
 
-      var input =
-          await rootBundle.loadString('assets/projectconfiguration.json');
+      var input = await rootBundle.loadString('assets/projectconfiguration.json');
 
       var map = jsonDecode(input);
 
@@ -100,8 +100,7 @@ class StateContainerState extends State<StateContainer> {
       apigatewayId = map['apigatewayId'];
       region = map['region'];
 
-      apiRootUrl =
-          'https://$apigatewayId.execute-api.$region.amazonaws.com/$environment';
+      apiRootUrl = 'https://$apigatewayId.execute-api.$region.amazonaws.com/$environment';
 
       //  var themeStr = await rootBundle.loadString('themes/appainter_theme.json');
       //var themeJson = json.decode(themeStr);
@@ -109,8 +108,7 @@ class StateContainerState extends State<StateContainer> {
       //theme = ThemeDecoder.decodeThemeData(themeJson) ?? ThemeData();
 
       if (!kIsWeb) {
-        final dataStorePlugin =
-            AmplifyDataStore(modelProvider: ModelProvider.instance);
+        final dataStorePlugin = AmplifyDataStore(modelProvider: ModelProvider.instance);
 
         await Amplify.addPlugins([dataStorePlugin]);
       }
@@ -136,7 +134,6 @@ class StateContainerState extends State<StateContainer> {
       safePrint('An error occurred while configuring Amplify: $e');
     }
   }
-
 
   Future<bool> isUserSignedIn() async {
     final result = await Amplify.Auth.fetchAuthSession();
@@ -164,8 +161,7 @@ class StateContainerState extends State<StateContainer> {
   void processAuthUser() async {
     authUser = await getCurrentUser();
 
-    List<AuthUserAttribute> authUserAttributes =
-        await Amplify.Auth.fetchUserAttributes();
+    List<AuthUserAttribute> authUserAttributes = await Amplify.Auth.fetchUserAttributes();
 
     String email = "";
     for (var a in authUserAttributes) {
@@ -176,40 +172,20 @@ class StateContainerState extends State<StateContainer> {
       }
     }
 
-    List<Customer?> customerList = await getCustomerObject(email);
-    Customer customer;
-    print('Customer list: $customerList}');
-    if (customerList.isEmpty) {
-      print('Customer list is empty');
+    List<Coworker?> coworkerList = await getCoworkerObject(email);
+    Coworker coworker;
+    print('Coworker list: $coworkerList}');
+    if (coworkerList.isEmpty) {
+      print('Coworker list is empty');
 
-      // stripe customer generation and putting into session
+      Coworker coworker = new Coworker(email: email);
 
-      String customerUrl =
-          "https://$apigatewayId.execute-api.$region.amazonaws.com/$environment/customer";
-
-      http.Response initResponse = await http.post(Uri.parse(customerUrl),
-          body: jsonEncode(
-              <String, String>{'email': email, 'name': authUser.username}));
-
-      print('Customer stripe sonuce geldi ${initResponse.body}');
-
-      final String stripeId = jsonDecode(initResponse.body)['stripeId'];
-
-      print('Stripe customer id: $stripeId');
-
-      customer = Customer(
-          userName: authUser.username,
-          stripeId: stripeId,
-          email: email,
-          purchases: List.empty());
-
-      print('Customer kaydedilecek');
-      // bunu API ile yap ki webde de calissin:
-
-      saveCustomerObject(customer);
-      print('Customer kaydedildi');
+      saveCoworkerObject(coworker);
+      print('Coworker kaydedildi');
     } else {
-      customer = customerList.elementAt(0)!;
+      coworker = coworkerList.elementAt(0)!;
+
+      this.coworkerId = coworker.id;
     }
   }
 
@@ -234,33 +210,21 @@ class StateContainerState extends State<StateContainer> {
     }
   }
 
-  Future<List<Customer?>> getCustomerObject(String email) async {
+  Future<List<Coworker?>> getCoworkerObject(String email) async {
     String graphQLDocument = '''query MyQuery {
-  listCustomers(filter: {email: {eq: "$email"}}) {
+  listCoworkers(filter: {email: {eq: "$email"}}) {
     items {
-      id
+      createdAt
+      description
+      displayName
       email
-      stripeId
-      userName
+      id
+      photoUrl
       updatedAt
-      createDate
-      purchases {
-        items {
-          id
-          purchaseBundleId
-          purchaseTenantId
-          purchaseTime
-          purchaseType
-          source
-          stripePaymentIntentId
-          stripePriceId
-          stripeProductId
-          validTill
-        }
-      }
     }
   }
 }
+
 ''';
 
     GraphQLRequest request = GraphQLRequest(document: graphQLDocument);
@@ -271,19 +235,18 @@ class StateContainerState extends State<StateContainer> {
 
     var data = response.data;
 
-    var json = jsonDecode(data!)['listCustomers']['items'] as List;
+    var json = jsonDecode(data!)['listCoworkers']['items'] as List;
 
-    List<Customer> list = json.map((e) => Customer.fromJson(e)).toList();
+    List<Coworker> list = json.map((e) => Coworker.fromJson(e)).toList();
 
     return list;
   }
 
-  saveCustomerObject(Customer customer) async {
-    final bundleSaveRequest = ModelMutations.create(customer);
-    await Amplify.API.mutate(request: bundleSaveRequest);
+  saveCoworkerObject(Coworker coworker) async {
+    final coworkerSaveRequest = ModelMutations.create(coworker);
+    await Amplify.API.mutate(request: coworkerSaveRequest);
 
-    print(customer.id);
-    print(customer.stripeId);
+    print(coworkerSaveRequest.id);
   }
 }
 

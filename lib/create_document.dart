@@ -3,6 +3,7 @@ import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:contentpub_admin/file_upload.dart';
 import 'package:contentpub_admin/models/ModelProvider.dart';
 import 'package:contentpub_admin/custom_models/editable/editables.dart';
+import 'package:contentpub_admin/state_container.dart';
 import 'package:flutter/material.dart';
 import 'package:super_editor/super_editor.dart';
 import 'package:uuid/uuid.dart';
@@ -352,7 +353,7 @@ class _CreateDocumentWidgetState extends State<CreateDocumentWidget> {
                                       child: DropdownButtonFormField<Coworker>(
                                     value: contentCoworker!.coworker,
                                     items: [
-                                      for (var coworker in coworkers!) DropdownMenuItem(value: coworker, child: Text(coworker!.displayName ?? 'Unknown author')),
+                                      DropdownMenuItem(value: contentCoworker!.coworker, child: Text(contentCoworker!.coworker!.displayName ?? 'Unknown author')),
                                     ],
                                     onChanged: (value) {
                                       print('author selection changed $value');
@@ -534,6 +535,10 @@ class _CreateDocumentWidgetState extends State<CreateDocumentWidget> {
       var response = await Amplify.API.mutate(request: contentSaveRequest).response;
       print(response.data);
       print(response.errors);
+
+      content = content?.copyWith(Coworkers: List.empty(growable: true));
+
+      content?.Coworkers?.add(ContentCoworker(content: content ?? Content(), coworker: Coworker(id: StateContainer.of(context).coworkerId)));
 
       editableContent = EditableContent.toEditable(content!);
       editableContent!.newItem = false;

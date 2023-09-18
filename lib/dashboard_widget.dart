@@ -3,6 +3,7 @@ import 'package:contentpub_admin/create_coworker.dart';
 import 'package:contentpub_admin/create_product.dart';
 import 'package:contentpub_admin/create_tenant.dart';
 import 'package:contentpub_admin/list_contents.dart';
+import 'package:contentpub_admin/state_container.dart';
 
 import '../flutter_flow/flutter_flow_theme.dart';
 import 'dart:ui';
@@ -53,8 +54,7 @@ class _DashboardWidgetState extends State<DashboardWidget> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Padding(
-                            padding: const EdgeInsetsDirectional.fromSTEB(
-                                24, 12, 0, 0),
+                            padding: const EdgeInsetsDirectional.fromSTEB(24, 12, 0, 0),
                             child: Wrap(
                               spacing: 8,
                               runSpacing: 8,
@@ -69,8 +69,7 @@ class _DashboardWidgetState extends State<DashboardWidget> {
                                   width: 160,
                                   height: 150,
                                   decoration: BoxDecoration(
-                                    color: FlutterFlowTheme.of(context)
-                                        .secondaryColor,
+                                    color: FlutterFlowTheme.of(context).secondaryColor,
                                     boxShadow: [
                                       const BoxShadow(
                                         blurRadius: 3,
@@ -82,25 +81,17 @@ class _DashboardWidgetState extends State<DashboardWidget> {
                                   ),
                                   child: InkWell(
                                       onTap: () {
-                                        Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    const ListContentsWidget()));
+                                        Navigator.push(context, MaterialPageRoute(builder: (context) => const ListContentsWidget()));
                                       },
                                       child: Padding(
-                                        padding: const EdgeInsetsDirectional
-                                            .fromSTEB(12, 8, 12, 8),
+                                        padding: const EdgeInsetsDirectional.fromSTEB(12, 8, 12, 8),
                                         child: Column(
                                           mainAxisSize: MainAxisSize.max,
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.center,
+                                          mainAxisAlignment: MainAxisAlignment.center,
+                                          crossAxisAlignment: CrossAxisAlignment.center,
                                           children: [
                                             const Padding(
-                                              padding: EdgeInsetsDirectional
-                                                  .fromSTEB(0, 0, 0, 12),
+                                              padding: EdgeInsetsDirectional.fromSTEB(0, 0, 0, 12),
                                               child: Icon(
                                                 Icons.schedule_rounded,
                                                 color: Colors.white,
@@ -109,16 +100,12 @@ class _DashboardWidgetState extends State<DashboardWidget> {
                                             ),
                                             Text(
                                               'Your contents',
-                                              style:
-                                                  FlutterFlowTheme.of(context)
-                                                      .bodyText2
-                                                      .override(
-                                                        fontFamily: 'Brazila',
-                                                        color: Colors.white,
-                                                        fontWeight:
-                                                            FontWeight.normal,
-                                                        useGoogleFonts: false,
-                                                      ),
+                                              style: FlutterFlowTheme.of(context).bodyText2.override(
+                                                    fontFamily: 'Brazila',
+                                                    color: Colors.white,
+                                                    fontWeight: FontWeight.normal,
+                                                    useGoogleFonts: false,
+                                                  ),
                                             ),
                                           ],
                                         ),
@@ -128,8 +115,7 @@ class _DashboardWidgetState extends State<DashboardWidget> {
                                   width: 160,
                                   height: 150,
                                   decoration: BoxDecoration(
-                                    color: FlutterFlowTheme.of(context)
-                                        .primaryColor,
+                                    color: FlutterFlowTheme.of(context).primaryColor,
                                     boxShadow: [
                                       const BoxShadow(
                                         blurRadius: 3,
@@ -140,20 +126,14 @@ class _DashboardWidgetState extends State<DashboardWidget> {
                                     borderRadius: BorderRadius.circular(12),
                                   ),
                                   child: Padding(
-                                    padding:
-                                        const EdgeInsetsDirectional.fromSTEB(
-                                            12, 8, 12, 8),
+                                    padding: const EdgeInsetsDirectional.fromSTEB(12, 8, 12, 8),
                                     child: Column(
                                       mainAxisSize: MainAxisSize.max,
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.center,
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      crossAxisAlignment: CrossAxisAlignment.center,
                                       children: [
                                         const Padding(
-                                          padding:
-                                              EdgeInsetsDirectional.fromSTEB(
-                                                  0, 0, 0, 12),
+                                          padding: EdgeInsetsDirectional.fromSTEB(0, 0, 0, 12),
                                           child: Icon(
                                             Icons.meeting_room_outlined,
                                             color: Colors.white,
@@ -162,9 +142,7 @@ class _DashboardWidgetState extends State<DashboardWidget> {
                                         ),
                                         Text(
                                           'Create a document',
-                                          style: FlutterFlowTheme.of(context)
-                                              .bodyText2
-                                              .override(
+                                          style: FlutterFlowTheme.of(context).bodyText2.override(
                                                 fontFamily: 'Brazila',
                                                 color: Colors.white,
                                                 fontWeight: FontWeight.normal,
@@ -179,8 +157,7 @@ class _DashboardWidgetState extends State<DashboardWidget> {
                                   width: 160,
                                   height: 150,
                                   decoration: BoxDecoration(
-                                    color: FlutterFlowTheme.of(context)
-                                        .secondaryColor,
+                                    color: FlutterFlowTheme.of(context).secondaryColor,
                                     boxShadow: [
                                       const BoxShadow(
                                         blurRadius: 3,
@@ -195,24 +172,19 @@ class _DashboardWidgetState extends State<DashboardWidget> {
                                         Navigator.push(
                                             context,
                                             MaterialPageRoute(
-                                                builder: (context) =>
-                                                    const CreateTenantWidget(
+                                                builder: (context) => const CreateTenantWidget(
                                                       tenantId: '',
                                                     )));
                                       },
                                       child: Padding(
-                                        padding: const EdgeInsetsDirectional
-                                            .fromSTEB(12, 8, 12, 8),
+                                        padding: const EdgeInsetsDirectional.fromSTEB(12, 8, 12, 8),
                                         child: Column(
                                           mainAxisSize: MainAxisSize.max,
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.center,
+                                          mainAxisAlignment: MainAxisAlignment.center,
+                                          crossAxisAlignment: CrossAxisAlignment.center,
                                           children: [
                                             const Padding(
-                                              padding: EdgeInsetsDirectional
-                                                  .fromSTEB(0, 0, 0, 12),
+                                              padding: EdgeInsetsDirectional.fromSTEB(0, 0, 0, 12),
                                               child: Icon(
                                                 Icons.schedule_rounded,
                                                 color: Colors.white,
@@ -220,17 +192,13 @@ class _DashboardWidgetState extends State<DashboardWidget> {
                                               ),
                                             ),
                                             Text(
-                                              'Settings',
-                                              style:
-                                                  FlutterFlowTheme.of(context)
-                                                      .bodyText2
-                                                      .override(
-                                                        fontFamily: 'Brazila',
-                                                        color: Colors.white,
-                                                        fontWeight:
-                                                            FontWeight.normal,
-                                                        useGoogleFonts: false,
-                                                      ),
+                                              'Project Settings',
+                                              style: FlutterFlowTheme.of(context).bodyText2.override(
+                                                    fontFamily: 'Brazila',
+                                                    color: Colors.white,
+                                                    fontWeight: FontWeight.normal,
+                                                    useGoogleFonts: false,
+                                                  ),
                                             ),
                                           ],
                                         ),
@@ -240,8 +208,7 @@ class _DashboardWidgetState extends State<DashboardWidget> {
                                   width: 160,
                                   height: 150,
                                   decoration: BoxDecoration(
-                                    color: FlutterFlowTheme.of(context)
-                                        .secondaryColor,
+                                    color: FlutterFlowTheme.of(context).secondaryColor,
                                     boxShadow: [
                                       const BoxShadow(
                                         blurRadius: 3,
@@ -254,26 +221,17 @@ class _DashboardWidgetState extends State<DashboardWidget> {
                                   child: InkWell(
                                       onTap: () {
                                         Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    const CreateAuthorWidget(
-                                                      coworkerId: '',
-                                                    )));
+                                            context, MaterialPageRoute(builder: (context) => CreateAuthorWidget(coworkerId: StateContainer.of(context).coworkerId ?? '')));
                                       },
                                       child: Padding(
-                                        padding: const EdgeInsetsDirectional
-                                            .fromSTEB(12, 8, 12, 8),
+                                        padding: const EdgeInsetsDirectional.fromSTEB(12, 8, 12, 8),
                                         child: Column(
                                           mainAxisSize: MainAxisSize.max,
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.center,
+                                          mainAxisAlignment: MainAxisAlignment.center,
+                                          crossAxisAlignment: CrossAxisAlignment.center,
                                           children: [
                                             const Padding(
-                                              padding: EdgeInsetsDirectional
-                                                  .fromSTEB(0, 0, 0, 12),
+                                              padding: EdgeInsetsDirectional.fromSTEB(0, 0, 0, 12),
                                               child: Icon(
                                                 Icons.schedule_rounded,
                                                 color: Colors.white,
@@ -281,17 +239,13 @@ class _DashboardWidgetState extends State<DashboardWidget> {
                                               ),
                                             ),
                                             Text(
-                                              'Create an author',
-                                              style:
-                                                  FlutterFlowTheme.of(context)
-                                                      .bodyText2
-                                                      .override(
-                                                        fontFamily: 'Brazila',
-                                                        color: Colors.white,
-                                                        fontWeight:
-                                                            FontWeight.normal,
-                                                        useGoogleFonts: false,
-                                                      ),
+                                              'Update user settings',
+                                              style: FlutterFlowTheme.of(context).bodyText2.override(
+                                                    fontFamily: 'Brazila',
+                                                    color: Colors.white,
+                                                    fontWeight: FontWeight.normal,
+                                                    useGoogleFonts: false,
+                                                  ),
                                             ),
                                           ],
                                         ),
@@ -301,8 +255,7 @@ class _DashboardWidgetState extends State<DashboardWidget> {
                                   width: 160,
                                   height: 150,
                                   decoration: BoxDecoration(
-                                    color: FlutterFlowTheme.of(context)
-                                        .primaryText,
+                                    color: FlutterFlowTheme.of(context).primaryText,
                                     boxShadow: [
                                       const BoxShadow(
                                         blurRadius: 3,
@@ -313,35 +266,25 @@ class _DashboardWidgetState extends State<DashboardWidget> {
                                     borderRadius: BorderRadius.circular(12),
                                   ),
                                   child: Padding(
-                                    padding:
-                                        const EdgeInsetsDirectional.fromSTEB(
-                                            12, 8, 12, 8),
+                                    padding: const EdgeInsetsDirectional.fromSTEB(12, 8, 12, 8),
                                     child: Column(
                                       mainAxisSize: MainAxisSize.max,
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.center,
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      crossAxisAlignment: CrossAxisAlignment.center,
                                       children: [
                                         Padding(
-                                          padding: const EdgeInsetsDirectional
-                                              .fromSTEB(0, 0, 0, 12),
+                                          padding: const EdgeInsetsDirectional.fromSTEB(0, 0, 0, 12),
                                           child: Icon(
                                             Icons.group_add_rounded,
-                                            color: FlutterFlowTheme.of(context)
-                                                .secondaryBackground,
+                                            color: FlutterFlowTheme.of(context).secondaryBackground,
                                             size: 44,
                                           ),
                                         ),
                                         Text(
                                           'Create newsletter',
-                                          style: FlutterFlowTheme.of(context)
-                                              .bodyText2
-                                              .override(
+                                          style: FlutterFlowTheme.of(context).bodyText2.override(
                                                 fontFamily: 'Brazila',
-                                                color:
-                                                    FlutterFlowTheme.of(context)
-                                                        .secondaryBackground,
+                                                color: FlutterFlowTheme.of(context).secondaryBackground,
                                                 fontWeight: FontWeight.normal,
                                                 useGoogleFonts: false,
                                               ),
@@ -354,8 +297,7 @@ class _DashboardWidgetState extends State<DashboardWidget> {
                                   width: 160,
                                   height: 150,
                                   decoration: BoxDecoration(
-                                    color: FlutterFlowTheme.of(context)
-                                        .primaryText,
+                                    color: FlutterFlowTheme.of(context).primaryText,
                                     boxShadow: [
                                       const BoxShadow(
                                         blurRadius: 3,
@@ -370,47 +312,33 @@ class _DashboardWidgetState extends State<DashboardWidget> {
                                         Navigator.push(
                                             context,
                                             MaterialPageRoute(
-                                                builder: (context) =>
-                                                    const CreateProductWidget(
+                                                builder: (context) => const CreateProductWidget(
                                                       bundleId: '',
                                                     )));
                                       },
                                       child: Padding(
-                                        padding: const EdgeInsetsDirectional
-                                            .fromSTEB(12, 8, 12, 8),
+                                        padding: const EdgeInsetsDirectional.fromSTEB(12, 8, 12, 8),
                                         child: Column(
                                           mainAxisSize: MainAxisSize.max,
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.center,
+                                          mainAxisAlignment: MainAxisAlignment.center,
+                                          crossAxisAlignment: CrossAxisAlignment.center,
                                           children: [
                                             Padding(
-                                              padding:
-                                                  const EdgeInsetsDirectional
-                                                      .fromSTEB(0, 0, 0, 12),
+                                              padding: const EdgeInsetsDirectional.fromSTEB(0, 0, 0, 12),
                                               child: Icon(
                                                 Icons.attach_money_rounded,
-                                                color:
-                                                    FlutterFlowTheme.of(context)
-                                                        .secondaryBackground,
+                                                color: FlutterFlowTheme.of(context).secondaryBackground,
                                                 size: 44,
                                               ),
                                             ),
                                             Text(
                                               'Create bundle',
-                                              style:
-                                                  FlutterFlowTheme.of(context)
-                                                      .bodyText2
-                                                      .override(
-                                                        fontFamily: 'Brazila',
-                                                        color: FlutterFlowTheme
-                                                                .of(context)
-                                                            .secondaryBackground,
-                                                        fontWeight:
-                                                            FontWeight.normal,
-                                                        useGoogleFonts: false,
-                                                      ),
+                                              style: FlutterFlowTheme.of(context).bodyText2.override(
+                                                    fontFamily: 'Brazila',
+                                                    color: FlutterFlowTheme.of(context).secondaryBackground,
+                                                    fontWeight: FontWeight.normal,
+                                                    useGoogleFonts: false,
+                                                  ),
                                             ),
                                           ],
                                         ),
