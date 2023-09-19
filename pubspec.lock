@@ -1258,8 +1258,16 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.2.6"
+  super_editor_markdown:
+    dependency: "direct main"
+    description:
+      name: super_editor_markdown
+      sha256: "2515d0183ee21aa22d577e95e80b1e4bc1b9ce0f651127d40844be7cb58b5330"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.1.5"
   super_text_layout:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: super_text_layout
       sha256: "2f2a8b36553f775c390924f079b5a8ba6c717b0885f44d80a9602bfa182b6f9f"

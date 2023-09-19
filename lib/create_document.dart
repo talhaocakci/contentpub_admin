@@ -7,6 +7,7 @@ import 'package:contentpub_admin/state_container.dart';
 import 'package:flutter/material.dart';
 import 'package:super_editor/super_editor.dart';
 import 'package:uuid/uuid.dart';
+import 'package:super_editor_markdown/super_editor_markdown.dart';
 
 import '../flutter_flow/flutter_flow_icon_button.dart';
 import '../flutter_flow/flutter_flow_theme.dart';
@@ -36,24 +37,12 @@ class _CreateDocumentWidgetState extends State<CreateDocumentWidget> {
 
   String? coworkerId;
 
+  MutableDocument? mutableDocument;
+
+  late SuperEditor superEditor;
+
 // With a MutableDocument, create a DocumentEditor, which knows how
 // to apply changes to the MutableDocument.
-  final docEditor = DocumentEditor(
-      document: MutableDocument(
-    nodes: [
-      ParagraphNode(
-        id: DocumentEditor.createNodeId(),
-        text: AttributedText(text: 'This is a header'),
-        metadata: {
-          'blockType': header1Attribution,
-        },
-      ),
-      ParagraphNode(
-        id: DocumentEditor.createNodeId(),
-        text: AttributedText(text: 'This is the first paragraph'),
-      ),
-    ],
-  ));
 
   @override
   void initState() {
@@ -73,7 +62,18 @@ class _CreateDocumentWidgetState extends State<CreateDocumentWidget> {
 
     content = await getContent(widget.contentId);
     editableContent = EditableContent.toEditable(content!);
-    print('in init content: $content');
+
+    mutableDocument = deserializeMarkdownToDocument(content?.body ?? 'Header');
+
+    superEditor = SuperEditor(
+        editor: DocumentEditor(
+      document: mutableDocument ?? MutableDocument(),
+    ));
+
+    //superEditor!.
+    //mutableDocument.
+
+    // mutableDocument?.add(ImageNode(id: 'sadfasf', imageUrl: 'https://images.unsplash.com/photo-1687360440781-93a491d8eb58'));
 
     setState(() {});
 
@@ -262,6 +262,20 @@ class _CreateDocumentWidgetState extends State<CreateDocumentWidget> {
                             ),
                             if (widget.type == ContentType.ARTICLE) const Text("Content"),
                             if (widget.type == ContentType.ARTICLE)
+                              FileUploadWithDrop(
+                                  remoteDirectory: editableContent!.id,
+                                  remoteFileName: Uuid().v1(),
+                                  isPublic: true,
+                                  fileType: FileType.OTHER,
+                                  onVideoDurationKnown: (_) {},
+                                  onComplete: (uploadedFile) {
+                                    mutableDocument!.insertNodeAt(0, ImageNode(id: Uuid().v1(), imageUrl: uploadedFile.remoteUrl));
+                                    // editableContent?.s3Url = uploadedFile.remoteUrl;
+                                  },
+                                  onClear: () {
+                                    print('Clear the object here as well');
+                                  }),
+                            /*if (widget.type == ContentType.ARTICLE)
                               Row(mainAxisSize: MainAxisSize.max, children: [
                                 Expanded(
                                     child: TextFormField(
@@ -272,13 +286,10 @@ class _CreateDocumentWidgetState extends State<CreateDocumentWidget> {
                                           editableContent?.body = value;
                                           editableContent!.dirty = true;
                                         })),
-                              ]),
+                              ]),*/
                             if (widget.type == ContentType.ARTICLE)
                               Row(mainAxisSize: MainAxisSize.max, children: [
-                                Expanded(
-                                    child: SuperEditor(
-                                  editor: docEditor,
-                                )),
+                                Expanded(child: superEditor),
                               ]),
                             if (widget.type == ContentType.DOCUMENT) const Text("Your file"),
                             if (widget.type == ContentType.DOCUMENT)
@@ -517,44 +528,7 @@ class _CreateDocumentWidgetState extends State<CreateDocumentWidget> {
     }
   }
 
-  Future<void> saveContent() async {
-    String contentId = editableContent!.id;
-
-    print('saving content with id ${editableContent!.id}');
-
-    String id = editableContent!.id;
-
-    print('editableContent new ${editableContent!.newItem}');
-
-    editableContent?.type = widget.type;
-
-    if (editableContent!.newItem == true) {
-      content = EditableContent.fromEditable(editableContent!);
-      final contentSaveRequest = ModelMutations.create(content!);
-
-      var response = await Amplify.API.mutate(request: contentSaveRequest).response;
-      print(response.data);
-      print(response.errors);
-
-      content = content?.copyWith(Coworkers: List.empty(growable: true));
-
-      content?.Coworkers?.add(ContentCoworker(content: content ?? Content(), coworker: Coworker(id: StateContainer.of(context).coworkerId)));
-
-      editableContent = EditableContent.toEditable(content!);
-      editableContent!.newItem = false;
-    } else {
-      content = EditableContent.fromEditable(editableContent!);
-
-      final contentSaveRequest = ModelMutations.update(content!);
-
-      var response = await Amplify.API.mutate(request: contentSaveRequest).response;
-
-      print(response.data);
-      print(response.errors);
-
-      deleteExistingCoworkerRelations(content!);
-    }
-
+  Future<void> saveAuthors() async {
     if (content!.Coworkers != null) {
       for (ContentCoworker contentCoworker in content!.Coworkers ?? List.empty()) {
         String graphQLQuery = ''' mutation MyMutation {
@@ -581,6 +555,53 @@ class _CreateDocumentWidgetState extends State<CreateDocumentWidget> {
         print('Content author relation created ${contentCoworker.id}');
       }
     }
+  }
+
+  Future<void> saveContent() async {
+    String contentId = editableContent!.id;
+
+    print('saving content with id ${editableContent!.id}');
+
+    String id = editableContent!.id;
+
+    print('editableContent new ${editableContent!.newItem}');
+
+    editableContent?.type = widget.type;
+
+    editableContent?.body = serializeDocumentToMarkdown(mutableDocument ?? MutableDocument());
+
+    if (editableContent!.newItem == true) {
+      content = EditableContent.fromEditable(editableContent!);
+      final contentSaveRequest = ModelMutations.create(content!);
+
+      var response = await Amplify.API.mutate(request: contentSaveRequest).response;
+      print(response.data);
+      print(response.errors);
+
+      content = content?.copyWith(Coworkers: List.empty(growable: true));
+
+      content?.Coworkers?.add(ContentCoworker(content: content ?? Content(), coworker: Coworker(id: StateContainer.of(context).coworkerId)));
+
+      editableContent = EditableContent.toEditable(content!);
+      editableContent!.newItem = false;
+
+      saveAuthors();
+    } else {
+      content = EditableContent.fromEditable(editableContent!);
+
+      final contentSaveRequest = ModelMutations.update(content!);
+
+      var response = await Amplify.API.mutate(request: contentSaveRequest).response;
+
+      print(response.data);
+      print(response.errors);
+
+      // deleteExistingCoworkerRelations(content!);
+    }
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Good Job! Your content is saved.')),
+    );
 
     setState(() {
       content = content;
