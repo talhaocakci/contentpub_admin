@@ -40,6 +40,9 @@ class _CreateDocumentWidgetState extends State<CreateDocumentWidget> {
   MutableDocument? mutableDocument;
 
   late SuperEditor superEditor;
+  late DocumentComposer _composer;
+
+  String cursorNodeId = '';
 
 // With a MutableDocument, create a DocumentEditor, which knows how
 // to apply changes to the MutableDocument.
@@ -65,10 +68,16 @@ class _CreateDocumentWidgetState extends State<CreateDocumentWidget> {
 
     mutableDocument = deserializeMarkdownToDocument(content?.body ?? 'Header');
 
+    mutableDocument?.addListener(_onDocumentChange);
+
+    _composer = DocumentComposer();
+    _composer.selectionNotifier.addListener(_onSelection);
     superEditor = SuperEditor(
+        autofocus: true,
+        composer: _composer,
         editor: DocumentEditor(
-      document: mutableDocument ?? MutableDocument(),
-    ));
+          document: mutableDocument ?? MutableDocument(),
+        ));
 
     //superEditor!.
     //mutableDocument.
@@ -78,6 +87,18 @@ class _CreateDocumentWidgetState extends State<CreateDocumentWidget> {
     setState(() {});
 
     return initPage();
+  }
+
+  void _onDocumentChange() {
+    //mutableDocument.
+    print('do something');
+  }
+
+  void _onSelection() {
+    //mutableDocument.
+    print('bisiler secildi');
+    print(_composer.selection?.base.nodeId);
+    cursorNodeId = _composer.selection?.base.nodeId ?? '';
   }
 
   Future<EditableContent> initPage() async {
@@ -269,7 +290,18 @@ class _CreateDocumentWidgetState extends State<CreateDocumentWidget> {
                                   fileType: FileType.OTHER,
                                   onVideoDurationKnown: (_) {},
                                   onComplete: (uploadedFile) {
-                                    mutableDocument!.insertNodeAt(0, ImageNode(id: Uuid().v1(), imageUrl: uploadedFile.remoteUrl));
+                                    TextNode defaultNode = TextNode(id: Uuid().v1(), text: AttributedText(text: 'null text'));
+                                    String paragraphNodeId = Uuid().v4();
+                                    String currentNodeId = _composer.selection?.base.nodeId ?? Uuid().v4();
+                                    mutableDocument?.insertNodeAfter(
+                                        existingNode: mutableDocument?.getNodeById(currentNodeId) ?? defaultNode,
+                                        newNode: ParagraphNode(id: paragraphNodeId, text: AttributedText(text: '''
+                                    ''')));
+
+                                    mutableDocument?.insertNodeBefore(
+                                        existingNode: mutableDocument?.getNodeById(paragraphNodeId) ?? defaultNode,
+                                        newNode: ImageNode(id: Uuid().v4(), imageUrl: uploadedFile.remoteUrl));
+
                                     // editableContent?.s3Url = uploadedFile.remoteUrl;
                                   },
                                   onClear: () {
