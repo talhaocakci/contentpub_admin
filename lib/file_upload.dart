@@ -47,8 +47,7 @@ class FileUploadWithDrop extends StatefulWidget {
       : super(key: key);
 
   @override
-  _FileUploadWithDropState createState() =>
-      _FileUploadWithDropState(fileType, remoteFileName, remoteDirectory);
+  _FileUploadWithDropState createState() => _FileUploadWithDropState(fileType, remoteFileName, remoteDirectory);
 }
 
 enum FileType { PICTURE, VIDEO, OTHER }
@@ -62,13 +61,7 @@ class UploadedFile {
   int? fileDurationInSeconds;
   FileType fileType;
 
-  UploadedFile(
-      {this.accessibleUrl,
-      required this.remoteUrl,
-      this.localFileName,
-      required this.fileSize,
-      this.fileDurationInSeconds,
-      required this.fileType});
+  UploadedFile({this.accessibleUrl, required this.remoteUrl, this.localFileName, required this.fileSize, this.fileDurationInSeconds, required this.fileType});
 }
 
 class _FileUploadWithDropState extends State<FileUploadWithDrop> {
@@ -93,8 +86,7 @@ class _FileUploadWithDropState extends State<FileUploadWithDrop> {
 
   String? projectName;
 
-  _FileUploadWithDropState(
-      this.fileType, this.remoteFileName, this.remoteDirectory);
+  _FileUploadWithDropState(this.fileType, this.remoteFileName, this.remoteDirectory);
 
   @override
   void initState() {
@@ -142,9 +134,7 @@ class _FileUploadWithDropState extends State<FileUploadWithDrop> {
             child: uploadedFileUrl == null
                 ? Stack(children: [
                     SizedBox(height: 150, child: buildZone2(context)),
-                    Container(
-                        alignment: Alignment.center,
-                        child: const Text('Drop file here')),
+                    Container(alignment: Alignment.center, child: const Text('Drop file here')),
                     Container(
                         alignment: Alignment.topRight,
                         child: FlutterFlowIconButton(
@@ -165,9 +155,7 @@ class _FileUploadWithDropState extends State<FileUploadWithDrop> {
                         )),
                   ])
                 : Column(
-                    children: (uploadInProgress == false &&
-                            uploadedFileUrl != null &&
-                            fileAccessible)
+                    children: (uploadInProgress == false && uploadedFileUrl != null && fileAccessible)
                         ? (fileType == FileType.VIDEO)
                             ? [
                                 ElevatedButton(
@@ -209,12 +197,8 @@ class _FileUploadWithDropState extends State<FileUploadWithDrop> {
                                     Container(
                                         height: 150,
                                         width: double.infinity,
-                                        decoration: BoxDecoration(
-                                            image: DecorationImage(
-                                                alignment: const Alignment(-.2, 0),
-                                                image: NetworkImage(
-                                                    uploadedFileUrl ?? ''),
-                                                fit: BoxFit.fill)))
+                                        decoration:
+                                            BoxDecoration(image: DecorationImage(alignment: const Alignment(-.2, 0), image: NetworkImage(uploadedFileUrl ?? ''), fit: BoxFit.fill)))
                                   ]
                                 : [
                                     ElevatedButton(
@@ -227,22 +211,20 @@ class _FileUploadWithDropState extends State<FileUploadWithDrop> {
                                           });
                                         },
                                         child: const Text('Clear')),
-                                    ElevatedButton(
-                                        onPressed: () => downloadFile(
-                                            uploadedFileUrl ?? 'Wrong url'),
-                                        child: const Text('Download the file'))
+                                    ElevatedButton(onPressed: () => downloadFile(uploadedFileUrl ?? 'Wrong url'), child: const Text('Download the file'))
                                   ]
                         : [Text(uploadMessage ?? '')])));
   }
 
   Widget buildZone2(BuildContext context) => Builder(
         builder: (context) => Container(
-            decoration: BoxDecoration(
-                color: FlutterFlowTheme.of(context).buttonColor.withAlpha(20)),
+            decoration: BoxDecoration(color: FlutterFlowTheme.of(context).buttonColor.withAlpha(20)),
             child: DropzoneView(
               operation: DragOperation.move,
               onCreated: (ctrl) => controller2 = ctrl,
-              onLoaded: () => print('Zone 2 loaded'),
+              onLoaded: () => {
+                //print('Zone 2 loaded')
+              },
               onError: (ev) => print('Zone 2 error: $ev'),
               onLeave: () => print('Zone 2 left'),
               onDrop: (ev) {
@@ -266,13 +248,10 @@ class _FileUploadWithDropState extends State<FileUploadWithDrop> {
   }
 
   String printDuration(Duration duration) {
-    return [duration.inHours, duration.inMinutes, duration.inSeconds]
-        .map((seg) => seg.remainder(60).toString().padLeft(2, '0'))
-        .join(':');
+    return [duration.inHours, duration.inMinutes, duration.inSeconds].map((seg) => seg.remainder(60).toString().padLeft(2, '0')).join(':');
   }
 
-  Future<String> uploadFile(
-      DropzoneViewController controller, dynamic ev, String url) async {
+  Future<String> uploadFile(DropzoneViewController controller, dynamic ev, String url) async {
     print("cozulecek dosya");
 
     AWSFile file = AWSFile.fromPath(url);
@@ -291,8 +270,7 @@ class _FileUploadWithDropState extends State<FileUploadWithDrop> {
 
     String uploadDest = remoteDirectory;
 
-    String remoteFileUrl =
-        'https://$bucket.s3.amazonaws.com/$uploadDest/$filename';
+    String remoteFileUrl = 'https://$bucket.s3.amazonaws.com/$uploadDest/$filename';
 
     uploadedFileUrl = remoteFileUrl;
 
@@ -314,8 +292,7 @@ class _FileUploadWithDropState extends State<FileUploadWithDrop> {
 
     int splitCount = (fileSize / chunkSize).ceil();
 
-    var r = await retrievePresignedUrl(
-        bucket, '$uploadDest/$filename', splitCount, "");
+    var r = await retrievePresignedUrl(bucket, '$uploadDest/$filename', splitCount, "");
 
     PresignUploadResponse presign = PresignUploadResponse();
     presign.initUrl = jsonDecode(r)['initUrl'];
@@ -332,8 +309,7 @@ class _FileUploadWithDropState extends State<FileUploadWithDrop> {
 
       final chunkStreamReader = ChunkedStreamReader(file.stream);
 
-      var res = await http.put(Uri.parse(presign.singleUrl!),
-          body: await chunkStreamReader.readBytes(fileSize));
+      var res = await http.put(Uri.parse(presign.singleUrl!), body: await chunkStreamReader.readBytes(fileSize));
       print('single upload');
       print(res.statusCode);
       print(res.headers);
@@ -343,19 +319,14 @@ class _FileUploadWithDropState extends State<FileUploadWithDrop> {
       return remoteFileUrl;
     }
 
-    var initiateResponse =
-        await http.post(Uri.parse(presign.initUrl ?? 'wrong url'), body: {});
+    var initiateResponse = await http.post(Uri.parse(presign.initUrl ?? 'wrong url'), body: {});
 
     final document = XmlDocument.parse(initiateResponse.body);
-    String? uploadId = document
-        .getElement('InitiateMultipartUploadResult')!
-        .getElement('UploadId')!
-        .text;
+    String? uploadId = document.getElement('InitiateMultipartUploadResult')!.getElement('UploadId')!.text;
 
     print('upload id: $uploadId');
 
-    r = await retrievePresignedUrl(bucket, '$uploadDest/$filename', splitCount,
-        uploadId ?? 'wrong upload id');
+    r = await retrievePresignedUrl(bucket, '$uploadDest/$filename', splitCount, uploadId ?? 'wrong upload id');
 
     presign = PresignUploadResponse();
     presign.initUrl = jsonDecode(r)['initUrl'];
@@ -369,8 +340,7 @@ class _FileUploadWithDropState extends State<FileUploadWithDrop> {
     var stream = file.stream;
 
     print(presign.completeUrl);
-    String? remoteUrl =
-        presign.completeUrl?.substring(0, presign.completeUrl?.indexOf("?"));
+    String? remoteUrl = presign.completeUrl?.substring(0, presign.completeUrl?.indexOf("?"));
     print(remoteUrl);
 
     Uint8List substream;
@@ -394,8 +364,7 @@ class _FileUploadWithDropState extends State<FileUploadWithDrop> {
 
       print('substream length ${substream.length}');
 
-      var res = await http.put(Uri.parse(presign.partUrls!.elementAt(i)),
-          body: substream);
+      var res = await http.put(Uri.parse(presign.partUrls!.elementAt(i)), body: substream);
 
       print(res.statusCode);
       print(res.headers);
@@ -420,9 +389,7 @@ class _FileUploadWithDropState extends State<FileUploadWithDrop> {
    $parts
 </CompleteMultipartUpload>''';
 
-    var completeResponse = await http.post(
-        Uri.parse(presign.completeUrl ?? 'wrong url'),
-        body: completeRequest);
+    var completeResponse = await http.post(Uri.parse(presign.completeUrl ?? 'wrong url'), body: completeRequest);
 
     completeUpload(visibility, bucket, uploadDest, filename, fileSize);
 
@@ -430,13 +397,11 @@ class _FileUploadWithDropState extends State<FileUploadWithDrop> {
   }
 
   Future<AuthSession> getCurrentSession() async {
-    final session = await Amplify.Auth.fetchAuthSession(
-        options: CognitoSessionOptions(getAWSCredentials: false));
+    final session = await Amplify.Auth.fetchAuthSession(options: CognitoSessionOptions(getAWSCredentials: false));
     return session;
   }
 
-  Future<String> retrievePresignedUrl(
-      String bucket, String key, int splitCount, String uploadId) async {
+  Future<String> retrievePresignedUrl(String bucket, String key, int splitCount, String uploadId) async {
     AuthSession session = await getCurrentSession();
 
     var tokens = (session as CognitoAuthSession).userPoolTokens;
@@ -446,13 +411,9 @@ class _FileUploadWithDropState extends State<FileUploadWithDrop> {
 
     String apiRoot = StateContainer.of(context).apiRootUrl ?? '';
 
-    final initUri = Uri.parse(
-        "$apiRoot/presignupload?bucket=$bucket&key=$key&splitCount=$splitCount&uploadId=$uploadId");
+    final initUri = Uri.parse("$apiRoot/presignupload?bucket=$bucket&key=$key&splitCount=$splitCount&uploadId=$uploadId");
 
-    final headers = <String, String>{
-      'Content-Type': 'application/json',
-      'Authorization': rawIdToken
-    };
+    final headers = <String, String>{'Content-Type': 'application/json', 'Authorization': rawIdToken};
 
     http.Response initResponse = await http.get(initUri, headers: headers);
 
@@ -471,20 +432,17 @@ class _FileUploadWithDropState extends State<FileUploadWithDrop> {
 
     String apiRoot = StateContainer.of(context).apiRootUrl ?? '';
 
-    //remote directory is implicitly contentId at the moment. Need to change it later on 
+    //remote directory is implicitly contentId at the moment. Need to change it later on
     final initUri = Uri.parse("$apiRoot/presign/${widget.remoteDirectory}?bucket=$bucket&key=$key");
 
-    final headers = <String, String>{
-      'Content-Type': 'application/json',
-      'Authorization': rawIdToken
-    };
+    final headers = <String, String>{'Content-Type': 'application/json', 'Authorization': rawIdToken};
 
     http.Response response = await http.get(initUri, headers: headers);
 
     if (response.statusCode == 200) {
       return jsonDecode(response.body)['url'];
     } else {
-        setState(() {
+      setState(() {
         uploadMessage = "Could not generate access url for the file";
       });
     }
@@ -492,32 +450,24 @@ class _FileUploadWithDropState extends State<FileUploadWithDrop> {
     return 'https://$bucket.s3.amazonaws.com/$key';
   }
 
-  void completeUpload(String visibility, String bucket, String uploadDest,
-      String fileName, int fileSize) async {
+  void completeUpload(String visibility, String bucket, String uploadDest, String fileName, int fileSize) async {
     uploadInProgress = false;
 
-    String remoteFileUrl =
-        'https://$bucket.s3.amazonaws.com/$uploadDest/$fileName';
+    String remoteFileUrl = 'https://$bucket.s3.amazonaws.com/$uploadDest/$fileName';
 
     String originalUrl = remoteFileUrl;
 
     if (visibility == 'restricted') {
-
-       setState(() {
+      setState(() {
         uploadMessage = "Generating your access url for the file";
       });
 
-      remoteFileUrl =
-          await retrievePresignedUrlForRead(bucket, '$uploadDest/$fileName');
+      remoteFileUrl = await retrievePresignedUrlForRead(bucket, '$uploadDest/$fileName');
 
       print('get url $remoteFileUrl');
     }
 
-    UploadedFile uploadedFile = UploadedFile(
-        remoteUrl: originalUrl,
-        localFileName: localFile,
-        fileSize: fileSize,
-        fileType: widget.fileType);
+    UploadedFile uploadedFile = UploadedFile(remoteUrl: originalUrl, localFileName: localFile, fileSize: fileSize, fileType: widget.fileType);
 
     print('result of upload: ${uploadedFile.remoteUrl}');
 

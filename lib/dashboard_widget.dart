@@ -1,4 +1,5 @@
 import 'package:amplify_authenticator/amplify_authenticator.dart';
+import 'package:contentpub_admin/banner.dart';
 import 'package:contentpub_admin/create_coworker.dart';
 import 'package:contentpub_admin/create_product.dart';
 import 'package:contentpub_admin/create_tenant.dart';
@@ -53,6 +54,7 @@ class _DashboardWidgetState extends State<DashboardWidget> {
                         mainAxisSize: MainAxisSize.max,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
+                          BannerWidget(maxWidth: 600),
                           Padding(
                             padding: const EdgeInsetsDirectional.fromSTEB(24, 12, 0, 0),
                             child: Wrap(

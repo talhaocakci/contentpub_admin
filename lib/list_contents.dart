@@ -1,9 +1,13 @@
+import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
 import 'package:amplify_flutter/amplify_flutter.dart';
+import 'package:contentpub_admin/banner.dart';
 import 'package:contentpub_admin/components/boxed_button.dart';
 import 'package:contentpub_admin/course/create_course.dart';
 import 'package:contentpub_admin/create_document.dart';
 import 'package:contentpub_admin/models/Content.dart';
 import 'package:contentpub_admin/models/ContentType.dart';
+import 'package:contentpub_admin/state_container.dart';
+import 'package:http/http.dart' as http;
 
 import '../flutter_flow/flutter_flow_theme.dart';
 import '../flutter_flow/flutter_flow_widgets.dart';
@@ -40,18 +44,8 @@ class _ListContentsWidgetState extends State<ListContentsWidget> {
   Widget build(BuildContext context) {
     return Scaffold(
         key: scaffoldKey,
-        backgroundColor: FlutterFlowTheme.of(context).primaryBackground,
-        appBar: AppBar(
-          backgroundColor: FlutterFlowTheme.of(context).secondaryBackground,
-          automaticallyImplyLeading: false,
-          title: Text(
-            'Your contents',
-            style: FlutterFlowTheme.of(context).title1,
-          ),
-          actions: [],
-          centerTitle: false,
-          elevation: 0,
-        ),
+        //backgroundColor: FlutterFlowTheme.of(context).primaryBackground,
+
         body: Row(children: [
           const Spacer(),
           SizedBox(
@@ -61,6 +55,7 @@ class _ListContentsWidgetState extends State<ListContentsWidget> {
                 mainAxisAlignment: MainAxisAlignment.start,
                 mainAxisSize: MainAxisSize.max,
                 children: [
+                  BannerWidget(maxWidth: 600),
                   Padding(
                     padding: const EdgeInsetsDirectional.fromSTEB(20, 12, 20, 0),
                     child: Row(
@@ -131,12 +126,12 @@ class _ListContentsWidgetState extends State<ListContentsWidget> {
                                   padding: const EdgeInsetsDirectional.fromSTEB(16, 8, 16, 0),
                                   child: SizedBox(
                                     width: double.infinity,
-                                    height: 200,
+                                    height: 250,
                                     child: Padding(
-                                      padding: const EdgeInsetsDirectional.fromSTEB(0, 120, 0, 0),
+                                      padding: const EdgeInsetsDirectional.fromSTEB(0, 50, 0, 0),
                                       child: Container(
                                         width: 100,
-                                        height: 100,
+                                        height: 150,
                                         decoration: BoxDecoration(
                                           color: FlutterFlowTheme.of(context).secondaryBackground,
                                         ),
@@ -167,11 +162,12 @@ class _ListContentsWidgetState extends State<ListContentsWidget> {
                                                   ],
                                                 ),
                                               ),
-                                              Column(
-                                                mainAxisSize: MainAxisSize.max,
-                                                mainAxisAlignment: MainAxisAlignment.center,
+                                              Row(
+                                                mainAxisSize: MainAxisSize.min,
+                                                mainAxisAlignment: MainAxisAlignment.start,
                                                 children: [
                                                   FFButtonWidget(
+                                                    options: FFButtonOptions(width: 100),
                                                     onPressed: () {
                                                       if (content?.type == ContentType.COURSE) {
                                                         print('Content icindeki object: ${content!.objectId}');
@@ -197,23 +193,9 @@ class _ListContentsWidgetState extends State<ListContentsWidget> {
                                                       color: Colors.white,
                                                       size: 15,
                                                     ),
-                                                    options: FFButtonOptions(
-                                                      width: 120,
-                                                      height: 40,
-                                                      color: const Color(0xFF39D2C0),
-                                                      textStyle: GoogleFonts.getFont(
-                                                        'Lexend Deca',
-                                                        color: Colors.white,
-                                                        fontSize: 14,
-                                                      ),
-                                                      elevation: 3,
-                                                      borderSide: const BorderSide(
-                                                        color: Colors.transparent,
-                                                        width: 1,
-                                                      ),
-                                                    ),
                                                   ),
                                                   FFButtonWidget(
+                                                    options: FFButtonOptions(width: 100),
                                                     onPressed: () {
                                                       print('before action isPublished: ${content!.isPublished}');
                                                       // publish the content
@@ -233,22 +215,20 @@ class _ListContentsWidgetState extends State<ListContentsWidget> {
                                                       color: Colors.white,
                                                       size: 15,
                                                     ),
-                                                    options: FFButtonOptions(
-                                                      width: 120,
-                                                      height: 40,
-                                                      color: const Color(0xFF39D2C0),
-                                                      textStyle: GoogleFonts.getFont(
-                                                        'Lexend Deca',
+                                                  ),
+                                                  if (content.isPublished ?? false)
+                                                    FFButtonWidget(
+                                                      options: FFButtonOptions(width: 100),
+                                                      onPressed: () {
+                                                        //Will be deleted
+                                                      },
+                                                      text: 'Delete',
+                                                      icon: const Icon(
+                                                        Icons.add_rounded,
                                                         color: Colors.white,
-                                                        fontSize: 14,
+                                                        size: 15,
                                                       ),
-                                                      elevation: 3,
-                                                      borderSide: const BorderSide(
-                                                        color: Colors.transparent,
-                                                        width: 1,
-                                                      ),
-                                                    ),
-                                                  )
+                                                    )
                                                 ],
                                               ),
                                             ],
@@ -269,7 +249,7 @@ class _ListContentsWidgetState extends State<ListContentsWidget> {
         ]));
   }
 
-  Future<void> publishTheContent(Content content, bool isPublished, isArchived) async {
+  Future<void> publishTheContent(Content content, bool isPublished, bool isArchived) async {
     String updateQuery = '''
      mutation MyMutation {
       updateContent(input: {id: "${content.id}", isPublished: $isPublished, isArchived: $isArchived}) {
@@ -291,15 +271,36 @@ class _ListContentsWidgetState extends State<ListContentsWidget> {
         ? 'Publishing the content, it will be visible to world. You can add it to a product to sell'
         : 'Archiving the content. Owners will still be able to access it but audience will not be able to buy it anymore';
 
-    ScaffoldMessenger.of(context).clearSnackBars();
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)));
-
     var response = await Amplify.API.mutate(request: request).response;
     print(response.data);
     print(response.errors);
     Content result = response.data;
     print('${result.id} is published: ${result.isPublished}');
     print('${result.id} is archived: ${result.isArchived}');
+
+    if (isPublished) {
+      final session = await Amplify.Auth.fetchAuthSession(options: CognitoSessionOptions(getAWSCredentials: false));
+
+      var tokens = (session as CognitoAuthSession).userPoolTokens;
+      var idToken = tokens?.idToken;
+
+      String rawIdToken = idToken!.raw;
+
+      String apiRoot = StateContainer.of(context).apiRootUrl ?? '';
+
+      final initUri = Uri.parse("$apiRoot/content/${content.id}/publish");
+
+      final headers = <String, String>{'Content-Type': 'application/json', 'Authorization': rawIdToken};
+
+      http.Response publishResponse = await http.post(initUri, headers: headers);
+
+      if (publishResponse.statusCode == 200) {
+        print(publishResponse.body);
+      }
+    }
+
+    ScaffoldMessenger.of(context).clearSnackBars();
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)));
 
     setState(() {});
   }
@@ -340,7 +341,7 @@ class _ListContentsWidgetState extends State<ListContentsWidget> {
       retrievedContents.sort((a, b) => (b!.updatedAt ?? TemporalDateTime(DateTime.now())).compareTo(a!.updatedAt ?? TemporalDateTime(DateTime.now())));
 
       retrievedContents.forEach((element) {
-        print(element!.updatedAt);
+        // print(element!.updatedAt);
       });
 
       setState(() {
