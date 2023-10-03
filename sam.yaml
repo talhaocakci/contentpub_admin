@@ -1,0 +1,2835 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: 'AWS::Serverless-2016-10-31'
+Description: ContentPub IO distribution
+
+Parameters:
+  DomainNameParameter:
+    Type: String
+    Default: contentpub.io
+    Description: Domain name with dot
+  ProjectNameParameter:
+    Type: String
+    Default: contentpubio
+    Description: Domain name without dot
+
+Resources:
+
+  
+
+  AppSyncGraphQLApiProduction:
+      Type: "AWS::AppSync::GraphQLApi"
+      Properties:
+          Name: !Sub "${ProjectNameParameter}-production"
+          AuthenticationType: "AMAZON_COGNITO_USER_POOLS"
+          UserPoolConfig: 
+              UserPoolId: !Ref CognitoUserPool
+              AwsRegion: !Ref AWS::Region
+              DefaultAction: "ALLOW"
+          XrayEnabled: true
+          Tags: 
+            - 
+              Key: "user:Application"
+              Value: !Sub "${ProjectNameParameter}"
+            - 
+              Key: "user:Stack"
+              Value: "production"
+
+  AppSyncGraphQLSchemaProduction:
+          Type: "AWS::AppSync::GraphQLSchema"
+          Properties:
+              ApiId: !GetAtt AppSyncGraphQLApiProduction.ApiId
+              Definition: |
+                  schema {
+                    query: Query
+                    mutation: Mutation
+                    subscription: Subscription
+                  }
+                  
+                  type Bundle @aws_cognito_user_pools @aws_iam {
+                    contents(filter: ModelBundleContentFilterInput, limit: Int, nextToken: String, sortDirection: ModelSortDirection): ModelBundleContentConnection
+                    createdAt: AWSDateTime!
+                    description: String
+                    id: ID!
+                    isAllAccess: Boolean
+                    isAllCourses: Boolean
+                    isAllDocuments: Boolean
+                    isArchived: Boolean
+                    isFree: Boolean
+                    isPublished: Boolean
+                    name: String
+                    prices(filter: ModelPriceFilterInput, limit: Int, nextToken: String, sortDirection: ModelSortDirection): ModelPriceConnection
+                    stripeProductId: String
+                    updatedAt: AWSDateTime!
+                  }
+                  
+                  type BundleContent @aws_cognito_user_pools @aws_iam {
+                    bundle: Bundle!
+                    bundleId: ID!
+                    content: Content!
+                    contentId: ID!
+                    createdAt: AWSDateTime!
+                    id: ID!
+                    updatedAt: AWSDateTime!
+                  }
+                  
+                  type Content @aws_cognito_user_pools @aws_iam {
+                    Coworkers(filter: ModelContentCoworkerFilterInput, limit: Int, nextToken: String, sortDirection: ModelSortDirection): ModelContentCoworkerConnection
+                    bundles(filter: ModelBundleContentFilterInput, limit: Int, nextToken: String, sortDirection: ModelSortDirection): ModelBundleContentConnection
+                    createdAt: AWSDateTime!
+                    description: String
+                    duration: Int
+                    fileSize: String
+                    id: ID!
+                    isArchived: Boolean
+                    isPublished: Boolean
+                    name: String
+                    objectId: String
+                    owner: String
+                    photoUrl: String
+                    promoVideoDuration: Int
+                    promoVideoUrl: String
+                    s3Url: AWSURL
+                    type: ContentType
+                    updatedAt: AWSDateTime!
+                    videoDuration: String
+                  }
+                  
+                  type ContentCoworker @aws_cognito_user_pools @aws_iam {
+                    content: Content!
+                    contentId: ID!
+                    coworker: Coworker!
+                    coworkerId: ID!
+                    createdAt: AWSDateTime!
+                    id: ID!
+                    updatedAt: AWSDateTime!
+                  }
+                  
+                  type Course @aws_cognito_user_pools @aws_iam {
+                    Sections(filter: ModelSectionFilterInput, limit: Int, nextToken: String, sortDirection: ModelSortDirection): ModelSectionConnection
+                    averagePoint: Float
+                    content: Content
+                    courseContentId: ID
+                    coverPhotoUrl: String
+                    createdAt: AWSDateTime!
+                    description: String
+                    features: String
+                    goals: String
+                    id: ID!
+                    language: String
+                    lastUpdateDate: AWSDate
+                    promoVideoUrl: String
+                    requirements: String
+                    stripeProduct: String
+                    studentCount: Int
+                    subtitle: String
+                    thumbnail: String
+                    title: String
+                    totalVideoDuration: Int
+                    updatedAt: AWSDateTime!
+                    videoCount: Int
+                  }
+                  
+                  type Coworker @aws_cognito_user_pools @aws_iam {
+                    contents(filter: ModelContentCoworkerFilterInput, limit: Int, nextToken: String, sortDirection: ModelSortDirection): ModelContentCoworkerConnection
+                    createdAt: AWSDateTime!
+                    description: String
+                    displayName: String
+                    email: String
+                    id: ID!
+                    photoUrl: String
+                    updatedAt: AWSDateTime!
+                  }
+                  
+                  type Customer @aws_cognito_user_pools @aws_iam {
+                    createDate: AWSDate
+                    createdAt: AWSDateTime!
+                    email: String
+                    id: ID!
+                    purchases(filter: ModelPurchaseFilterInput, limit: Int, nextToken: String, sortDirection: ModelSortDirection): ModelPurchaseConnection
+                    stripeId: String
+                    updatedAt: AWSDateTime!
+                    userName: String
+                  }
+                  
+                  type Lesson @aws_cognito_user_pools @aws_iam {
+                    createdAt: AWSDateTime!
+                    customContent: String
+                    customLessonType: String
+                    description: String
+                    id: ID!
+                    name: String
+                    order: Int
+                    sectionID: ID!
+                    type: LessonType
+                    updatedAt: AWSDateTime!
+                    video: String
+                    videoDuration: Int
+                    videoFileSize: String
+                  }
+                  
+                  type ModelBundleConnection @aws_cognito_user_pools @aws_iam {
+                    items: [Bundle]!
+                    nextToken: String
+                  }
+                  
+                  type ModelBundleContentConnection @aws_cognito_user_pools @aws_iam {
+                    items: [BundleContent]!
+                    nextToken: String
+                  }
+                  
+                  type ModelContentConnection @aws_cognito_user_pools @aws_iam {
+                    items: [Content]!
+                    nextToken: String
+                  }
+                  
+                  type ModelContentCoworkerConnection @aws_cognito_user_pools @aws_iam {
+                    items: [ContentCoworker]!
+                    nextToken: String
+                  }
+                  
+                  type ModelCourseConnection @aws_cognito_user_pools @aws_iam {
+                    items: [Course]!
+                    nextToken: String
+                  }
+                  
+                  type ModelCoworkerConnection @aws_cognito_user_pools @aws_iam {
+                    items: [Coworker]!
+                    nextToken: String
+                  }
+                  
+                  type ModelCustomerConnection @aws_cognito_user_pools @aws_iam {
+                    items: [Customer]!
+                    nextToken: String
+                  }
+                  
+                  type ModelLessonConnection @aws_cognito_user_pools @aws_iam {
+                    items: [Lesson]!
+                    nextToken: String
+                  }
+                  
+                  type ModelPriceConnection @aws_cognito_user_pools @aws_iam {
+                    items: [Price]!
+                    nextToken: String
+                  }
+                  
+                  type ModelPurchaseConnection @aws_cognito_user_pools @aws_iam {
+                    items: [Purchase]!
+                    nextToken: String
+                  }
+                  
+                  type ModelSectionConnection @aws_cognito_user_pools @aws_iam {
+                    items: [Section]!
+                    nextToken: String
+                  }
+                  
+                  type ModelTenantConfigurationConnection @aws_cognito_user_pools @aws_iam {
+                    items: [TenantConfiguration]!
+                    nextToken: String
+                  }
+                  
+                  type ModelTenantConnection @aws_cognito_user_pools @aws_iam {
+                    items: [Tenant]!
+                    nextToken: String
+                  }
+                  
+                  type Mutation {
+                    createBundle(condition: ModelBundleConditionInput, input: CreateBundleInput!): Bundle @aws_cognito_user_pools @aws_iam
+                    createBundleContent(condition: ModelBundleContentConditionInput, input: CreateBundleContentInput!): BundleContent @aws_cognito_user_pools @aws_iam
+                    createContent(condition: ModelContentConditionInput, input: CreateContentInput!): Content @aws_cognito_user_pools @aws_iam
+                    createContentCoworker(condition: ModelContentCoworkerConditionInput, input: CreateContentCoworkerInput!): ContentCoworker @aws_cognito_user_pools @aws_iam
+                    createCourse(condition: ModelCourseConditionInput, input: CreateCourseInput!): Course @aws_cognito_user_pools @aws_iam
+                    createCoworker(condition: ModelCoworkerConditionInput, input: CreateCoworkerInput!): Coworker @aws_cognito_user_pools @aws_iam
+                    createCustomer(condition: ModelCustomerConditionInput, input: CreateCustomerInput!): Customer @aws_cognito_user_pools @aws_iam
+                    createLesson(condition: ModelLessonConditionInput, input: CreateLessonInput!): Lesson @aws_cognito_user_pools @aws_iam
+                    createPrice(condition: ModelPriceConditionInput, input: CreatePriceInput!): Price @aws_cognito_user_pools @aws_iam
+                    createPurchase(condition: ModelPurchaseConditionInput, input: CreatePurchaseInput!): Purchase @aws_cognito_user_pools @aws_iam
+                    createSection(condition: ModelSectionConditionInput, input: CreateSectionInput!): Section @aws_cognito_user_pools @aws_iam
+                    createTenant(condition: ModelTenantConditionInput, input: CreateTenantInput!): Tenant @aws_cognito_user_pools @aws_iam
+                    createTenantConfiguration(condition: ModelTenantConfigurationConditionInput, input: CreateTenantConfigurationInput!): TenantConfiguration @aws_cognito_user_pools @aws_iam
+                    deleteBundle(condition: ModelBundleConditionInput, input: DeleteBundleInput!): Bundle @aws_cognito_user_pools @aws_iam
+                    deleteBundleContent(condition: ModelBundleContentConditionInput, input: DeleteBundleContentInput!): BundleContent @aws_cognito_user_pools @aws_iam
+                    deleteContent(condition: ModelContentConditionInput, input: DeleteContentInput!): Content @aws_cognito_user_pools @aws_iam
+                    deleteContentCoworker(condition: ModelContentCoworkerConditionInput, input: DeleteContentCoworkerInput!): ContentCoworker @aws_cognito_user_pools @aws_iam
+                    deleteCourse(condition: ModelCourseConditionInput, input: DeleteCourseInput!): Course @aws_cognito_user_pools @aws_iam
+                    deleteCoworker(condition: ModelCoworkerConditionInput, input: DeleteCoworkerInput!): Coworker @aws_cognito_user_pools @aws_iam
+                    deleteCustomer(condition: ModelCustomerConditionInput, input: DeleteCustomerInput!): Customer @aws_cognito_user_pools @aws_iam
+                    deleteLesson(condition: ModelLessonConditionInput, input: DeleteLessonInput!): Lesson @aws_cognito_user_pools @aws_iam
+                    deletePrice(condition: ModelPriceConditionInput, input: DeletePriceInput!): Price @aws_cognito_user_pools @aws_iam
+                    deletePurchase(condition: ModelPurchaseConditionInput, input: DeletePurchaseInput!): Purchase @aws_cognito_user_pools @aws_iam
+                    deleteSection(condition: ModelSectionConditionInput, input: DeleteSectionInput!): Section @aws_cognito_user_pools @aws_iam
+                    deleteTenant(condition: ModelTenantConditionInput, input: DeleteTenantInput!): Tenant @aws_cognito_user_pools @aws_iam
+                    deleteTenantConfiguration(condition: ModelTenantConfigurationConditionInput, input: DeleteTenantConfigurationInput!): TenantConfiguration @aws_cognito_user_pools @aws_iam
+                    updateBundle(condition: ModelBundleConditionInput, input: UpdateBundleInput!): Bundle @aws_cognito_user_pools @aws_iam
+                    updateBundleContent(condition: ModelBundleContentConditionInput, input: UpdateBundleContentInput!): BundleContent @aws_cognito_user_pools @aws_iam
+                    updateContent(condition: ModelContentConditionInput, input: UpdateContentInput!): Content @aws_cognito_user_pools @aws_iam
+                    updateContentCoworker(condition: ModelContentCoworkerConditionInput, input: UpdateContentCoworkerInput!): ContentCoworker @aws_cognito_user_pools @aws_iam
+                    updateCourse(condition: ModelCourseConditionInput, input: UpdateCourseInput!): Course @aws_cognito_user_pools @aws_iam
+                    updateCoworker(condition: ModelCoworkerConditionInput, input: UpdateCoworkerInput!): Coworker @aws_cognito_user_pools @aws_iam
+                    updateCustomer(condition: ModelCustomerConditionInput, input: UpdateCustomerInput!): Customer @aws_cognito_user_pools @aws_iam
+                    updateLesson(condition: ModelLessonConditionInput, input: UpdateLessonInput!): Lesson @aws_cognito_user_pools @aws_iam
+                    updatePrice(condition: ModelPriceConditionInput, input: UpdatePriceInput!): Price @aws_cognito_user_pools @aws_iam
+                    updatePurchase(condition: ModelPurchaseConditionInput, input: UpdatePurchaseInput!): Purchase @aws_cognito_user_pools @aws_iam
+                    updateSection(condition: ModelSectionConditionInput, input: UpdateSectionInput!): Section @aws_cognito_user_pools @aws_iam
+                    updateTenant(condition: ModelTenantConditionInput, input: UpdateTenantInput!): Tenant @aws_cognito_user_pools @aws_iam
+                    updateTenantConfiguration(condition: ModelTenantConfigurationConditionInput, input: UpdateTenantConfigurationInput!): TenantConfiguration @aws_cognito_user_pools @aws_iam
+                  }
+                  
+                  type Price @aws_cognito_user_pools @aws_iam {
+                    amount: Float
+                    bundleID: ID!
+                    createdAt: AWSDateTime!
+                    currency: String
+                    id: ID!
+                    purchaseType: PurchaseType
+                    recurrenceInterval: Int
+                    recurrenceType: RecurrenceType
+                    stripePriceId: String
+                    trialPeriod: Int
+                    updatedAt: AWSDateTime!
+                  }
+                  
+                  type Purchase @aws_cognito_user_pools @aws_iam {
+                    amount: Float
+                    bundle: Bundle
+                    cancellationDate: AWSDate
+                    createdAt: AWSDateTime!
+                    currency: String
+                    customerID: ID!
+                    id: ID!
+                    isActive: Boolean
+                    purchaseBundleId: ID
+                    purchaseTenantId: ID
+                    purchaseTime: AWSDate
+                    purchaseType: PurchaseType
+                    source: Source
+                    stripePaymentIntentId: String
+                    stripePriceId: String
+                    stripeProductId: String
+                    tenant: TenantConfiguration
+                    updatedAt: AWSDateTime!
+                    validTill: AWSDate
+                  }
+                  
+                  type Query {
+                    bundleContentsByBundleId(bundleId: ID!, filter: ModelBundleContentFilterInput, limit: Int, nextToken: String, sortDirection: ModelSortDirection): ModelBundleContentConnection @aws_cognito_user_pools @aws_iam
+                    bundleContentsByContentId(contentId: ID!, filter: ModelBundleContentFilterInput, limit: Int, nextToken: String, sortDirection: ModelSortDirection): ModelBundleContentConnection @aws_cognito_user_pools @aws_iam
+                    contentCoworkersByContentId(contentId: ID!, filter: ModelContentCoworkerFilterInput, limit: Int, nextToken: String, sortDirection: ModelSortDirection): ModelContentCoworkerConnection @aws_cognito_user_pools @aws_iam
+                    contentCoworkersByCoworkerId(coworkerId: ID!, filter: ModelContentCoworkerFilterInput, limit: Int, nextToken: String, sortDirection: ModelSortDirection): ModelContentCoworkerConnection @aws_cognito_user_pools @aws_iam
+                    getBundle(id: ID!): Bundle @aws_cognito_user_pools @aws_iam
+                    getBundleContent(id: ID!): BundleContent @aws_cognito_user_pools @aws_iam
+                    getContent(id: ID!): Content @aws_cognito_user_pools @aws_iam
+                    getContentCoworker(id: ID!): ContentCoworker @aws_cognito_user_pools @aws_iam
+                    getCourse(id: ID!): Course @aws_cognito_user_pools @aws_iam
+                    getCoworker(id: ID!): Coworker @aws_cognito_user_pools @aws_iam
+                    getCustomer(id: ID!): Customer @aws_cognito_user_pools @aws_iam
+                    getLesson(id: ID!): Lesson @aws_cognito_user_pools @aws_iam
+                    getPrice(id: ID!): Price @aws_cognito_user_pools @aws_iam
+                    getPurchase(id: ID!): Purchase @aws_cognito_user_pools @aws_iam
+                    getSection(id: ID!): Section @aws_cognito_user_pools @aws_iam
+                    getTenant(id: ID!): Tenant @aws_cognito_user_pools @aws_iam
+                    getTenantConfiguration(id: ID!): TenantConfiguration @aws_cognito_user_pools @aws_iam
+                    lessonsBySectionID(filter: ModelLessonFilterInput, limit: Int, nextToken: String, sectionID: ID!, sortDirection: ModelSortDirection): ModelLessonConnection @aws_cognito_user_pools @aws_iam
+                    listBundleContents(filter: ModelBundleContentFilterInput, limit: Int, nextToken: String): ModelBundleContentConnection @aws_cognito_user_pools @aws_iam
+                    listBundles(filter: ModelBundleFilterInput, limit: Int, nextToken: String): ModelBundleConnection @aws_cognito_user_pools @aws_iam
+                    listContentCoworkers(filter: ModelContentCoworkerFilterInput, limit: Int, nextToken: String): ModelContentCoworkerConnection @aws_cognito_user_pools @aws_iam
+                    listContents(filter: ModelContentFilterInput, limit: Int, nextToken: String): ModelContentConnection @aws_cognito_user_pools @aws_iam
+                    listCourses(filter: ModelCourseFilterInput, limit: Int, nextToken: String): ModelCourseConnection @aws_cognito_user_pools @aws_iam
+                    listCoworkers(filter: ModelCoworkerFilterInput, limit: Int, nextToken: String): ModelCoworkerConnection @aws_cognito_user_pools @aws_iam
+                    listCustomers(filter: ModelCustomerFilterInput, limit: Int, nextToken: String): ModelCustomerConnection @aws_cognito_user_pools @aws_iam
+                    listLessons(filter: ModelLessonFilterInput, limit: Int, nextToken: String): ModelLessonConnection @aws_cognito_user_pools @aws_iam
+                    listPrices(filter: ModelPriceFilterInput, limit: Int, nextToken: String): ModelPriceConnection @aws_cognito_user_pools @aws_iam
+                    listPurchases(filter: ModelPurchaseFilterInput, limit: Int, nextToken: String): ModelPurchaseConnection @aws_cognito_user_pools @aws_iam
+                    listSections(filter: ModelSectionFilterInput, limit: Int, nextToken: String): ModelSectionConnection @aws_cognito_user_pools @aws_iam
+                    listTenantConfigurations(filter: ModelTenantConfigurationFilterInput, limit: Int, nextToken: String): ModelTenantConfigurationConnection @aws_cognito_user_pools @aws_iam
+                    listTenants(filter: ModelTenantFilterInput, limit: Int, nextToken: String): ModelTenantConnection @aws_cognito_user_pools @aws_iam
+                    pricesByBundleID(bundleID: ID!, filter: ModelPriceFilterInput, limit: Int, nextToken: String, sortDirection: ModelSortDirection): ModelPriceConnection @aws_cognito_user_pools @aws_iam
+                    purchasesByCustomerID(customerID: ID!, filter: ModelPurchaseFilterInput, limit: Int, nextToken: String, sortDirection: ModelSortDirection): ModelPurchaseConnection @aws_cognito_user_pools @aws_iam
+                    sectionsByCourseID(courseID: ID!, filter: ModelSectionFilterInput, limit: Int, nextToken: String, sortDirection: ModelSortDirection): ModelSectionConnection @aws_cognito_user_pools @aws_iam
+                  }
+                  
+                  type Section @aws_cognito_user_pools @aws_iam {
+                    Lessons(filter: ModelLessonFilterInput, limit: Int, nextToken: String, sortDirection: ModelSortDirection): ModelLessonConnection
+                    courseID: ID!
+                    createdAt: AWSDateTime!
+                    description: String
+                    id: ID!
+                    name: String
+                    order: Int
+                    subtitle: String
+                    totalVideoCount: Int
+                    totalVideoDuration: Int
+                    updatedAt: AWSDateTime!
+                  }
+                  
+                  type Subscription {
+                    onCreateBundle(filter: ModelSubscriptionBundleFilterInput): Bundle @aws_cognito_user_pools @aws_iam @aws_subscribe(mutations : ["createBundle"])
+                    onCreateBundleContent(filter: ModelSubscriptionBundleContentFilterInput): BundleContent @aws_cognito_user_pools @aws_iam @aws_subscribe(mutations : ["createBundleContent"])
+                    onCreateContent(filter: ModelSubscriptionContentFilterInput): Content @aws_cognito_user_pools @aws_iam @aws_subscribe(mutations : ["createContent"])
+                    onCreateContentCoworker(filter: ModelSubscriptionContentCoworkerFilterInput): ContentCoworker @aws_cognito_user_pools @aws_iam @aws_subscribe(mutations : ["createContentCoworker"])
+                    onCreateCourse(filter: ModelSubscriptionCourseFilterInput): Course @aws_cognito_user_pools @aws_iam @aws_subscribe(mutations : ["createCourse"])
+                    onCreateCoworker(filter: ModelSubscriptionCoworkerFilterInput): Coworker @aws_cognito_user_pools @aws_iam @aws_subscribe(mutations : ["createCoworker"])
+                    onCreateCustomer(filter: ModelSubscriptionCustomerFilterInput): Customer @aws_cognito_user_pools @aws_iam @aws_subscribe(mutations : ["createCustomer"])
+                    onCreateLesson(filter: ModelSubscriptionLessonFilterInput): Lesson @aws_cognito_user_pools @aws_iam @aws_subscribe(mutations : ["createLesson"])
+                    onCreatePrice(filter: ModelSubscriptionPriceFilterInput): Price @aws_cognito_user_pools @aws_iam @aws_subscribe(mutations : ["createPrice"])
+                    onCreatePurchase(filter: ModelSubscriptionPurchaseFilterInput): Purchase @aws_cognito_user_pools @aws_iam @aws_subscribe(mutations : ["createPurchase"])
+                    onCreateSection(filter: ModelSubscriptionSectionFilterInput): Section @aws_cognito_user_pools @aws_iam @aws_subscribe(mutations : ["createSection"])
+                    onCreateTenant(filter: ModelSubscriptionTenantFilterInput): Tenant @aws_cognito_user_pools @aws_iam @aws_subscribe(mutations : ["createTenant"])
+                    onCreateTenantConfiguration(filter: ModelSubscriptionTenantConfigurationFilterInput): TenantConfiguration @aws_cognito_user_pools @aws_iam @aws_subscribe(mutations : ["createTenantConfiguration"])
+                    onDeleteBundle(filter: ModelSubscriptionBundleFilterInput): Bundle @aws_cognito_user_pools @aws_iam @aws_subscribe(mutations : ["deleteBundle"])
+                    onDeleteBundleContent(filter: ModelSubscriptionBundleContentFilterInput): BundleContent @aws_cognito_user_pools @aws_iam @aws_subscribe(mutations : ["deleteBundleContent"])
+                    onDeleteContent(filter: ModelSubscriptionContentFilterInput): Content @aws_cognito_user_pools @aws_iam @aws_subscribe(mutations : ["deleteContent"])
+                    onDeleteContentCoworker(filter: ModelSubscriptionContentCoworkerFilterInput): ContentCoworker @aws_cognito_user_pools @aws_iam @aws_subscribe(mutations : ["deleteContentCoworker"])
+                    onDeleteCourse(filter: ModelSubscriptionCourseFilterInput): Course @aws_cognito_user_pools @aws_iam @aws_subscribe(mutations : ["deleteCourse"])
+                    onDeleteCoworker(filter: ModelSubscriptionCoworkerFilterInput): Coworker @aws_cognito_user_pools @aws_iam @aws_subscribe(mutations : ["deleteCoworker"])
+                    onDeleteCustomer(filter: ModelSubscriptionCustomerFilterInput): Customer @aws_cognito_user_pools @aws_iam @aws_subscribe(mutations : ["deleteCustomer"])
+                    onDeleteLesson(filter: ModelSubscriptionLessonFilterInput): Lesson @aws_cognito_user_pools @aws_iam @aws_subscribe(mutations : ["deleteLesson"])
+                    onDeletePrice(filter: ModelSubscriptionPriceFilterInput): Price @aws_cognito_user_pools @aws_iam @aws_subscribe(mutations : ["deletePrice"])
+                    onDeletePurchase(filter: ModelSubscriptionPurchaseFilterInput): Purchase @aws_cognito_user_pools @aws_iam @aws_subscribe(mutations : ["deletePurchase"])
+                    onDeleteSection(filter: ModelSubscriptionSectionFilterInput): Section @aws_cognito_user_pools @aws_iam @aws_subscribe(mutations : ["deleteSection"])
+                    onDeleteTenant(filter: ModelSubscriptionTenantFilterInput): Tenant @aws_cognito_user_pools @aws_iam @aws_subscribe(mutations : ["deleteTenant"])
+                    onDeleteTenantConfiguration(filter: ModelSubscriptionTenantConfigurationFilterInput): TenantConfiguration @aws_cognito_user_pools @aws_iam @aws_subscribe(mutations : ["deleteTenantConfiguration"])
+                    onUpdateBundle(filter: ModelSubscriptionBundleFilterInput): Bundle @aws_cognito_user_pools @aws_iam @aws_subscribe(mutations : ["updateBundle"])
+                    onUpdateBundleContent(filter: ModelSubscriptionBundleContentFilterInput): BundleContent @aws_cognito_user_pools @aws_iam @aws_subscribe(mutations : ["updateBundleContent"])
+                    onUpdateContent(filter: ModelSubscriptionContentFilterInput): Content @aws_cognito_user_pools @aws_iam @aws_subscribe(mutations : ["updateContent"])
+                    onUpdateContentCoworker(filter: ModelSubscriptionContentCoworkerFilterInput): ContentCoworker @aws_cognito_user_pools @aws_iam @aws_subscribe(mutations : ["updateContentCoworker"])
+                    onUpdateCourse(filter: ModelSubscriptionCourseFilterInput): Course @aws_cognito_user_pools @aws_iam @aws_subscribe(mutations : ["updateCourse"])
+                    onUpdateCoworker(filter: ModelSubscriptionCoworkerFilterInput): Coworker @aws_cognito_user_pools @aws_iam @aws_subscribe(mutations : ["updateCoworker"])
+                    onUpdateCustomer(filter: ModelSubscriptionCustomerFilterInput): Customer @aws_cognito_user_pools @aws_iam @aws_subscribe(mutations : ["updateCustomer"])
+                    onUpdateLesson(filter: ModelSubscriptionLessonFilterInput): Lesson @aws_cognito_user_pools @aws_iam @aws_subscribe(mutations : ["updateLesson"])
+                    onUpdatePrice(filter: ModelSubscriptionPriceFilterInput): Price @aws_cognito_user_pools @aws_iam @aws_subscribe(mutations : ["updatePrice"])
+                    onUpdatePurchase(filter: ModelSubscriptionPurchaseFilterInput): Purchase @aws_cognito_user_pools @aws_iam @aws_subscribe(mutations : ["updatePurchase"])
+                    onUpdateSection(filter: ModelSubscriptionSectionFilterInput): Section @aws_cognito_user_pools @aws_iam @aws_subscribe(mutations : ["updateSection"])
+                    onUpdateTenant(filter: ModelSubscriptionTenantFilterInput): Tenant @aws_cognito_user_pools @aws_iam @aws_subscribe(mutations : ["updateTenant"])
+                    onUpdateTenantConfiguration(filter: ModelSubscriptionTenantConfigurationFilterInput): TenantConfiguration @aws_cognito_user_pools @aws_iam @aws_subscribe(mutations : ["updateTenantConfiguration"])
+                  }
+                  
+                  type Tenant @aws_cognito_user_pools @aws_iam {
+                    coverPhotoUrl: String
+                    createdAt: AWSDateTime!
+                    description: String
+                    id: ID!
+                    name: String
+                    productionConfiguration: TenantConfiguration
+                    promoVideoUrl: String
+                    tenantProductionConfigurationId: ID
+                    tenantTestingConfigurationId: ID
+                    testingConfiguration: TenantConfiguration
+                    updatedAt: AWSDateTime!
+                  }
+                  
+                  type TenantConfiguration @aws_cognito_user_pools @aws_iam {
+                    contentpubApiKey: String
+                    createdAt: AWSDateTime!
+                    id: ID!
+                    stripeSecretKey: String
+                    stripeWebhookSecretKey: String
+                    stripeWebhookUrl: String
+                    updatedAt: AWSDateTime!
+                  }
+                  
+                  enum ContentType {
+                    ARTICLE
+                    COURSE
+                    DOCUMENT
+                    ONLINE_SESSION
+                    PHOTO
+                    VIDEO
+                  }
+                  
+                  enum LessonType {
+                    CUSTOM
+                    QUIZ
+                    TEXT
+                    VIDEO
+                  }
+                  
+                  enum ModelAttributeTypes {
+                    _null
+                    binary
+                    binarySet
+                    bool
+                    list
+                    map
+                    number
+                    numberSet
+                    string
+                    stringSet
+                  }
+                  
+                  enum ModelSortDirection {
+                    ASC
+                    DESC
+                  }
+                  
+                  enum PurchaseType {
+                    ONE_TIME
+                    SUBSCRIPTION
+                  }
+                  
+                  enum RecurrenceType {
+                    ANNUAL
+                    MONTHLY
+                    WEEKLY
+                  }
+                  
+                  enum Source {
+                    CENTRAL_CAMPAIGN
+                    SELF
+                  }
+                  
+                  input CreateBundleContentInput {
+                    bundleId: ID!
+                    contentId: ID!
+                    id: ID
+                  }
+                  
+                  input CreateBundleInput {
+                    description: String
+                    id: ID
+                    isAllAccess: Boolean
+                    isAllCourses: Boolean
+                    isAllDocuments: Boolean
+                    isArchived: Boolean
+                    isFree: Boolean
+                    isPublished: Boolean
+                    name: String
+                    stripeProductId: String
+                  }
+                  
+                  input CreateContentCoworkerInput {
+                    contentId: ID!
+                    coworkerId: ID!
+                    id: ID
+                  }
+                  
+                  input CreateContentInput {
+                    description: String
+                    duration: Int
+                    fileSize: String
+                    id: ID
+                    isArchived: Boolean
+                    isPublished: Boolean
+                    name: String
+                    objectId: String
+                    owner: String
+                    photoUrl: String
+                    promoVideoDuration: Int
+                    promoVideoUrl: String
+                    s3Url: AWSURL
+                    type: ContentType
+                    videoDuration: String
+                  }
+                  
+                  input CreateCourseInput {
+                    averagePoint: Float
+                    courseContentId: ID
+                    coverPhotoUrl: String
+                    description: String
+                    features: String
+                    goals: String
+                    id: ID
+                    language: String
+                    lastUpdateDate: AWSDate
+                    promoVideoUrl: String
+                    requirements: String
+                    stripeProduct: String
+                    studentCount: Int
+                    subtitle: String
+                    thumbnail: String
+                    title: String
+                    totalVideoDuration: Int
+                    videoCount: Int
+                  }
+                  
+                  input CreateCoworkerInput {
+                    description: String
+                    displayName: String
+                    email: String
+                    id: ID
+                    photoUrl: String
+                  }
+                  
+                  input CreateCustomerInput {
+                    createDate: AWSDate
+                    email: String
+                    id: ID
+                    stripeId: String
+                    userName: String
+                  }
+                  
+                  input CreateLessonInput {
+                    customContent: String
+                    customLessonType: String
+                    description: String
+                    id: ID
+                    name: String
+                    order: Int
+                    sectionID: ID!
+                    type: LessonType
+                    video: String
+                    videoDuration: Int
+                    videoFileSize: String
+                  }
+                  
+                  input CreatePriceInput {
+                    amount: Float
+                    bundleID: ID!
+                    currency: String
+                    id: ID
+                    purchaseType: PurchaseType
+                    recurrenceInterval: Int
+                    recurrenceType: RecurrenceType
+                    stripePriceId: String
+                    trialPeriod: Int
+                  }
+                  
+                  input CreatePurchaseInput {
+                    amount: Float
+                    cancellationDate: AWSDate
+                    currency: String
+                    customerID: ID!
+                    id: ID
+                    isActive: Boolean
+                    purchaseBundleId: ID
+                    purchaseTenantId: ID
+                    purchaseTime: AWSDate
+                    purchaseType: PurchaseType
+                    source: Source
+                    stripePaymentIntentId: String
+                    stripePriceId: String
+                    stripeProductId: String
+                    validTill: AWSDate
+                  }
+                  
+                  input CreateSectionInput {
+                    courseID: ID!
+                    description: String
+                    id: ID
+                    name: String
+                    order: Int
+                    subtitle: String
+                    totalVideoCount: Int
+                    totalVideoDuration: Int
+                  }
+                  
+                  input CreateTenantConfigurationInput {
+                    contentpubApiKey: String
+                    id: ID
+                    stripeSecretKey: String
+                    stripeWebhookSecretKey: String
+                    stripeWebhookUrl: String
+                  }
+                  
+                  input CreateTenantInput {
+                    coverPhotoUrl: String
+                    description: String
+                    id: ID
+                    name: String
+                    promoVideoUrl: String
+                    tenantProductionConfigurationId: ID
+                    tenantTestingConfigurationId: ID
+                  }
+                  
+                  input DeleteBundleContentInput {
+                    id: ID!
+                  }
+                  
+                  input DeleteBundleInput {
+                    id: ID!
+                  }
+                  
+                  input DeleteContentCoworkerInput {
+                    id: ID!
+                  }
+                  
+                  input DeleteContentInput {
+                    id: ID!
+                  }
+                  
+                  input DeleteCourseInput {
+                    id: ID!
+                  }
+                  
+                  input DeleteCoworkerInput {
+                    id: ID!
+                  }
+                  
+                  input DeleteCustomerInput {
+                    id: ID!
+                  }
+                  
+                  input DeleteLessonInput {
+                    id: ID!
+                  }
+                  
+                  input DeletePriceInput {
+                    id: ID!
+                  }
+                  
+                  input DeletePurchaseInput {
+                    id: ID!
+                  }
+                  
+                  input DeleteSectionInput {
+                    id: ID!
+                  }
+                  
+                  input DeleteTenantConfigurationInput {
+                    id: ID!
+                  }
+                  
+                  input DeleteTenantInput {
+                    id: ID!
+                  }
+                  
+                  input ModelBooleanInput {
+                    attributeExists: Boolean
+                    attributeType: ModelAttributeTypes
+                    eq: Boolean
+                    ne: Boolean
+                  }
+                  
+                  input ModelBundleConditionInput {
+                    and: [ModelBundleConditionInput]
+                    description: ModelStringInput
+                    isAllAccess: ModelBooleanInput
+                    isAllCourses: ModelBooleanInput
+                    isAllDocuments: ModelBooleanInput
+                    isArchived: ModelBooleanInput
+                    isFree: ModelBooleanInput
+                    isPublished: ModelBooleanInput
+                    name: ModelStringInput
+                    not: ModelBundleConditionInput
+                    or: [ModelBundleConditionInput]
+                    stripeProductId: ModelStringInput
+                  }
+                  
+                  input ModelBundleContentConditionInput {
+                    and: [ModelBundleContentConditionInput]
+                    bundleId: ModelIDInput
+                    contentId: ModelIDInput
+                    not: ModelBundleContentConditionInput
+                    or: [ModelBundleContentConditionInput]
+                  }
+                  
+                  input ModelBundleContentFilterInput {
+                    and: [ModelBundleContentFilterInput]
+                    bundleId: ModelIDInput
+                    contentId: ModelIDInput
+                    id: ModelIDInput
+                    not: ModelBundleContentFilterInput
+                    or: [ModelBundleContentFilterInput]
+                  }
+                  
+                  input ModelBundleFilterInput {
+                    and: [ModelBundleFilterInput]
+                    description: ModelStringInput
+                    id: ModelIDInput
+                    isAllAccess: ModelBooleanInput
+                    isAllCourses: ModelBooleanInput
+                    isAllDocuments: ModelBooleanInput
+                    isArchived: ModelBooleanInput
+                    isFree: ModelBooleanInput
+                    isPublished: ModelBooleanInput
+                    name: ModelStringInput
+                    not: ModelBundleFilterInput
+                    or: [ModelBundleFilterInput]
+                    stripeProductId: ModelStringInput
+                  }
+                  
+                  input ModelContentConditionInput {
+                    and: [ModelContentConditionInput]
+                    description: ModelStringInput
+                    duration: ModelIntInput
+                    fileSize: ModelStringInput
+                    isArchived: ModelBooleanInput
+                    isPublished: ModelBooleanInput
+                    name: ModelStringInput
+                    not: ModelContentConditionInput
+                    objectId: ModelStringInput
+                    or: [ModelContentConditionInput]
+                    owner: ModelStringInput
+                    photoUrl: ModelStringInput
+                    promoVideoDuration: ModelIntInput
+                    promoVideoUrl: ModelStringInput
+                    s3Url: ModelStringInput
+                    type: ModelContentTypeInput
+                    videoDuration: ModelStringInput
+                  }
+                  
+                  input ModelContentCoworkerConditionInput {
+                    and: [ModelContentCoworkerConditionInput]
+                    contentId: ModelIDInput
+                    coworkerId: ModelIDInput
+                    not: ModelContentCoworkerConditionInput
+                    or: [ModelContentCoworkerConditionInput]
+                  }
+                  
+                  input ModelContentCoworkerFilterInput {
+                    and: [ModelContentCoworkerFilterInput]
+                    contentId: ModelIDInput
+                    coworkerId: ModelIDInput
+                    id: ModelIDInput
+                    not: ModelContentCoworkerFilterInput
+                    or: [ModelContentCoworkerFilterInput]
+                  }
+                  
+                  input ModelContentFilterInput {
+                    and: [ModelContentFilterInput]
+                    description: ModelStringInput
+                    duration: ModelIntInput
+                    fileSize: ModelStringInput
+                    id: ModelIDInput
+                    isArchived: ModelBooleanInput
+                    isPublished: ModelBooleanInput
+                    name: ModelStringInput
+                    not: ModelContentFilterInput
+                    objectId: ModelStringInput
+                    or: [ModelContentFilterInput]
+                    owner: ModelStringInput
+                    photoUrl: ModelStringInput
+                    promoVideoDuration: ModelIntInput
+                    promoVideoUrl: ModelStringInput
+                    s3Url: ModelStringInput
+                    type: ModelContentTypeInput
+                    videoDuration: ModelStringInput
+                  }
+                  
+                  input ModelContentTypeInput {
+                    eq: ContentType
+                    ne: ContentType
+                  }
+                  
+                  input ModelCourseConditionInput {
+                    and: [ModelCourseConditionInput]
+                    averagePoint: ModelFloatInput
+                    courseContentId: ModelIDInput
+                    coverPhotoUrl: ModelStringInput
+                    description: ModelStringInput
+                    features: ModelStringInput
+                    goals: ModelStringInput
+                    language: ModelStringInput
+                    lastUpdateDate: ModelStringInput
+                    not: ModelCourseConditionInput
+                    or: [ModelCourseConditionInput]
+                    promoVideoUrl: ModelStringInput
+                    requirements: ModelStringInput
+                    stripeProduct: ModelStringInput
+                    studentCount: ModelIntInput
+                    subtitle: ModelStringInput
+                    thumbnail: ModelStringInput
+                    title: ModelStringInput
+                    totalVideoDuration: ModelIntInput
+                    videoCount: ModelIntInput
+                  }
+                  
+                  input ModelCourseFilterInput {
+                    and: [ModelCourseFilterInput]
+                    averagePoint: ModelFloatInput
+                    courseContentId: ModelIDInput
+                    coverPhotoUrl: ModelStringInput
+                    description: ModelStringInput
+                    features: ModelStringInput
+                    goals: ModelStringInput
+                    id: ModelIDInput
+                    language: ModelStringInput
+                    lastUpdateDate: ModelStringInput
+                    not: ModelCourseFilterInput
+                    or: [ModelCourseFilterInput]
+                    promoVideoUrl: ModelStringInput
+                    requirements: ModelStringInput
+                    stripeProduct: ModelStringInput
+                    studentCount: ModelIntInput
+                    subtitle: ModelStringInput
+                    thumbnail: ModelStringInput
+                    title: ModelStringInput
+                    totalVideoDuration: ModelIntInput
+                    videoCount: ModelIntInput
+                  }
+                  
+                  input ModelCoworkerConditionInput {
+                    and: [ModelCoworkerConditionInput]
+                    description: ModelStringInput
+                    displayName: ModelStringInput
+                    email: ModelStringInput
+                    not: ModelCoworkerConditionInput
+                    or: [ModelCoworkerConditionInput]
+                    photoUrl: ModelStringInput
+                  }
+                  
+                  input ModelCoworkerFilterInput {
+                    and: [ModelCoworkerFilterInput]
+                    description: ModelStringInput
+                    displayName: ModelStringInput
+                    email: ModelStringInput
+                    id: ModelIDInput
+                    not: ModelCoworkerFilterInput
+                    or: [ModelCoworkerFilterInput]
+                    photoUrl: ModelStringInput
+                  }
+                  
+                  input ModelCustomerConditionInput {
+                    and: [ModelCustomerConditionInput]
+                    createDate: ModelStringInput
+                    email: ModelStringInput
+                    not: ModelCustomerConditionInput
+                    or: [ModelCustomerConditionInput]
+                    stripeId: ModelStringInput
+                    userName: ModelStringInput
+                  }
+                  
+                  input ModelCustomerFilterInput {
+                    and: [ModelCustomerFilterInput]
+                    createDate: ModelStringInput
+                    email: ModelStringInput
+                    id: ModelIDInput
+                    not: ModelCustomerFilterInput
+                    or: [ModelCustomerFilterInput]
+                    stripeId: ModelStringInput
+                    userName: ModelStringInput
+                  }
+                  
+                  input ModelFloatInput {
+                    attributeExists: Boolean
+                    attributeType: ModelAttributeTypes
+                    between: [Float]
+                    eq: Float
+                    ge: Float
+                    gt: Float
+                    le: Float
+                    lt: Float
+                    ne: Float
+                  }
+                  
+                  input ModelIDInput {
+                    attributeExists: Boolean
+                    attributeType: ModelAttributeTypes
+                    beginsWith: ID
+                    between: [ID]
+                    contains: ID
+                    eq: ID
+                    ge: ID
+                    gt: ID
+                    le: ID
+                    lt: ID
+                    ne: ID
+                    notContains: ID
+                    size: ModelSizeInput
+                  }
+                  
+                  input ModelIntInput {
+                    attributeExists: Boolean
+                    attributeType: ModelAttributeTypes
+                    between: [Int]
+                    eq: Int
+                    ge: Int
+                    gt: Int
+                    le: Int
+                    lt: Int
+                    ne: Int
+                  }
+                  
+                  input ModelLessonConditionInput {
+                    and: [ModelLessonConditionInput]
+                    customContent: ModelStringInput
+                    customLessonType: ModelStringInput
+                    description: ModelStringInput
+                    name: ModelStringInput
+                    not: ModelLessonConditionInput
+                    or: [ModelLessonConditionInput]
+                    order: ModelIntInput
+                    sectionID: ModelIDInput
+                    type: ModelLessonTypeInput
+                    video: ModelStringInput
+                    videoDuration: ModelIntInput
+                    videoFileSize: ModelStringInput
+                  }
+                  
+                  input ModelLessonFilterInput {
+                    and: [ModelLessonFilterInput]
+                    customContent: ModelStringInput
+                    customLessonType: ModelStringInput
+                    description: ModelStringInput
+                    id: ModelIDInput
+                    name: ModelStringInput
+                    not: ModelLessonFilterInput
+                    or: [ModelLessonFilterInput]
+                    order: ModelIntInput
+                    sectionID: ModelIDInput
+                    type: ModelLessonTypeInput
+                    video: ModelStringInput
+                    videoDuration: ModelIntInput
+                    videoFileSize: ModelStringInput
+                  }
+                  
+                  input ModelLessonTypeInput {
+                    eq: LessonType
+                    ne: LessonType
+                  }
+                  
+                  input ModelPriceConditionInput {
+                    amount: ModelFloatInput
+                    and: [ModelPriceConditionInput]
+                    bundleID: ModelIDInput
+                    currency: ModelStringInput
+                    not: ModelPriceConditionInput
+                    or: [ModelPriceConditionInput]
+                    purchaseType: ModelPurchaseTypeInput
+                    recurrenceInterval: ModelIntInput
+                    recurrenceType: ModelRecurrenceTypeInput
+                    stripePriceId: ModelStringInput
+                    trialPeriod: ModelIntInput
+                  }
+                  
+                  input ModelPriceFilterInput {
+                    amount: ModelFloatInput
+                    and: [ModelPriceFilterInput]
+                    bundleID: ModelIDInput
+                    currency: ModelStringInput
+                    id: ModelIDInput
+                    not: ModelPriceFilterInput
+                    or: [ModelPriceFilterInput]
+                    purchaseType: ModelPurchaseTypeInput
+                    recurrenceInterval: ModelIntInput
+                    recurrenceType: ModelRecurrenceTypeInput
+                    stripePriceId: ModelStringInput
+                    trialPeriod: ModelIntInput
+                  }
+                  
+                  input ModelPurchaseConditionInput {
+                    amount: ModelFloatInput
+                    and: [ModelPurchaseConditionInput]
+                    cancellationDate: ModelStringInput
+                    currency: ModelStringInput
+                    customerID: ModelIDInput
+                    isActive: ModelBooleanInput
+                    not: ModelPurchaseConditionInput
+                    or: [ModelPurchaseConditionInput]
+                    purchaseBundleId: ModelIDInput
+                    purchaseTenantId: ModelIDInput
+                    purchaseTime: ModelStringInput
+                    purchaseType: ModelPurchaseTypeInput
+                    source: ModelSourceInput
+                    stripePaymentIntentId: ModelStringInput
+                    stripePriceId: ModelStringInput
+                    stripeProductId: ModelStringInput
+                    validTill: ModelStringInput
+                  }
+                  
+                  input ModelPurchaseFilterInput {
+                    amount: ModelFloatInput
+                    and: [ModelPurchaseFilterInput]
+                    cancellationDate: ModelStringInput
+                    currency: ModelStringInput
+                    customerID: ModelIDInput
+                    id: ModelIDInput
+                    isActive: ModelBooleanInput
+                    not: ModelPurchaseFilterInput
+                    or: [ModelPurchaseFilterInput]
+                    purchaseBundleId: ModelIDInput
+                    purchaseTenantId: ModelIDInput
+                    purchaseTime: ModelStringInput
+                    purchaseType: ModelPurchaseTypeInput
+                    source: ModelSourceInput
+                    stripePaymentIntentId: ModelStringInput
+                    stripePriceId: ModelStringInput
+                    stripeProductId: ModelStringInput
+                    validTill: ModelStringInput
+                  }
+                  
+                  input ModelPurchaseTypeInput {
+                    eq: PurchaseType
+                    ne: PurchaseType
+                  }
+                  
+                  input ModelRecurrenceTypeInput {
+                    eq: RecurrenceType
+                    ne: RecurrenceType
+                  }
+                  
+                  input ModelSectionConditionInput {
+                    and: [ModelSectionConditionInput]
+                    courseID: ModelIDInput
+                    description: ModelStringInput
+                    name: ModelStringInput
+                    not: ModelSectionConditionInput
+                    or: [ModelSectionConditionInput]
+                    order: ModelIntInput
+                    subtitle: ModelStringInput
+                    totalVideoCount: ModelIntInput
+                    totalVideoDuration: ModelIntInput
+                  }
+                  
+                  input ModelSectionFilterInput {
+                    and: [ModelSectionFilterInput]
+                    courseID: ModelIDInput
+                    description: ModelStringInput
+                    id: ModelIDInput
+                    name: ModelStringInput
+                    not: ModelSectionFilterInput
+                    or: [ModelSectionFilterInput]
+                    order: ModelIntInput
+                    subtitle: ModelStringInput
+                    totalVideoCount: ModelIntInput
+                    totalVideoDuration: ModelIntInput
+                  }
+                  
+                  input ModelSizeInput {
+                    between: [Int]
+                    eq: Int
+                    ge: Int
+                    gt: Int
+                    le: Int
+                    lt: Int
+                    ne: Int
+                  }
+                  
+                  input ModelSourceInput {
+                    eq: Source
+                    ne: Source
+                  }
+                  
+                  input ModelStringInput {
+                    attributeExists: Boolean
+                    attributeType: ModelAttributeTypes
+                    beginsWith: String
+                    between: [String]
+                    contains: String
+                    eq: String
+                    ge: String
+                    gt: String
+                    le: String
+                    lt: String
+                    ne: String
+                    notContains: String
+                    size: ModelSizeInput
+                  }
+                  
+                  input ModelSubscriptionBooleanInput {
+                    eq: Boolean
+                    ne: Boolean
+                  }
+                  
+                  input ModelSubscriptionBundleContentFilterInput {
+                    and: [ModelSubscriptionBundleContentFilterInput]
+                    bundleId: ModelSubscriptionIDInput
+                    contentId: ModelSubscriptionIDInput
+                    id: ModelSubscriptionIDInput
+                    or: [ModelSubscriptionBundleContentFilterInput]
+                  }
+                  
+                  input ModelSubscriptionBundleFilterInput {
+                    and: [ModelSubscriptionBundleFilterInput]
+                    description: ModelSubscriptionStringInput
+                    id: ModelSubscriptionIDInput
+                    isAllAccess: ModelSubscriptionBooleanInput
+                    isAllCourses: ModelSubscriptionBooleanInput
+                    isAllDocuments: ModelSubscriptionBooleanInput
+                    isArchived: ModelSubscriptionBooleanInput
+                    isFree: ModelSubscriptionBooleanInput
+                    isPublished: ModelSubscriptionBooleanInput
+                    name: ModelSubscriptionStringInput
+                    or: [ModelSubscriptionBundleFilterInput]
+                    stripeProductId: ModelSubscriptionStringInput
+                  }
+                  
+                  input ModelSubscriptionContentCoworkerFilterInput {
+                    and: [ModelSubscriptionContentCoworkerFilterInput]
+                    contentId: ModelSubscriptionIDInput
+                    coworkerId: ModelSubscriptionIDInput
+                    id: ModelSubscriptionIDInput
+                    or: [ModelSubscriptionContentCoworkerFilterInput]
+                  }
+                  
+                  input ModelSubscriptionContentFilterInput {
+                    and: [ModelSubscriptionContentFilterInput]
+                    description: ModelSubscriptionStringInput
+                    duration: ModelSubscriptionIntInput
+                    fileSize: ModelSubscriptionStringInput
+                    id: ModelSubscriptionIDInput
+                    isArchived: ModelSubscriptionBooleanInput
+                    isPublished: ModelSubscriptionBooleanInput
+                    name: ModelSubscriptionStringInput
+                    objectId: ModelSubscriptionStringInput
+                    or: [ModelSubscriptionContentFilterInput]
+                    owner: ModelSubscriptionStringInput
+                    photoUrl: ModelSubscriptionStringInput
+                    promoVideoDuration: ModelSubscriptionIntInput
+                    promoVideoUrl: ModelSubscriptionStringInput
+                    s3Url: ModelSubscriptionStringInput
+                    type: ModelSubscriptionStringInput
+                    videoDuration: ModelSubscriptionStringInput
+                  }
+                  
+                  input ModelSubscriptionCourseFilterInput {
+                    and: [ModelSubscriptionCourseFilterInput]
+                    averagePoint: ModelSubscriptionFloatInput
+                    coverPhotoUrl: ModelSubscriptionStringInput
+                    description: ModelSubscriptionStringInput
+                    features: ModelSubscriptionStringInput
+                    goals: ModelSubscriptionStringInput
+                    id: ModelSubscriptionIDInput
+                    language: ModelSubscriptionStringInput
+                    lastUpdateDate: ModelSubscriptionStringInput
+                    or: [ModelSubscriptionCourseFilterInput]
+                    promoVideoUrl: ModelSubscriptionStringInput
+                    requirements: ModelSubscriptionStringInput
+                    stripeProduct: ModelSubscriptionStringInput
+                    studentCount: ModelSubscriptionIntInput
+                    subtitle: ModelSubscriptionStringInput
+                    thumbnail: ModelSubscriptionStringInput
+                    title: ModelSubscriptionStringInput
+                    totalVideoDuration: ModelSubscriptionIntInput
+                    videoCount: ModelSubscriptionIntInput
+                  }
+                  
+                  input ModelSubscriptionCoworkerFilterInput {
+                    and: [ModelSubscriptionCoworkerFilterInput]
+                    description: ModelSubscriptionStringInput
+                    displayName: ModelSubscriptionStringInput
+                    email: ModelSubscriptionStringInput
+                    id: ModelSubscriptionIDInput
+                    or: [ModelSubscriptionCoworkerFilterInput]
+                    photoUrl: ModelSubscriptionStringInput
+                  }
+                  
+                  input ModelSubscriptionCustomerFilterInput {
+                    and: [ModelSubscriptionCustomerFilterInput]
+                    createDate: ModelSubscriptionStringInput
+                    email: ModelSubscriptionStringInput
+                    id: ModelSubscriptionIDInput
+                    or: [ModelSubscriptionCustomerFilterInput]
+                    stripeId: ModelSubscriptionStringInput
+                    userName: ModelSubscriptionStringInput
+                  }
+                  
+                  input ModelSubscriptionFloatInput {
+                    between: [Float]
+                    eq: Float
+                    ge: Float
+                    gt: Float
+                    in: [Float]
+                    le: Float
+                    lt: Float
+                    ne: Float
+                    notIn: [Float]
+                  }
+                  
+                  input ModelSubscriptionIDInput {
+                    beginsWith: ID
+                    between: [ID]
+                    contains: ID
+                    eq: ID
+                    ge: ID
+                    gt: ID
+                    in: [ID]
+                    le: ID
+                    lt: ID
+                    ne: ID
+                    notContains: ID
+                    notIn: [ID]
+                  }
+                  
+                  input ModelSubscriptionIntInput {
+                    between: [Int]
+                    eq: Int
+                    ge: Int
+                    gt: Int
+                    in: [Int]
+                    le: Int
+                    lt: Int
+                    ne: Int
+                    notIn: [Int]
+                  }
+                  
+                  input ModelSubscriptionLessonFilterInput {
+                    and: [ModelSubscriptionLessonFilterInput]
+                    customContent: ModelSubscriptionStringInput
+                    customLessonType: ModelSubscriptionStringInput
+                    description: ModelSubscriptionStringInput
+                    id: ModelSubscriptionIDInput
+                    name: ModelSubscriptionStringInput
+                    or: [ModelSubscriptionLessonFilterInput]
+                    order: ModelSubscriptionIntInput
+                    sectionID: ModelSubscriptionIDInput
+                    type: ModelSubscriptionStringInput
+                    video: ModelSubscriptionStringInput
+                    videoDuration: ModelSubscriptionIntInput
+                    videoFileSize: ModelSubscriptionStringInput
+                  }
+                  
+                  input ModelSubscriptionPriceFilterInput {
+                    amount: ModelSubscriptionFloatInput
+                    and: [ModelSubscriptionPriceFilterInput]
+                    bundleID: ModelSubscriptionIDInput
+                    currency: ModelSubscriptionStringInput
+                    id: ModelSubscriptionIDInput
+                    or: [ModelSubscriptionPriceFilterInput]
+                    purchaseType: ModelSubscriptionStringInput
+                    recurrenceInterval: ModelSubscriptionIntInput
+                    recurrenceType: ModelSubscriptionStringInput
+                    stripePriceId: ModelSubscriptionStringInput
+                    trialPeriod: ModelSubscriptionIntInput
+                  }
+                  
+                  input ModelSubscriptionPurchaseFilterInput {
+                    amount: ModelSubscriptionFloatInput
+                    and: [ModelSubscriptionPurchaseFilterInput]
+                    cancellationDate: ModelSubscriptionStringInput
+                    currency: ModelSubscriptionStringInput
+                    customerID: ModelSubscriptionIDInput
+                    id: ModelSubscriptionIDInput
+                    isActive: ModelSubscriptionBooleanInput
+                    or: [ModelSubscriptionPurchaseFilterInput]
+                    purchaseTime: ModelSubscriptionStringInput
+                    purchaseType: ModelSubscriptionStringInput
+                    source: ModelSubscriptionStringInput
+                    stripePaymentIntentId: ModelSubscriptionStringInput
+                    stripePriceId: ModelSubscriptionStringInput
+                    stripeProductId: ModelSubscriptionStringInput
+                    validTill: ModelSubscriptionStringInput
+                  }
+                  
+                  input ModelSubscriptionSectionFilterInput {
+                    and: [ModelSubscriptionSectionFilterInput]
+                    courseID: ModelSubscriptionIDInput
+                    description: ModelSubscriptionStringInput
+                    id: ModelSubscriptionIDInput
+                    name: ModelSubscriptionStringInput
+                    or: [ModelSubscriptionSectionFilterInput]
+                    order: ModelSubscriptionIntInput
+                    subtitle: ModelSubscriptionStringInput
+                    totalVideoCount: ModelSubscriptionIntInput
+                    totalVideoDuration: ModelSubscriptionIntInput
+                  }
+                  
+                  input ModelSubscriptionStringInput {
+                    beginsWith: String
+                    between: [String]
+                    contains: String
+                    eq: String
+                    ge: String
+                    gt: String
+                    in: [String]
+                    le: String
+                    lt: String
+                    ne: String
+                    notContains: String
+                    notIn: [String]
+                  }
+                  
+                  input ModelSubscriptionTenantConfigurationFilterInput {
+                    and: [ModelSubscriptionTenantConfigurationFilterInput]
+                    contentpubApiKey: ModelSubscriptionStringInput
+                    id: ModelSubscriptionIDInput
+                    or: [ModelSubscriptionTenantConfigurationFilterInput]
+                    stripeSecretKey: ModelSubscriptionStringInput
+                    stripeWebhookSecretKey: ModelSubscriptionStringInput
+                    stripeWebhookUrl: ModelSubscriptionStringInput
+                  }
+                  
+                  input ModelSubscriptionTenantFilterInput {
+                    and: [ModelSubscriptionTenantFilterInput]
+                    coverPhotoUrl: ModelSubscriptionStringInput
+                    description: ModelSubscriptionStringInput
+                    id: ModelSubscriptionIDInput
+                    name: ModelSubscriptionStringInput
+                    or: [ModelSubscriptionTenantFilterInput]
+                    promoVideoUrl: ModelSubscriptionStringInput
+                  }
+                  
+                  input ModelTenantConditionInput {
+                    and: [ModelTenantConditionInput]
+                    coverPhotoUrl: ModelStringInput
+                    description: ModelStringInput
+                    name: ModelStringInput
+                    not: ModelTenantConditionInput
+                    or: [ModelTenantConditionInput]
+                    promoVideoUrl: ModelStringInput
+                    tenantProductionConfigurationId: ModelIDInput
+                    tenantTestingConfigurationId: ModelIDInput
+                  }
+                  
+                  input ModelTenantConfigurationConditionInput {
+                    and: [ModelTenantConfigurationConditionInput]
+                    contentpubApiKey: ModelStringInput
+                    not: ModelTenantConfigurationConditionInput
+                    or: [ModelTenantConfigurationConditionInput]
+                    stripeSecretKey: ModelStringInput
+                    stripeWebhookSecretKey: ModelStringInput
+                    stripeWebhookUrl: ModelStringInput
+                  }
+                  
+                  input ModelTenantConfigurationFilterInput {
+                    and: [ModelTenantConfigurationFilterInput]
+                    contentpubApiKey: ModelStringInput
+                    id: ModelIDInput
+                    not: ModelTenantConfigurationFilterInput
+                    or: [ModelTenantConfigurationFilterInput]
+                    stripeSecretKey: ModelStringInput
+                    stripeWebhookSecretKey: ModelStringInput
+                    stripeWebhookUrl: ModelStringInput
+                  }
+                  
+                  input ModelTenantFilterInput {
+                    and: [ModelTenantFilterInput]
+                    coverPhotoUrl: ModelStringInput
+                    description: ModelStringInput
+                    id: ModelIDInput
+                    name: ModelStringInput
+                    not: ModelTenantFilterInput
+                    or: [ModelTenantFilterInput]
+                    promoVideoUrl: ModelStringInput
+                    tenantProductionConfigurationId: ModelIDInput
+                    tenantTestingConfigurationId: ModelIDInput
+                  }
+                  
+                  input UpdateBundleContentInput {
+                    bundleId: ID
+                    contentId: ID
+                    id: ID!
+                  }
+                  
+                  input UpdateBundleInput {
+                    description: String
+                    id: ID!
+                    isAllAccess: Boolean
+                    isAllCourses: Boolean
+                    isAllDocuments: Boolean
+                    isArchived: Boolean
+                    isFree: Boolean
+                    isPublished: Boolean
+                    name: String
+                    stripeProductId: String
+                  }
+                  
+                  input UpdateContentCoworkerInput {
+                    contentId: ID
+                    coworkerId: ID
+                    id: ID!
+                  }
+                  
+                  input UpdateContentInput {
+                    description: String
+                    duration: Int
+                    fileSize: String
+                    id: ID!
+                    isArchived: Boolean
+                    isPublished: Boolean
+                    name: String
+                    objectId: String
+                    owner: String
+                    photoUrl: String
+                    promoVideoDuration: Int
+                    promoVideoUrl: String
+                    s3Url: AWSURL
+                    type: ContentType
+                    videoDuration: String
+                  }
+                  
+                  input UpdateCourseInput {
+                    averagePoint: Float
+                    courseContentId: ID
+                    coverPhotoUrl: String
+                    description: String
+                    features: String
+                    goals: String
+                    id: ID!
+                    language: String
+                    lastUpdateDate: AWSDate
+                    promoVideoUrl: String
+                    requirements: String
+                    stripeProduct: String
+                    studentCount: Int
+                    subtitle: String
+                    thumbnail: String
+                    title: String
+                    totalVideoDuration: Int
+                    videoCount: Int
+                  }
+                  
+                  input UpdateCoworkerInput {
+                    description: String
+                    displayName: String
+                    email: String
+                    id: ID!
+                    photoUrl: String
+                  }
+                  
+                  input UpdateCustomerInput {
+                    createDate: AWSDate
+                    email: String
+                    id: ID!
+                    stripeId: String
+                    userName: String
+                  }
+                  
+                  input UpdateLessonInput {
+                    customContent: String
+                    customLessonType: String
+                    description: String
+                    id: ID!
+                    name: String
+                    order: Int
+                    sectionID: ID
+                    type: LessonType
+                    video: String
+                    videoDuration: Int
+                    videoFileSize: String
+                  }
+                  
+                  input UpdatePriceInput {
+                    amount: Float
+                    bundleID: ID
+                    currency: String
+                    id: ID!
+                    purchaseType: PurchaseType
+                    recurrenceInterval: Int
+                    recurrenceType: RecurrenceType
+                    stripePriceId: String
+                    trialPeriod: Int
+                  }
+                  
+                  input UpdatePurchaseInput {
+                    amount: Float
+                    cancellationDate: AWSDate
+                    currency: String
+                    customerID: ID
+                    id: ID!
+                    isActive: Boolean
+                    purchaseBundleId: ID
+                    purchaseTenantId: ID
+                    purchaseTime: AWSDate
+                    purchaseType: PurchaseType
+                    source: Source
+                    stripePaymentIntentId: String
+                    stripePriceId: String
+                    stripeProductId: String
+                    validTill: AWSDate
+                  }
+                  
+                  input UpdateSectionInput {
+                    courseID: ID
+                    description: String
+                    id: ID!
+                    name: String
+                    order: Int
+                    subtitle: String
+                    totalVideoCount: Int
+                    totalVideoDuration: Int
+                  }
+                  
+                  input UpdateTenantConfigurationInput {
+                    contentpubApiKey: String
+                    id: ID!
+                    stripeSecretKey: String
+                    stripeWebhookSecretKey: String
+                    stripeWebhookUrl: String
+                  }
+                  
+                  input UpdateTenantInput {
+                    coverPhotoUrl: String
+                    description: String
+                    id: ID!
+                    name: String
+                    promoVideoUrl: String
+                    tenantProductionConfigurationId: ID
+                    tenantTestingConfigurationId: ID
+                  }
+
+
+  CognitoUserPool:
+        Type: "AWS::Cognito::UserPool"
+        Properties:
+            UserPoolName: !Sub "${ProjectNameParameter}-userpool"
+            Policies: 
+                PasswordPolicy: 
+                    MinimumLength: 8
+                    RequireUppercase: false
+                    RequireLowercase: false
+                    RequireNumbers: false
+                    RequireSymbols: false
+                    TemporaryPasswordValidityDays: 7
+            LambdaConfig: {}
+            Schema: 
+              - 
+                Name: "sub"
+                AttributeDataType: "String"
+                DeveloperOnlyAttribute: false
+                Mutable: false
+                Required: true
+                StringAttributeConstraints: 
+                    MinLength: "1"
+                    MaxLength: "2048"
+              - 
+                Name: "name"
+                AttributeDataType: "String"
+                DeveloperOnlyAttribute: false
+                Mutable: true
+                Required: false
+                StringAttributeConstraints: 
+                    MinLength: "0"
+                    MaxLength: "2048"
+              - 
+                Name: "given_name"
+                AttributeDataType: "String"
+                DeveloperOnlyAttribute: false
+                Mutable: true
+                Required: false
+                StringAttributeConstraints: 
+                    MinLength: "0"
+                    MaxLength: "2048"
+              - 
+                Name: "family_name"
+                AttributeDataType: "String"
+                DeveloperOnlyAttribute: false
+                Mutable: true
+                Required: false
+                StringAttributeConstraints: 
+                    MinLength: "0"
+                    MaxLength: "2048"
+              - 
+                Name: "middle_name"
+                AttributeDataType: "String"
+                DeveloperOnlyAttribute: false
+                Mutable: true
+                Required: false
+                StringAttributeConstraints: 
+                    MinLength: "0"
+                    MaxLength: "2048"
+              - 
+                Name: "nickname"
+                AttributeDataType: "String"
+                DeveloperOnlyAttribute: false
+                Mutable: true
+                Required: false
+                StringAttributeConstraints: 
+                    MinLength: "0"
+                    MaxLength: "2048"
+              - 
+                Name: "preferred_username"
+                AttributeDataType: "String"
+                DeveloperOnlyAttribute: false
+                Mutable: true
+                Required: false
+                StringAttributeConstraints: 
+                    MinLength: "0"
+                    MaxLength: "2048"
+              - 
+                Name: "profile"
+                AttributeDataType: "String"
+                DeveloperOnlyAttribute: false
+                Mutable: true
+                Required: false
+                StringAttributeConstraints: 
+                    MinLength: "0"
+                    MaxLength: "2048"
+              - 
+                Name: "picture"
+                AttributeDataType: "String"
+                DeveloperOnlyAttribute: false
+                Mutable: true
+                Required: false
+                StringAttributeConstraints: 
+                    MinLength: "0"
+                    MaxLength: "2048"
+              - 
+                Name: "website"
+                AttributeDataType: "String"
+                DeveloperOnlyAttribute: false
+                Mutable: true
+                Required: false
+                StringAttributeConstraints: 
+                    MinLength: "0"
+                    MaxLength: "2048"
+              - 
+                Name: "email"
+                AttributeDataType: "String"
+                DeveloperOnlyAttribute: false
+                Mutable: true
+                Required: true
+                StringAttributeConstraints: 
+                    MinLength: "0"
+                    MaxLength: "2048"
+              - 
+                Name: "email_verified"
+                AttributeDataType: "Boolean"
+                DeveloperOnlyAttribute: false
+                Mutable: true
+                Required: false
+              - 
+                Name: "gender"
+                AttributeDataType: "String"
+                DeveloperOnlyAttribute: false
+                Mutable: true
+                Required: false
+                StringAttributeConstraints: 
+                    MinLength: "0"
+                    MaxLength: "2048"
+              - 
+                Name: "birthdate"
+                AttributeDataType: "String"
+                DeveloperOnlyAttribute: false
+                Mutable: true
+                Required: false
+                StringAttributeConstraints: 
+                    MinLength: "10"
+                    MaxLength: "10"
+              - 
+                Name: "zoneinfo"
+                AttributeDataType: "String"
+                DeveloperOnlyAttribute: false
+                Mutable: true
+                Required: false
+                StringAttributeConstraints: 
+                    MinLength: "0"
+                    MaxLength: "2048"
+              - 
+                Name: "locale"
+                AttributeDataType: "String"
+                DeveloperOnlyAttribute: false
+                Mutable: true
+                Required: false
+                StringAttributeConstraints: 
+                    MinLength: "0"
+                    MaxLength: "2048"
+              - 
+                Name: "phone_number"
+                AttributeDataType: "String"
+                DeveloperOnlyAttribute: false
+                Mutable: true
+                Required: false
+                StringAttributeConstraints: 
+                    MinLength: "0"
+                    MaxLength: "2048"
+              - 
+                Name: "pn_verified"
+                AttributeDataType: "Boolean"
+                DeveloperOnlyAttribute: false
+                Mutable: true
+                Required: false
+              - 
+                Name: "address"
+                AttributeDataType: "String"
+                DeveloperOnlyAttribute: false
+                Mutable: true
+                Required: false
+                StringAttributeConstraints: 
+                    MinLength: "0"
+                    MaxLength: "2048"
+              - 
+                Name: "updated_at"
+                AttributeDataType: "Number"
+                DeveloperOnlyAttribute: false
+                Mutable: true
+                Required: false
+                NumberAttributeConstraints: 
+                    MinValue: "0"
+              - 
+                Name: "identities"
+                AttributeDataType: "String"
+                DeveloperOnlyAttribute: false
+                Mutable: true
+                Required: false
+                StringAttributeConstraints: {}
+            AutoVerifiedAttributes: 
+              - "email"
+            UsernameAttributes: 
+              - "email"
+            EmailVerificationMessage: "Your verification code is {####}"
+            EmailVerificationSubject: "Your verification code"
+            MfaConfiguration: "OFF"
+            EmailConfiguration: 
+                EmailSendingAccount: "COGNITO_DEFAULT"
+            AdminCreateUserConfig: 
+                AllowAdminCreateUserOnly: false
+            UserPoolTags: {}
+            AccountRecoverySetting: 
+                RecoveryMechanisms: 
+                  - 
+                    Priority: 1
+                    Name: "verified_email"
+                  - 
+                    Priority: 2
+                    Name: "verified_phone_number"
+            UsernameConfiguration: 
+                CaseSensitive: false
+            VerificationMessageTemplate: 
+                EmailMessage: "Your verification code is {####}"
+                EmailSubject: "Your verification code"
+                DefaultEmailOption: "CONFIRM_WITH_CODE"
+
+ 
+  CognitoUserPoolClientMobile:
+      Type: "AWS::Cognito::UserPoolClient"
+      Properties:
+          UserPoolId: !Ref CognitoUserPool
+          ClientName:  !Sub "${ProjectNameParameter}_app_client"
+          RefreshTokenValidity: 3
+          SupportedIdentityProviders: 
+            - "COGNITO"
+          CallbackURLs: 
+            - !Sub "https://www.${DomainNameParameter}/"
+          LogoutURLs: 
+            - !Sub "https://www.${DomainNameParameter}/"
+          AllowedOAuthFlows: 
+            - "code"
+          AllowedOAuthScopes: 
+            - "aws.cognito.signin.user.admin"
+            - "email"
+            - "openid"
+            - "phone"
+            - "profile"
+          AllowedOAuthFlowsUserPoolClient: true
+          TokenValidityUnits: 
+              RefreshToken: "days"
+
+  CognitoUserPoolClientMobileWeb:
+      Type: "AWS::Cognito::UserPoolClient"
+      Properties:
+          UserPoolId: !Ref CognitoUserPool
+          ClientName: !Sub "${ProjectNameParameter}_app_clientWeb"
+          RefreshTokenValidity: 3
+          SupportedIdentityProviders: 
+            - "COGNITO"
+          CallbackURLs: 
+            - !Sub "https://www.${DomainNameParameter}/"
+          LogoutURLs: 
+            - !Sub "https://www.${DomainNameParameter}/"
+          AllowedOAuthFlows: 
+            - "code"
+          AllowedOAuthScopes: 
+            - "aws.cognito.signin.user.admin"
+            - "email"
+            - "openid"
+            - "phone"
+            - "profile"
+          AllowedOAuthFlowsUserPoolClient: true
+          TokenValidityUnits: 
+              RefreshToken: "days"
+
+
+  DynamoDBBundleTable:
+        Type: "AWS::DynamoDB::Table"
+        Properties:
+            AttributeDefinitions: 
+              - 
+                AttributeName: "id"
+                AttributeType: "S"
+            BillingMode: "PAY_PER_REQUEST"
+            TableName: !Sub "Bundle-${ProjectNameParameter}-production"
+            Tags: 
+              - 
+                Key: "user:Application"
+                Value: !Sub "${ProjectNameParameter}"
+              - 
+                Key: "user:Stack"
+                Value: "production"
+            KeySchema: 
+              - 
+                AttributeName: "id"
+                KeyType: "HASH"
+            StreamSpecification: 
+                StreamViewType: "NEW_AND_OLD_IMAGES"
+
+  DynamoDBContentTable:
+      Type: "AWS::DynamoDB::Table"
+      Properties:
+          AttributeDefinitions: 
+            - 
+              AttributeName: "id"
+              AttributeType: "S"
+          BillingMode: "PAY_PER_REQUEST"
+          TableName: !Sub "Content-${ProjectNameParameter}-production"
+          Tags: 
+            - 
+              Key: "user:Application"
+              Value: !Sub "${ProjectNameParameter}"
+            - 
+              Key: "user:Stack"
+              Value: "production"
+          KeySchema: 
+            - 
+              AttributeName: "id"
+              KeyType: "HASH"
+          StreamSpecification: 
+              StreamViewType: "NEW_AND_OLD_IMAGES"
+
+  DynamoDBBundleContentTable:
+      Type: "AWS::DynamoDB::Table"
+      Properties:
+          AttributeDefinitions: 
+            - 
+              AttributeName: "bundleId"
+              AttributeType: "S"
+            - 
+              AttributeName: "contentId"
+              AttributeType: "S"
+            - 
+              AttributeName: "id"
+              AttributeType: "S"
+          BillingMode: "PAY_PER_REQUEST"
+          TableName: !Sub "BundleContent-${ProjectNameParameter}-production"
+          Tags: 
+            - 
+              Key: "user:Application"
+              Value: !Sub "${ProjectNameParameter}"
+            - 
+              Key: "user:Stack"
+              Value: "production"
+          KeySchema: 
+            - 
+              AttributeName: "id"
+              KeyType: "HASH"
+          GlobalSecondaryIndexes: 
+            - 
+              IndexName: "byBundle"
+              KeySchema: 
+                - 
+                  AttributeName: "bundleId"
+                  KeyType: "HASH"
+              Projection: 
+                  ProjectionType: "ALL"
+              ProvisionedThroughput: 
+                  ReadCapacityUnits: 0
+                  WriteCapacityUnits: 0
+            - 
+              IndexName: "byContent"
+              KeySchema: 
+                - 
+                  AttributeName: "contentId"
+                  KeyType: "HASH"
+              Projection: 
+                  ProjectionType: "ALL"
+              ProvisionedThroughput: 
+                  ReadCapacityUnits: 0
+                  WriteCapacityUnits: 0
+          StreamSpecification: 
+              StreamViewType: "NEW_AND_OLD_IMAGES"
+
+  DynamoDBCourseTable:
+      Type: "AWS::DynamoDB::Table"
+      Properties:
+          AttributeDefinitions: 
+            - 
+              AttributeName: "id"
+              AttributeType: "S"
+          BillingMode: "PAY_PER_REQUEST"
+          TableName: !Sub "Course-${ProjectNameParameter}-production"
+          Tags: 
+            - 
+              Key: "user:Application"
+              Value: !Sub "${ProjectNameParameter}"
+            - 
+              Key: "user:Stack"
+              Value: "production"
+          KeySchema: 
+            - 
+              AttributeName: "id"
+              KeyType: "HASH"
+          StreamSpecification: 
+              StreamViewType: "NEW_AND_OLD_IMAGES"
+
+  DynamoDBContentCoworkerTable:
+      Type: "AWS::DynamoDB::Table"
+      Properties:
+          AttributeDefinitions: 
+            - 
+              AttributeName: "contentId"
+              AttributeType: "S"
+            - 
+              AttributeName: "coworkerId"
+              AttributeType: "S"
+            - 
+              AttributeName: "id"
+              AttributeType: "S"
+          BillingMode: "PAY_PER_REQUEST"
+          TableName: !Sub "ContentCoworker-${ProjectNameParameter}-production"
+          Tags: 
+            - 
+              Key: "user:Application"
+              Value: !Sub "${ProjectNameParameter}"
+            - 
+              Key: "user:Stack"
+              Value: "production"
+          KeySchema: 
+            - 
+              AttributeName: "id"
+              KeyType: "HASH"
+          GlobalSecondaryIndexes: 
+            - 
+              IndexName: "byContent"
+              KeySchema: 
+                - 
+                  AttributeName: "contentId"
+                  KeyType: "HASH"
+              Projection: 
+                  ProjectionType: "ALL"
+              ProvisionedThroughput: 
+                  ReadCapacityUnits: 0
+                  WriteCapacityUnits: 0
+            - 
+              IndexName: "byCoworker"
+              KeySchema: 
+                - 
+                  AttributeName: "coworkerId"
+                  KeyType: "HASH"
+              Projection: 
+                  ProjectionType: "ALL"
+              ProvisionedThroughput: 
+                  ReadCapacityUnits: 0
+                  WriteCapacityUnits: 0
+          StreamSpecification: 
+              StreamViewType: "NEW_AND_OLD_IMAGES"
+
+  DynamoDBCoworkerTable:
+      Type: "AWS::DynamoDB::Table"
+      Properties:
+          AttributeDefinitions: 
+            - 
+              AttributeName: "id"
+              AttributeType: "S"
+          BillingMode: "PAY_PER_REQUEST"
+          TableName: !Sub "Coworker-${ProjectNameParameter}-production"
+          Tags: 
+            - 
+              Key: "user:Application"
+              Value: !Sub "${ProjectNameParameter}"
+            - 
+              Key: "user:Stack"
+              Value: "production"
+          KeySchema: 
+            - 
+              AttributeName: "id"
+              KeyType: "HASH"
+          StreamSpecification: 
+              StreamViewType: "NEW_AND_OLD_IMAGES"
+
+  DynamoDBCustomerTable:
+      Type: "AWS::DynamoDB::Table"
+      Properties:
+          AttributeDefinitions: 
+            - 
+              AttributeName: "id"
+              AttributeType: "S"
+          BillingMode: "PAY_PER_REQUEST"
+          TableName: !Sub "Customer-${ProjectNameParameter}-production"
+          Tags: 
+            - 
+              Key: "user:Application"
+              Value: !Sub "${ProjectNameParameter}"
+            - 
+              Key: "user:Stack"
+              Value: "production"
+          KeySchema: 
+            - 
+              AttributeName: "id"
+              KeyType: "HASH"
+          StreamSpecification: 
+              StreamViewType: "NEW_AND_OLD_IMAGES"
+
+  DynamoDBPriceTable:
+      Type: "AWS::DynamoDB::Table"
+      Properties:
+          AttributeDefinitions: 
+            - 
+              AttributeName: "bundleID"
+              AttributeType: "S"
+            - 
+              AttributeName: "id"
+              AttributeType: "S"
+          BillingMode: "PAY_PER_REQUEST"
+          TableName: !Sub "Price-${ProjectNameParameter}-production"
+          Tags: 
+            - 
+              Key: "user:Application"
+              Value: !Sub "${ProjectNameParameter}"
+            - 
+              Key: "user:Stack"
+              Value: "production"
+          KeySchema: 
+            - 
+              AttributeName: "id"
+              KeyType: "HASH"
+          GlobalSecondaryIndexes: 
+            - 
+              IndexName: "byBundle"
+              KeySchema: 
+                - 
+                  AttributeName: "bundleID"
+                  KeyType: "HASH"
+              Projection: 
+                  ProjectionType: "ALL"
+              ProvisionedThroughput: 
+                  ReadCapacityUnits: 0
+                  WriteCapacityUnits: 0
+          StreamSpecification: 
+              StreamViewType: "NEW_AND_OLD_IMAGES"
+
+  DynamoDBPurchaseTable:
+      Type: "AWS::DynamoDB::Table"
+      Properties:
+          AttributeDefinitions: 
+            - 
+              AttributeName: "customerID"
+              AttributeType: "S"
+            - 
+              AttributeName: "id"
+              AttributeType: "S"
+          BillingMode: "PAY_PER_REQUEST"
+          TableName: !Sub "Purchase-${ProjectNameParameter}-production"
+          Tags: 
+            - 
+              Key: "user:Application"
+              Value: !Sub "${ProjectNameParameter}"
+            - 
+              Key: "user:Stack"
+              Value: "production"
+          KeySchema: 
+            - 
+              AttributeName: "id"
+              KeyType: "HASH"
+          GlobalSecondaryIndexes: 
+            - 
+              IndexName: "byCustomer"
+              KeySchema: 
+                - 
+                  AttributeName: "customerID"
+                  KeyType: "HASH"
+              Projection: 
+                  ProjectionType: "ALL"
+              ProvisionedThroughput: 
+                  ReadCapacityUnits: 0
+                  WriteCapacityUnits: 0
+          StreamSpecification: 
+              StreamViewType: "NEW_AND_OLD_IMAGES"
+
+  DynamoDBSectionTable:
+      Type: "AWS::DynamoDB::Table"
+      Properties:
+          AttributeDefinitions: 
+            - 
+              AttributeName: "courseID"
+              AttributeType: "S"
+            - 
+              AttributeName: "id"
+              AttributeType: "S"
+          BillingMode: "PAY_PER_REQUEST"
+          TableName: !Sub "Section-${ProjectNameParameter}-production"
+          Tags: 
+            - 
+              Key: "user:Application"
+              Value: !Sub "${ProjectNameParameter}"
+            - 
+              Key: "user:Stack"
+              Value: "production"
+          KeySchema: 
+            - 
+              AttributeName: "id"
+              KeyType: "HASH"
+          GlobalSecondaryIndexes: 
+            - 
+              IndexName: "byCourse"
+              KeySchema: 
+                - 
+                  AttributeName: "courseID"
+                  KeyType: "HASH"
+              Projection: 
+                  ProjectionType: "ALL"
+              ProvisionedThroughput: 
+                  ReadCapacityUnits: 0
+                  WriteCapacityUnits: 0
+          StreamSpecification: 
+              StreamViewType: "NEW_AND_OLD_IMAGES"
+
+  DynamoDBTenantConfigurationTable:
+      Type: "AWS::DynamoDB::Table"
+      Properties:
+          AttributeDefinitions: 
+            - 
+              AttributeName: "id"
+              AttributeType: "S"
+          BillingMode: "PAY_PER_REQUEST"
+          TableName: !Sub "TenantConfiguration-${ProjectNameParameter}-production"
+          Tags: 
+            - 
+              Key: "user:Application"
+              Value: !Sub "${ProjectNameParameter}"
+            - 
+              Key: "user:Stack"
+              Value: "production"
+          KeySchema: 
+            - 
+              AttributeName: "id"
+              KeyType: "HASH"
+          StreamSpecification: 
+              StreamViewType: "NEW_AND_OLD_IMAGES"
+
+  DynamoDBTenantTable:
+      Type: "AWS::DynamoDB::Table"
+      Properties:
+          AttributeDefinitions: 
+            - 
+              AttributeName: "id"
+              AttributeType: "S"
+          BillingMode: "PAY_PER_REQUEST"
+          TableName: !Sub "Tenant-${ProjectNameParameter}-production"
+          Tags: 
+            - 
+              Key: "user:Application"
+              Value: !Sub "${ProjectNameParameter}"
+            - 
+              Key: "user:Stack"
+              Value: "production"
+          KeySchema: 
+            - 
+              AttributeName: "id"
+              KeyType: "HASH"
+          StreamSpecification: 
+              StreamViewType: "NEW_AND_OLD_IMAGES"
+
+  DynamoDBLessonTable:
+      Type: "AWS::DynamoDB::Table"
+      Properties:
+          AttributeDefinitions: 
+            - 
+              AttributeName: "id"
+              AttributeType: "S"
+            - 
+              AttributeName: "sectionID"
+              AttributeType: "S"
+          BillingMode: "PAY_PER_REQUEST"
+          TableName: !Sub "Lesson-${ProjectNameParameter}-production"
+          Tags: 
+            - 
+              Key: "user:Application"
+              Value: !Sub "${ProjectNameParameter}"
+            - 
+              Key: "user:Stack"
+              Value: "production"
+          KeySchema: 
+            - 
+              AttributeName: "id"
+              KeyType: "HASH"
+          GlobalSecondaryIndexes: 
+            - 
+              IndexName: "bySection"
+              KeySchema: 
+                - 
+                  AttributeName: "sectionID"
+                  KeyType: "HASH"
+              Projection: 
+                  ProjectionType: "ALL"
+              ProvisionedThroughput: 
+                  ReadCapacityUnits: 0
+                  WriteCapacityUnits: 0
+          StreamSpecification: 
+              StreamViewType: "NEW_AND_OLD_IMAGES"
+  
+  AppSyncBundleContentDataSource:
+      Type: "AWS::AppSync::DataSource"
+      Properties:
+          Name: "BundleContentTable"
+          Type: "AMAZON_DYNAMODB"
+          ServiceRoleArn: !GetAtt DynamoDbAccessIAMRole.Arn
+          DynamoDBConfig: 
+              TableName: !Ref DynamoDBBundleContentTable
+              AwsRegion: !Ref AWS::Region
+              UseCallerCredentials: false
+              Versioned: false
+          ApiId: !GetAtt AppSyncGraphQLApiProduction.ApiId
+
+  AppSyncSectionDataSource:
+      Type: "AWS::AppSync::DataSource"
+      Properties:
+          Name: "SectionTable"
+          Type: "AMAZON_DYNAMODB"
+          ServiceRoleArn: !GetAtt DynamoDbAccessIAMRole.Arn
+          DynamoDBConfig: 
+              TableName: !Ref DynamoDBSectionTable
+              AwsRegion: !Ref AWS::Region
+              UseCallerCredentials: false
+              Versioned: false
+          ApiId: !GetAtt AppSyncGraphQLApiProduction.ApiId
+
+  AppSyncPriceDataSource:
+      Type: "AWS::AppSync::DataSource"
+      Properties:
+          Name: "PriceTable"
+          Type: "AMAZON_DYNAMODB"
+          ServiceRoleArn: !GetAtt DynamoDbAccessIAMRole.Arn
+          DynamoDBConfig: 
+              TableName: !Ref DynamoDBPriceTable
+              AwsRegion: !Ref AWS::Region
+              UseCallerCredentials: false
+              Versioned: false
+          ApiId: !GetAtt AppSyncGraphQLApiProduction.ApiId
+
+  AppSyncBundleDataSource:
+      Type: "AWS::AppSync::DataSource"
+      Properties:
+          Name: "BundleTable"
+          Type: "AMAZON_DYNAMODB"
+          ServiceRoleArn: !GetAtt DynamoDbAccessIAMRole.Arn
+          DynamoDBConfig: 
+              TableName: !Ref DynamoDBBundleTable
+              AwsRegion: !Ref AWS::Region
+              UseCallerCredentials: false
+              Versioned: false
+          ApiId: !GetAtt AppSyncGraphQLApiProduction.ApiId
+
+  AppSyncTenantDataSource:
+      Type: "AWS::AppSync::DataSource"
+      Properties:
+          Name: "TenantTable"
+          Type: "AMAZON_DYNAMODB"
+          ServiceRoleArn: !GetAtt DynamoDbAccessIAMRole.Arn
+          DynamoDBConfig: 
+              TableName: !Ref DynamoDBTenantTable
+              AwsRegion: !Ref AWS::Region
+              UseCallerCredentials: false
+              Versioned: false
+          ApiId: !GetAtt AppSyncGraphQLApiProduction.ApiId
+
+  AppSyncContentDataSource:
+      Type: "AWS::AppSync::DataSource"
+      Properties:
+          Name: "ContentTable"
+          Type: "AMAZON_DYNAMODB"
+          ServiceRoleArn: !GetAtt DynamoDbAccessIAMRole.Arn
+          DynamoDBConfig: 
+              TableName: !Ref DynamoDBContentTable
+              AwsRegion: !Ref AWS::Region
+              UseCallerCredentials: false
+              Versioned: false
+          ApiId: !GetAtt AppSyncGraphQLApiProduction.ApiId
+
+  AppSyncCourseDataSource:
+      Type: "AWS::AppSync::DataSource"
+      Properties:
+          Name: "CourseTable"
+          Type: "AMAZON_DYNAMODB"
+          ServiceRoleArn: !GetAtt DynamoDbAccessIAMRole.Arn
+          DynamoDBConfig: 
+              TableName: !Ref DynamoDBCourseTable
+              AwsRegion: !Ref AWS::Region
+              UseCallerCredentials: false
+              Versioned: false
+          ApiId: !GetAtt AppSyncGraphQLApiProduction.ApiId
+
+  AppSyncTenantConfigurationDataSource:
+      Type: "AWS::AppSync::DataSource"
+      Properties:
+          Name: "TenantConfigurationTable"
+          Type: "AMAZON_DYNAMODB"
+          ServiceRoleArn: !GetAtt DynamoDbAccessIAMRole.Arn
+          DynamoDBConfig: 
+              TableName: !Ref DynamoDBTenantConfigurationTable
+              AwsRegion: !Ref AWS::Region
+              UseCallerCredentials: false
+              Versioned: false
+          ApiId: !GetAtt AppSyncGraphQLApiProduction.ApiId
+
+  AppSyncLessonDataSource:
+      Type: "AWS::AppSync::DataSource"
+      Properties:
+          Name: "LessonTable"
+          Type: "AMAZON_DYNAMODB"
+          ServiceRoleArn: !GetAtt DynamoDbAccessIAMRole.Arn
+          DynamoDBConfig: 
+              TableName: !Ref DynamoDBLessonTable
+              AwsRegion: !Ref AWS::Region
+              UseCallerCredentials: false
+              Versioned: false
+          ApiId: !GetAtt AppSyncGraphQLApiProduction.ApiId
+
+  AppSyncPurchaseDataSource:
+      Type: "AWS::AppSync::DataSource"
+      Properties:
+          Name: "PurchaseTable"
+          Type: "AMAZON_DYNAMODB"
+          ServiceRoleArn: !GetAtt DynamoDbAccessIAMRole.Arn
+          DynamoDBConfig: 
+              TableName: !Ref  DynamoDBPurchaseTable
+              AwsRegion: !Ref AWS::Region
+              UseCallerCredentials: false
+              Versioned: false
+          ApiId: !GetAtt AppSyncGraphQLApiProduction.ApiId
+
+  AppSyncContentCoworkerDataSource:
+      Type: "AWS::AppSync::DataSource"
+      Properties:
+          Name: "ContentCoworkerTable"
+          Type: "AMAZON_DYNAMODB"
+          ServiceRoleArn: !GetAtt DynamoDbAccessIAMRole.Arn
+          DynamoDBConfig: 
+              TableName: !Ref DynamoDBContentCoworkerTable
+              AwsRegion: !Ref AWS::Region
+              UseCallerCredentials: false
+              Versioned: false
+          ApiId: !GetAtt AppSyncGraphQLApiProduction.ApiId
+
+  AppSyncCoworkerDataSource:
+      Type: "AWS::AppSync::DataSource"
+      Properties:
+          Name: "CoworkerTable"
+          Type: "AMAZON_DYNAMODB"
+          ServiceRoleArn: !GetAtt DynamoDbAccessIAMRole.Arn
+          DynamoDBConfig: 
+              TableName: !Ref DynamoDBCoworkerTable
+              AwsRegion: !Ref AWS::Region
+              UseCallerCredentials: false
+              Versioned: false
+          ApiId: !GetAtt AppSyncGraphQLApiProduction.ApiId
+
+  AppSyncNoneDataDataSource:
+      Type: "AWS::AppSync::DataSource"
+      Properties:
+          Name: "NONE_DS"
+          Description: "None Data Source for Pipeline functions"
+          Type: "NONE"
+          ApiId: !GetAtt AppSyncGraphQLApiProduction.ApiId
+
+  AppSyncCustomerDataSource:
+      Type: "AWS::AppSync::DataSource"
+      Properties:
+          Name: "CustomerTable"
+          Type: "AMAZON_DYNAMODB"
+          ServiceRoleArn: !GetAtt DynamoDbAccessIAMRole.Arn
+          DynamoDBConfig: 
+              TableName: !Ref DynamoDBCustomerTable
+              AwsRegion: !Ref AWS::Region
+              UseCallerCredentials: false
+              Versioned: false
+          ApiId: !GetAtt AppSyncGraphQLApiProduction.ApiId
+
+  DynamoDbAccessIAMRole:
+      Type: "AWS::IAM::Role"
+      Properties:
+          Path: "/"
+          RoleName: !Sub "AllAccessToDynamoDBRole-${ProjectNameParameter}"
+          AssumeRolePolicyDocument: "{\"Version\":\"2012-10-17\",\"Statement\":[{\"Effect\":\"Allow\",\"Principal\":{\"Service\":\"appsync.amazonaws.com\"},\"Action\":\"sts:AssumeRole\"}]}"
+          MaxSessionDuration: 3600
+          Description: ""
+          Tags: 
+            - 
+              Key: "user:Application"
+              Value: !Sub "${ProjectNameParameter}"
+            - 
+              Key: "user:Stack"
+              Value: "production"
+
+  DynamoDbAllAccessPolicy:
+      Type: "AWS::IAM::Policy"
+      Properties:
+          PolicyDocument: !Sub "{\"Version\":\"2012-10-17\",\"Statement\":[{\"Action\":[\"dynamodb:BatchGetItem\",\"dynamodb:GetRecords\",\"dynamodb:GetShardIterator\",\"dynamodb:Query\",\"dynamodb:GetItem\",\"dynamodb:Scan\",\"dynamodb:ConditionCheckItem\",\"dynamodb:BatchWriteItem\",\"dynamodb:PutItem\",\"dynamodb:UpdateItem\",\"dynamodb:DeleteItem\",\"dynamodb:DescribeTable\"],\"Resource\":[\"arn:aws:dynamodb:${AWS::Region}:${AWS::AccountId}:table/*\"],\"Effect\":\"Allow\"}]}"
+          Roles: 
+            - !Ref DynamoDbAccessIAMRole
+          PolicyName: !Sub "${ProjectNameParameter}-DynamoDBAllAccessPolicy"
+
+
+  AllBucketsAllAccessPolicy:
+        Type: "AWS::IAM::ManagedPolicy"
+        Properties:
+            ManagedPolicyName: !Sub "${ProjectNameParameter}-AllBucketsAllAccessPolicy"
+            Path: "/"
+            PolicyDocument: !Sub |
+                {
+                	"Version": "2012-10-17",
+                	"Statement": [
+                		{
+                			"Sid": "VisualEditor0",
+                			"Effect": "Allow",
+                			"Action": [
+                				"s3:PutObject",
+                				"s3:GetObject"
+                			],
+                			"Resource": [
+                				 "arn:aws:s3:::${ProjectNameParameter}-staging-restricted/*",
+                				 "arn:aws:s3:::${ProjectNameParameter}-staging-public/*",
+                				 "arn:aws:s3:::${ProjectNameParameter}-production-restricted/*",
+                				 "arn:aws:s3:::${ProjectNameParameter}-production-public/*"
+                			]
+                		}
+                	]
+                }
+
+  UnauthUserAppSyncAccessPolicy:
+      Type: "AWS::IAM::ManagedPolicy"
+      Properties:
+          ManagedPolicyName: "contentpub-unauthuser-graphql"
+          Path: "/"
+          PolicyDocument: !Sub |
+              {
+                "Version": "2012-10-17",
+                "Statement": [
+                  {
+                    "Sid": "VisualEditor0",
+                    "Effect": "Allow",
+                    "Action": "appsync:GraphQL",
+                    "Resource": "arn:aws:appsync:*:${AWS::AccountId}:apis/*"
+                  },
+                  {
+                    "Sid": "VisualEditor1",
+                    "Effect": "Allow",
+                    "Action": "appsync:GraphQL",
+                    "Resource": "arn:aws:appsync:*:${AWS::AccountId}:apis/*/types/*/fields/*"
+                  }
+                ]
+              }
+
+  LambdaFunctionsAccessRole:
+      Type: "AWS::IAM::Role"
+      Properties:
+          Path: "/service-role/"
+          RoleName: "LambdaFunctionsAccessRole"
+          AssumeRolePolicyDocument: "{\"Version\":\"2012-10-17\",\"Statement\":[{\"Effect\":\"Allow\",\"Principal\":{\"Service\":\"lambda.amazonaws.com\"},\"Action\":\"sts:AssumeRole\"},{\"Sid\":\"Statement1\",\"Effect\":\"Allow\",\"Principal\":{\"Service\":\"appsync.amazonaws.com\"},\"Action\":\"sts:AssumeRole\"}]}"
+          MaxSessionDuration: 3600
+          ManagedPolicyArns: 
+            - !Ref AllBucketsAllAccessPolicy
+            - !Ref UnauthUserAppSyncAccessPolicy
+            - "arn:aws:iam::aws:policy/AWSAppSyncInvokeFullAccess"
+            - "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+            - "arn:aws:iam::aws:policy/AmazonDynamoDBFullAccess"
+          Tags: 
+            - 
+              Key: "contentpubversion"
+              Value: "0.1"
+            - 
+              Key: "app"
+              Value: !Sub "${ProjectNameParameter}"
+
+
+  StripeFunction:
+      Type: "AWS::Lambda::Function"
+      Properties:
+          Description: "Stripe functions, product functions etc"
+          Environment: 
+              Variables: 
+                  stripe_api_secret: "sk_test_XXX"
+                  environment: "production"
+                  app_url: !Sub "https://www.${DomainNameParameter}"
+                  aws_region: !Ref AWS::Region
+                  graphql_endpoint_id: !GetAtt AppSyncGraphQLApiProduction.ApiId
+                  JAVA_TOOL_OPTIONS: "-XX:+TieredCompilation -XX:TieredStopAtLevel=1"
+                  stripe_webhook_secret: "whsec_XXX"
+                  appsync_api_id: !GetAtt AppSyncGraphQLApiProduction.GraphQLUrl
+                  stripe_webhook_id: "we_XXX"
+          FunctionName: "stripeFunctions"
+          Handler: "io.contentpub.stripe.StripeHandler::handleRequest"
+          Architectures: 
+            - "x86_64"
+          Code: 
+              S3Bucket: "contentpub-central-dist"
+              S3Key: "stripe-operations-1.0-SNAPSHOT.jar"
+          MemorySize: 512
+          Role: !GetAtt LambdaFunctionsAccessRole.Arn
+          Runtime: "java11"
+          Timeout: 20
+          TracingConfig: 
+              Mode: "PassThrough"
+          EphemeralStorage: 
+              Size: 512
+
+  PresignerFunction:
+        Type: "AWS::Lambda::Function"
+        Properties:
+            Description: "S3 presigner lambda for uploads"
+            Environment: 
+                Variables: 
+                    aws_region: !Ref AWS::Region
+                    JAVA_TOOL_OPTIONS: "-XX:+TieredCompilation -XX:TieredStopAtLevel=1"
+                    appsync_api_id: !GetAtt AppSyncGraphQLApiProduction.ApiId
+            FunctionName: "s3PresignerFunction"
+            Handler: "io.contentpub.lambda.S3Handler::handleRequest"
+            Architectures: 
+              - "x86_64"
+            Code: 
+                S3Bucket: "contentpub-central-dist"
+                S3Key: "stripe-operations-1.0-SNAPSHOT.jar"
+            MemorySize: 256
+            Role: !GetAtt LambdaFunctionsAccessRole.Arn
+            Runtime: "java11"
+            Timeout: 20
+            TracingConfig: 
+                Mode: "PassThrough"
+            EphemeralStorage: 
+                Size: 512
+
+
+  RestApi:
+    Type: 'AWS::ApiGateway::RestApi'
+    Properties:
+      BodyS3Location: "s3://contentpub-central-dist/openapi.json"
+      Description: A test API
+      Name: MyRestAPI
+
+  ApiGatewayAuthorizer:
+        Type: "AWS::ApiGateway::Authorizer"
+        Properties:
+            RestApiId: !Ref RestApi
+            Name: "contentpub-io-EndUserAuthorizer"
+            Type: "COGNITO_USER_POOLS"
+            ProviderARNs: 
+              - !GetAtt CognitoUserPool.Arn
+            AuthType: "cognito_user_pools"
+            IdentitySource: "method.request.header.Authorization"
+
+  ApiGatewayProductionDeployment:
+        Type: "AWS::ApiGateway::Deployment"
+        Properties:
+            RestApiId: !Ref RestApi
+
+
+  ApiGatewayProduction:
+        Type: "AWS::ApiGateway::Stage"
+        Properties:
+            StageName: "production"
+            DeploymentId: !GetAtt ApiGatewayProductionDeployment.DeploymentId
+            RestApiId: !Ref RestApi
+            CacheClusterEnabled: false
+            TracingEnabled: false
+            Tags: 
+              - 
+                Key: "app"
+                Value: !Sub ${ProjectNameParameter}
+              - 
+                Key: "contentpubversion"
+                Value: "0.1"
+
+  StripeLambdaPermission:
+        Type: "AWS::Lambda::Permission"
+        Properties:
+            Action: "lambda:InvokeFunction"
+            FunctionName: !GetAtt StripeFunction.Arn
+            Principal: "apigateway.amazonaws.com"
+            SourceArn: !Sub "arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${RestApi.RootResourceId}/*"
+
+  PresignerLambdaPermission:
+      Type: "AWS::Lambda::Permission"
+      Properties:
+          Action: "lambda:InvokeFunction"
+          FunctionName: !GetAtt PresignerFunction.Arn
+          Principal: "apigateway.amazonaws.com"
+          SourceArn: !Sub "arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${RestApi.RootResourceId}/*"
+
+
+  CopyS3ObjectsFunction:
+    Type: AWS::Lambda::Function
+    Properties:
+      Timeout: 900
+      FunctionName: CopyS3ObjectsFunction
+      Handler: index.lambda_handler
+      Role: !GetAtt CopyS3ObjectsFunctionExecutionRole.Arn
+      Code:
+        ZipFile: !Sub |
+          import boto3
+          import cfnresponse
+
+          def lambda_handler(event, context):
+                     
+              try:
+                  copyobjects("contentpub-central-dist", "www.${DomainNameParameter}", "app/")
+                  copyobjects("contentpub-central-dist", "admin.${DomainNameParameter}", "admin/")
+                  
+                  cfnresponse.send(event, context, cfnresponse.SUCCESS, {}, "CustomResourcePhysicalID")
+              except Exception as e:
+                  cfnresponse.send(event, context, cfnresponse.FAILED, {}, "CustomResourcePhysicalID")
+
+          def copyobjects(source_bucket, destination_bucket, folder):
+            
+              s3 = boto3.client("s3")
+
+              # List objects in the source bucket
+              objects = s3.list_objects_v2(Bucket=source_bucket, Prefix=folder)["Contents"]
+
+              # Copy each object to the destination bucket
+              for obj in objects:
+                  key = obj["Key"]
+                  copy_source = {"Bucket": source_bucket, "Key": key}
+                  print(key)
+                  newkey = key.replace(folder, "")
+                  if len(newkey) > 0:
+                      s3.copy_object(CopySource=copy_source, Bucket=destination_bucket, Key=newkey)
+      Runtime: python3.11
+
+  ProcessOutputsFunction:
+    Type: AWS::Lambda::Function
+    Properties:
+      Timeout: 900
+      FunctionName: ProcessOutputsFunction
+      Handler: index.lambda_handler
+      Role: !GetAtt StackOutputFunctionExecutionRole.Arn
+      Code:
+        ZipFile: !Sub |
+          import json
+          import boto3
+          import cfnresponse
+
+          def lambda_handler(event, context):
+              # Create a CloudFormation client
+              cloudformation = boto3.client('cloudformation')
+
+              # Specify the stack name
+              stack_name = 'serverlessrepo-ContentPub'
+
+              # Describe the stack to retrieve its outputs
+              response = cloudformation.describe_stacks(StackName=stack_name)
+
+              # Extract the outputs from the stack description
+              if 'Stacks' in response and len(response['Stacks']) > 0:
+                  stack_outputs = response['Stacks'][0].get('Outputs', [])
+              else:
+                  stack_outputs = []
+
+              # Process the stack outputs
+              formatted_outputs = {}
+              for output in stack_outputs:
+                  formatted_outputs[output['OutputKey']] = output['OutputValue']
+
+              print(stack_outputs)
+              print(formatted_outputs)
+
+              s3 = boto3.resource('s3')
+              object = s3.Object('www.${DomainNameParameter}', 'amplifyconfiguration.json')
+              object.put(Body=json.dumps(formatted_outputs))
+              
+              cfnresponse.send(event, context, cfnresponse.SUCCESS, {}, "CustomResourcePhysicalID")
+
+
+      Runtime: python3.11
+
+  CopyS3ObjectsFunctionExecutionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: LambdaExecutionRole
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+            Action: sts:AssumeRole
+      Policies:
+        - PolicyName: S3AccessPolicy
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action:
+                  - s3:GetObject
+                  - s3:PutObject
+                Resource:
+                  - arn:aws:s3:::contentpub-central-dist/*
+                  - !Sub "arn:aws:s3:::www.${DomainNameParameter}/*"
+                  - !Sub "arn:aws:s3:::admin.${DomainNameParameter}/*"
+              - Effect: Allow
+                Action:
+                  - s3:ListBucket                 
+                Resource:
+                  - arn:aws:s3:::contentpub-central-dist
+                  - !Sub "arn:aws:s3:::www.${DomainNameParameter}"
+                  - !Sub "arn:aws:s3:::admin.${DomainNameParameter}/*"
+  
+  CopyS3ObjectsInvokePermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: lambda:InvokeFunction
+      FunctionName: !GetAtt CopyS3ObjectsFunction.Arn
+      Principal: s3.amazonaws.com
+      SourceAccount: !Sub "${AWS::AccountId}"
+      SourceArn: arn:aws:s3:::contentpub-central-dist
+
+  StackOutputFunctionExecutionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: StackOutputFunctionExecutionRole
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+            Action: sts:AssumeRole
+      Policies:
+        - PolicyName: CloudFormationAccess
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - cloudformation:DescribeStacks
+                Resource: '*'
+        - PolicyName: CloudWatchLogsAccess
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - logs:CreateLogGroup
+                  - logs:CreateLogStream
+                  - logs:PutLogEvents
+                Resource: arn:aws:logs:*:*:*
+        - PolicyName: S3AccessPolicy
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action:
+                  - s3:GetObject
+                  - s3:PutObject
+                Resource:
+                  - !Sub "arn:aws:s3:::www.${DomainNameParameter}/*"
+                  - !Sub "arn:aws:s3:::admin.${DomainNameParameter}/*"
+              - Effect: Allow
+                Action:
+                  - s3:ListBucket                 
+                Resource:
+                  - !Sub "arn:aws:s3:::www.${DomainNameParameter}"
+                  - !Sub "arn:aws:s3:::admin.${DomainNameParameter}/*"
+
+  TransformOutputs:
+    Type: AWS::CloudFormation::CustomResource
+    DeletionPolicy: Retain
+    UpdateReplacePolicy: Retain
+    Properties:
+      ServiceToken: !GetAtt ProcessOutputsFunction.Arn
+
+
+  RunLambdaAfterDeployment:
+      Type: AWS::CloudFormation::CustomResource
+      Properties:
+        ServiceToken: !GetAtt CopyS3ObjectsFunction.Arn
+
+
+Outputs:
+  ProjectNameOutput:
+    Description: Name of the project
+    Value: !Sub ${ProjectNameParameter}
+    Export:
+      Name: "project"
+
+  Region:
+    Description: AWS region of the stack
+    Value: !Sub ${AWS::Region}
+    Export:
+      Name: "region"
+
+  AppSyncApiId:
+    Description: Api ID (not Graphql endpoint prefix) of Appsync
+    Value: !GetAtt AppSyncGraphQLApiProduction.ApiId
+    Export:
+      Name: appsyncid
+
+  AppSyncGraphqlId:
+    Description: Graphql endpoint prefix from Appsync resource
+    Value: !GetAtt AppSyncGraphQLApiProduction.GraphQLUrl
+    Export:
+      Name: appsyncgraphqlid
+
+  ApiGatewayId:
+    Description: API Gateway Id - to be used in endpoint URL
+    Value: !Ref RestApi
+    Export:
+      Name: "apigatewayid"
+

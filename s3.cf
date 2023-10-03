@@ -1,0 +1,508 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Metadata:
+    Generator: "former2"
+Description: ""
+Resources:
+    S3Bucket:
+        Type: "AWS::S3::Bucket"
+        Properties:
+            BucketName: "admin.javawebdevelopment.com"
+            Tags: 
+              - 
+                Key: "app"
+                Value: "javawebdevelopment.com"
+              - 
+                Key: "contentpubversion"
+                Value: "0.1"
+            BucketEncryption: 
+                ServerSideEncryptionConfiguration: 
+                  - 
+                    ServerSideEncryptionByDefault: 
+                        SSEAlgorithm: "AES256"
+                    BucketKeyEnabled: false
+            CorsConfiguration: 
+                CorsRules: 
+                  - 
+                    AllowedMethods: 
+                      - "GET"
+                    AllowedOrigins: 
+                      - "*"
+                  - 
+                    AllowedHeaders: 
+                      - "*"
+                    AllowedMethods: 
+                      - "POST"
+                    AllowedOrigins: 
+                      - "*"
+            VersioningConfiguration: 
+                Status: "Enabled"
+            WebsiteConfiguration: 
+                IndexDocument: "index.html"
+            OwnershipControls: 
+                Rules: 
+                  - 
+                    ObjectOwnership: "BucketOwnerEnforced"
+            PublicAccessBlockConfiguration: 
+                BlockPublicAcls: false
+                BlockPublicPolicy: false
+                IgnorePublicAcls: false
+                RestrictPublicBuckets: false
+
+    S3Bucket2:
+        Type: "AWS::S3::Bucket"
+        Properties:
+            BucketName: "amplify-javawebdevelopment-production-180337-deployment"
+            Tags: 
+              - 
+                Key: "user:Application"
+                Value: "javawebdevelopment"
+              - 
+                Key: "aws:cloudformation:stack-name"
+                Value: "amplify-javawebdevelopment-production-180337"
+              - 
+                Key: "aws:cloudformation:logical-id"
+                Value: "DeploymentBucket"
+              - 
+                Key: "aws:cloudformation:stack-id"
+                Value: !Sub "arn:aws:cloudformation:${AWS::Region}:${AWS::AccountId}:stack/amplify-javawebdevelopment-production-180337/d7740f10-1828-11ee-943c-06af39d3f30c"
+              - 
+                Key: "user:Stack"
+                Value: "production"
+            BucketEncryption: 
+                ServerSideEncryptionConfiguration: 
+                  - 
+                    ServerSideEncryptionByDefault: 
+                        SSEAlgorithm: "AES256"
+                    BucketKeyEnabled: false
+            OwnershipControls: 
+                Rules: 
+                  - 
+                    ObjectOwnership: "BucketOwnerEnforced"
+            PublicAccessBlockConfiguration: 
+                BlockPublicAcls: true
+                BlockPublicPolicy: true
+                IgnorePublicAcls: true
+                RestrictPublicBuckets: true
+
+    S3Bucket3:
+        Type: "AWS::S3::Bucket"
+        Properties:
+            BucketName: "javawebdevelopmentcom-production-lambda"
+            Tags: 
+              - 
+                Key: "app"
+                Value: "javawebdevelopmentcom"
+              - 
+                Key: "contentpubversion"
+                Value: "0.1"
+            BucketEncryption: 
+                ServerSideEncryptionConfiguration: 
+                  - 
+                    ServerSideEncryptionByDefault: 
+                        SSEAlgorithm: "AES256"
+                    BucketKeyEnabled: false
+            OwnershipControls: 
+                Rules: 
+                  - 
+                    ObjectOwnership: "BucketOwnerEnforced"
+            PublicAccessBlockConfiguration: 
+                BlockPublicAcls: true
+                BlockPublicPolicy: true
+                IgnorePublicAcls: true
+                RestrictPublicBuckets: true
+
+    S3Bucket4:
+        Type: "AWS::S3::Bucket"
+        Properties:
+            BucketName: "javawebdevelopmentcom-backend-staging-deployment"
+            Tags: 
+              - 
+                Key: "app"
+                Value: "javawebdevelopmentcom"
+              - 
+                Key: "contentpubversion"
+                Value: "0.1"
+            BucketEncryption: 
+                ServerSideEncryptionConfiguration: 
+                  - 
+                    ServerSideEncryptionByDefault: 
+                        SSEAlgorithm: "AES256"
+                    BucketKeyEnabled: false
+            OwnershipControls: 
+                Rules: 
+                  - 
+                    ObjectOwnership: "BucketOwnerEnforced"
+            PublicAccessBlockConfiguration: 
+                BlockPublicAcls: true
+                BlockPublicPolicy: true
+                IgnorePublicAcls: true
+                RestrictPublicBuckets: true
+
+    S3Bucket5:
+        Type: "AWS::S3::Bucket"
+        Properties:
+            BucketName: !Sub "cf-templates-1fyn1ngkkgxf6-${AWS::Region}"
+            BucketEncryption: 
+                ServerSideEncryptionConfiguration: 
+                  - 
+                    ServerSideEncryptionByDefault: 
+                        SSEAlgorithm: "AES256"
+                    BucketKeyEnabled: false
+            OwnershipControls: 
+                Rules: 
+                  - 
+                    ObjectOwnership: "BucketOwnerEnforced"
+            PublicAccessBlockConfiguration: 
+                BlockPublicAcls: true
+                BlockPublicPolicy: true
+                IgnorePublicAcls: true
+                RestrictPublicBuckets: true
+
+    S3Bucket6:
+        Type: "AWS::S3::Bucket"
+        Properties:
+            BucketName: "javawebdevelopmentcom-staging-lambda"
+            Tags: 
+              - 
+                Key: "app"
+                Value: "javawebdevelopmentcom"
+              - 
+                Key: "contentpubversion"
+                Value: "0.1"
+            BucketEncryption: 
+                ServerSideEncryptionConfiguration: 
+                  - 
+                    ServerSideEncryptionByDefault: 
+                        SSEAlgorithm: "AES256"
+                    BucketKeyEnabled: false
+            OwnershipControls: 
+                Rules: 
+                  - 
+                    ObjectOwnership: "BucketOwnerEnforced"
+            PublicAccessBlockConfiguration: 
+                BlockPublicAcls: true
+                BlockPublicPolicy: true
+                IgnorePublicAcls: true
+                RestrictPublicBuckets: true
+
+    S3Bucket7:
+        Type: "AWS::S3::Bucket"
+        Properties:
+            BucketName: "javawebdevelopmentcom-production-public"
+            Tags: 
+              - 
+                Key: "app"
+                Value: "javawebdevelopmentcom"
+              - 
+                Key: "contentpubversion"
+                Value: "0.1"
+            BucketEncryption: 
+                ServerSideEncryptionConfiguration: 
+                  - 
+                    ServerSideEncryptionByDefault: 
+                        SSEAlgorithm: "AES256"
+                    BucketKeyEnabled: false
+            CorsConfiguration: 
+                CorsRules: 
+                  - 
+                    AllowedHeaders: 
+                      - "*"
+                    AllowedMethods: 
+                      - "POST"
+                      - "PUT"
+                    AllowedOrigins: 
+                      - "*"
+                  - 
+                    AllowedHeaders: 
+                      - "*"
+                    AllowedMethods: 
+                      - "GET"
+                    AllowedOrigins: 
+                      - "*"
+            OwnershipControls: 
+                Rules: 
+                  - 
+                    ObjectOwnership: "BucketOwnerEnforced"
+            PublicAccessBlockConfiguration: 
+                BlockPublicAcls: false
+                BlockPublicPolicy: false
+                IgnorePublicAcls: false
+                RestrictPublicBuckets: false
+
+    S3Bucket8:
+        Type: "AWS::S3::Bucket"
+        Properties:
+            BucketName: "javawebdevelopmentcom-backend-production-deployment"
+            Tags: 
+              - 
+                Key: "app"
+                Value: "javawebdevelopmentcom"
+              - 
+                Key: "contentpubversion"
+                Value: "0.1"
+            BucketEncryption: 
+                ServerSideEncryptionConfiguration: 
+                  - 
+                    ServerSideEncryptionByDefault: 
+                        SSEAlgorithm: "AES256"
+                    BucketKeyEnabled: false
+            OwnershipControls: 
+                Rules: 
+                  - 
+                    ObjectOwnership: "BucketOwnerEnforced"
+            PublicAccessBlockConfiguration: 
+                BlockPublicAcls: true
+                BlockPublicPolicy: true
+                IgnorePublicAcls: true
+                RestrictPublicBuckets: true
+
+    S3Bucket9:
+        Type: "AWS::S3::Bucket"
+        Properties:
+            BucketName: "javawebdevelopmentcom-production-restricted"
+            Tags: 
+              - 
+                Key: "app"
+                Value: "javawebdevelopmentcom"
+              - 
+                Key: "contentpubversion"
+                Value: "0.1"
+            BucketEncryption: 
+                ServerSideEncryptionConfiguration: 
+                  - 
+                    ServerSideEncryptionByDefault: 
+                        SSEAlgorithm: "AES256"
+                    BucketKeyEnabled: false
+            CorsConfiguration: 
+                CorsRules: 
+                  - 
+                    AllowedHeaders: 
+                      - "*"
+                    AllowedMethods: 
+                      - "POST"
+                      - "PUT"
+                    AllowedOrigins: 
+                      - "*"
+                  - 
+                    AllowedMethods: 
+                      - "GET"
+                    AllowedOrigins: 
+                      - "*"
+            OwnershipControls: 
+                Rules: 
+                  - 
+                    ObjectOwnership: "BucketOwnerEnforced"
+            PublicAccessBlockConfiguration: 
+                BlockPublicAcls: true
+                BlockPublicPolicy: true
+                IgnorePublicAcls: true
+                RestrictPublicBuckets: true
+
+    S3Bucket10:
+        Type: "AWS::S3::Bucket"
+        Properties:
+            BucketName: "samdeneme"
+            BucketEncryption: 
+                ServerSideEncryptionConfiguration: 
+                  - 
+                    ServerSideEncryptionByDefault: 
+                        SSEAlgorithm: "AES256"
+                    BucketKeyEnabled: true
+            OwnershipControls: 
+                Rules: 
+                  - 
+                    ObjectOwnership: "BucketOwnerEnforced"
+            PublicAccessBlockConfiguration: 
+                BlockPublicAcls: false
+                BlockPublicPolicy: false
+                IgnorePublicAcls: false
+                RestrictPublicBuckets: false
+
+    S3Bucket11:
+        Type: "AWS::S3::Bucket"
+        Properties:
+            BucketName: "javawebdevelopmentcom-staging-public"
+            Tags: 
+              - 
+                Key: "app"
+                Value: "javawebdevelopmentcom"
+              - 
+                Key: "contentpubversion"
+                Value: "0.1"
+            BucketEncryption: 
+                ServerSideEncryptionConfiguration: 
+                  - 
+                    ServerSideEncryptionByDefault: 
+                        SSEAlgorithm: "AES256"
+                    BucketKeyEnabled: false
+            CorsConfiguration: 
+                CorsRules: 
+                  - 
+                    AllowedHeaders: 
+                      - "*"
+                    AllowedMethods: 
+                      - "POST"
+                      - "PUT"
+                    AllowedOrigins: 
+                      - "*"
+                  - 
+                    AllowedHeaders: 
+                      - "*"
+                    AllowedMethods: 
+                      - "GET"
+                    AllowedOrigins: 
+                      - "*"
+            OwnershipControls: 
+                Rules: 
+                  - 
+                    ObjectOwnership: "BucketOwnerEnforced"
+            PublicAccessBlockConfiguration: 
+                BlockPublicAcls: false
+                BlockPublicPolicy: false
+                IgnorePublicAcls: false
+                RestrictPublicBuckets: false
+
+    S3Bucket12:
+        Type: "AWS::S3::Bucket"
+        Properties:
+            BucketName: "javawebdevelopmentcom-staging-restricted"
+            Tags: 
+              - 
+                Key: "app"
+                Value: "javawebdevelopmentcom"
+              - 
+                Key: "contentpubversion"
+                Value: "0.1"
+            BucketEncryption: 
+                ServerSideEncryptionConfiguration: 
+                  - 
+                    ServerSideEncryptionByDefault: 
+                        SSEAlgorithm: "AES256"
+                    BucketKeyEnabled: false
+            CorsConfiguration: 
+                CorsRules: 
+                  - 
+                    AllowedHeaders: 
+                      - "*"
+                    AllowedMethods: 
+                      - "POST"
+                      - "PUT"
+                    AllowedOrigins: 
+                      - "*"
+                  - 
+                    AllowedMethods: 
+                      - "GET"
+                    AllowedOrigins: 
+                      - "*"
+            OwnershipControls: 
+                Rules: 
+                  - 
+                    ObjectOwnership: "BucketOwnerEnforced"
+            PublicAccessBlockConfiguration: 
+                BlockPublicAcls: true
+                BlockPublicPolicy: true
+                IgnorePublicAcls: true
+                RestrictPublicBuckets: true
+
+    S3Bucket13:
+        Type: "AWS::S3::Bucket"
+        Properties:
+            BucketName: "www.javawebdevelopment.com"
+            Tags: 
+              - 
+                Key: "app"
+                Value: "javawebdevelopment.com"
+              - 
+                Key: "contentpubversion"
+                Value: "0.1"
+            BucketEncryption: 
+                ServerSideEncryptionConfiguration: 
+                  - 
+                    ServerSideEncryptionByDefault: 
+                        SSEAlgorithm: "AES256"
+                    BucketKeyEnabled: false
+            CorsConfiguration: 
+                CorsRules: 
+                  - 
+                    AllowedMethods: 
+                      - "GET"
+                    AllowedOrigins: 
+                      - "*"
+                  - 
+                    AllowedHeaders: 
+                      - "*"
+                    AllowedMethods: 
+                      - "POST"
+                    AllowedOrigins: 
+                      - "*"
+            VersioningConfiguration: 
+                Status: "Enabled"
+            WebsiteConfiguration: 
+                IndexDocument: "index.html"
+            OwnershipControls: 
+                Rules: 
+                  - 
+                    ObjectOwnership: "BucketOwnerEnforced"
+            PublicAccessBlockConfiguration: 
+                BlockPublicAcls: false
+                BlockPublicPolicy: false
+                IgnorePublicAcls: false
+                RestrictPublicBuckets: false
+
+    S3BucketPolicy:
+        Type: "AWS::S3::BucketPolicy"
+        Properties:
+            Bucket: !Ref S3Bucket
+            PolicyDocument: 
+                Version: "2012-10-17"
+                Statement: 
+                  - 
+                    Sid: "PublicReadGetObject"
+                    Effect: "Allow"
+                    Principal: "*"
+                    Action: "s3:GetObject"
+                    Resource: !Sub "arn:aws:s3:::${S3Bucket}/*"
+
+    S3BucketPolicy2:
+        Type: "AWS::S3::BucketPolicy"
+        Properties:
+            Bucket: !Ref S3Bucket11
+            PolicyDocument: 
+                Version: "2012-10-17"
+                Statement: 
+                  - 
+                    Sid: "PublicReadGetObject"
+                    Effect: "Allow"
+                    Principal: "*"
+                    Action: "s3:GetObject"
+                    Resource: !Sub "arn:aws:s3:::${S3Bucket11}/*"
+
+    S3BucketPolicy3:
+        Type: "AWS::S3::BucketPolicy"
+        Properties:
+            Bucket: !Ref S3Bucket7
+            PolicyDocument: 
+                Version: "2012-10-17"
+                Statement: 
+                  - 
+                    Sid: "PublicReadGetObject"
+                    Effect: "Allow"
+                    Principal: "*"
+                    Action: "s3:GetObject"
+                    Resource: !Sub "arn:aws:s3:::${S3Bucket7}/*"
+
+    S3BucketPolicy4:
+        Type: "AWS::S3::BucketPolicy"
+        Properties:
+            Bucket: !Ref S3Bucket13
+            PolicyDocument: 
+                Version: "2012-10-17"
+                Statement: 
+                  - 
+                    Sid: "PublicReadGetObject"
+                    Effect: "Allow"
+                    Principal: "*"
+                    Action: "s3:GetObject"
+                    Resource: !Sub "arn:aws:s3:::${S3Bucket13}/*"
+
+
