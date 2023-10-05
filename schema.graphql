@@ -84,6 +84,9 @@ type Content @model @auth(
   videoDuration: String
   fileSize: String
   body: String
+  urlSlug: String
+  metaTitle: String
+  metaDescription: String
 }
 
 type Bundle @model @auth(

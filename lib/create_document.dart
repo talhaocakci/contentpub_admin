@@ -5,6 +5,7 @@ import 'package:contentpub_admin/file_upload.dart';
 import 'package:contentpub_admin/models/ModelProvider.dart';
 import 'package:contentpub_admin/custom_models/editable/editables.dart';
 import 'package:contentpub_admin/state_container.dart';
+import 'package:contentpub_admin/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:super_editor/super_editor.dart';
 import 'package:uuid/uuid.dart';
@@ -40,6 +41,10 @@ class _CreateDocumentWidgetState extends State<CreateDocumentWidget> {
 
   MutableDocument? mutableDocument;
 
+  final RegExp nonAlphaNum = RegExp("[^A-Z a-z0-9]");
+
+  late TextEditingController slugController;
+
   late SuperEditor superEditor;
   late DocumentComposer _composer;
 
@@ -57,7 +62,7 @@ class _CreateDocumentWidgetState extends State<CreateDocumentWidget> {
 
   Future<EditableContent> initContent() async {
     if (widget.contentId == '') {
-      content = Content(id: Uuid().v4());
+      content = Content(id: Utils.generateId());
       editableContent = EditableContent.toEditable(content!);
       editableContent!.newItem = true;
 
@@ -74,6 +79,8 @@ class _CreateDocumentWidgetState extends State<CreateDocumentWidget> {
 
       return editableContent!;
     }
+
+    slugController = TextEditingController.fromValue(TextEditingValue(text: editableContent?.urlSlug ?? ''));
 
     content = await getContent(widget.contentId);
     editableContent = EditableContent.toEditable(content!);
@@ -158,6 +165,12 @@ class _CreateDocumentWidgetState extends State<CreateDocumentWidget> {
                                               onChanged: (value) {
                                                 editableContent!.name = value;
                                                 editableContent!.dirty = true;
+                                                if ((editableContent?.isPublished ?? false) == false) {
+                                                  String slug = value.toLowerCase().trimLeft().trimRight().replaceAll(nonAlphaNum, "").replaceAll(" ", "-");
+                                                  slugController.text = slug;
+                                                  editableContent!.urlSlug = slug;
+                                                  setState(() {});
+                                                }
                                               },
                                               initialValue: editableContent?.name,
                                               obscureText: false,
@@ -380,6 +393,18 @@ class _CreateDocumentWidgetState extends State<CreateDocumentWidget> {
                                           ))
                                       ],
                                     ),
+                                    if (widget.type == ContentType.ARTICLE)
+                                      Row(mainAxisSize: MainAxisSize.max, children: [
+                                        Expanded(
+                                            child: Column(children: [
+                                          Text('URL slug'),
+                                          TextFormField(controller: slugController),
+                                          Text('Meta title'),
+                                          TextFormField(onChanged: (value) {}),
+                                          Text('Meta description'),
+                                          TextFormField(onChanged: (value) {})
+                                        ]))
+                                      ]),
                                     Row(children: [
                                       Padding(
                                         padding: const EdgeInsetsDirectional.fromSTEB(0, 12, 0, 12),

@@ -47,6 +47,9 @@ class Content extends Model {
   final String? _videoDuration;
   final String? _fileSize;
   final String? _body;
+  final String? _urlSlug;
+  final String? _metaTitle;
+  final String? _metaDescription;
   final TemporalDateTime? _createdAt;
   final TemporalDateTime? _updatedAt;
 
@@ -131,6 +134,18 @@ class Content extends Model {
     return _body;
   }
   
+  String? get urlSlug {
+    return _urlSlug;
+  }
+  
+  String? get metaTitle {
+    return _metaTitle;
+  }
+  
+  String? get metaDescription {
+    return _metaDescription;
+  }
+  
   TemporalDateTime? get createdAt {
     return _createdAt;
   }
@@ -139,9 +154,9 @@ class Content extends Model {
     return _updatedAt;
   }
   
-  const Content._internal({required this.id, name, description, s3Url, type, objectId, owner, duration, bundles, photoUrl, promoVideoUrl, promoVideoDuration, isPublished, isArchived, Coworkers, videoDuration, fileSize, body, createdAt, updatedAt}): _name = name, _description = description, _s3Url = s3Url, _type = type, _objectId = objectId, _owner = owner, _duration = duration, _bundles = bundles, _photoUrl = photoUrl, _promoVideoUrl = promoVideoUrl, _promoVideoDuration = promoVideoDuration, _isPublished = isPublished, _isArchived = isArchived, _Coworkers = Coworkers, _videoDuration = videoDuration, _fileSize = fileSize, _body = body, _createdAt = createdAt, _updatedAt = updatedAt;
+  const Content._internal({required this.id, name, description, s3Url, type, objectId, owner, duration, bundles, photoUrl, promoVideoUrl, promoVideoDuration, isPublished, isArchived, Coworkers, videoDuration, fileSize, body, urlSlug, metaTitle, metaDescription, createdAt, updatedAt}): _name = name, _description = description, _s3Url = s3Url, _type = type, _objectId = objectId, _owner = owner, _duration = duration, _bundles = bundles, _photoUrl = photoUrl, _promoVideoUrl = promoVideoUrl, _promoVideoDuration = promoVideoDuration, _isPublished = isPublished, _isArchived = isArchived, _Coworkers = Coworkers, _videoDuration = videoDuration, _fileSize = fileSize, _body = body, _urlSlug = urlSlug, _metaTitle = metaTitle, _metaDescription = metaDescription, _createdAt = createdAt, _updatedAt = updatedAt;
   
-  factory Content({String? id, String? name, String? description, String? s3Url, ContentType? type, String? objectId, String? owner, int? duration, List<BundleContent>? bundles, String? photoUrl, String? promoVideoUrl, int? promoVideoDuration, bool? isPublished, bool? isArchived, List<ContentCoworker>? Coworkers, String? videoDuration, String? fileSize, String? body}) {
+  factory Content({String? id, String? name, String? description, String? s3Url, ContentType? type, String? objectId, String? owner, int? duration, List<BundleContent>? bundles, String? photoUrl, String? promoVideoUrl, int? promoVideoDuration, bool? isPublished, bool? isArchived, List<ContentCoworker>? Coworkers, String? videoDuration, String? fileSize, String? body, String? urlSlug, String? metaTitle, String? metaDescription}) {
     return Content._internal(
       id: id == null ? UUID.getUUID() : id,
       name: name,
@@ -160,7 +175,10 @@ class Content extends Model {
       Coworkers: Coworkers != null ? List<ContentCoworker>.unmodifiable(Coworkers) : Coworkers,
       videoDuration: videoDuration,
       fileSize: fileSize,
-      body: body);
+      body: body,
+      urlSlug: urlSlug,
+      metaTitle: metaTitle,
+      metaDescription: metaDescription);
   }
   
   bool equals(Object other) {
@@ -188,7 +206,10 @@ class Content extends Model {
       DeepCollectionEquality().equals(_Coworkers, other._Coworkers) &&
       _videoDuration == other._videoDuration &&
       _fileSize == other._fileSize &&
-      _body == other._body;
+      _body == other._body &&
+      _urlSlug == other._urlSlug &&
+      _metaTitle == other._metaTitle &&
+      _metaDescription == other._metaDescription;
   }
   
   @override
@@ -215,6 +236,9 @@ class Content extends Model {
     buffer.write("videoDuration=" + "$_videoDuration" + ", ");
     buffer.write("fileSize=" + "$_fileSize" + ", ");
     buffer.write("body=" + "$_body" + ", ");
+    buffer.write("urlSlug=" + "$_urlSlug" + ", ");
+    buffer.write("metaTitle=" + "$_metaTitle" + ", ");
+    buffer.write("metaDescription=" + "$_metaDescription" + ", ");
     buffer.write("createdAt=" + (_createdAt != null ? _createdAt!.format() : "null") + ", ");
     buffer.write("updatedAt=" + (_updatedAt != null ? _updatedAt!.format() : "null"));
     buffer.write("}");
@@ -222,7 +246,7 @@ class Content extends Model {
     return buffer.toString();
   }
   
-  Content copyWith({String? name, String? description, String? s3Url, ContentType? type, String? objectId, String? owner, int? duration, List<BundleContent>? bundles, String? photoUrl, String? promoVideoUrl, int? promoVideoDuration, bool? isPublished, bool? isArchived, List<ContentCoworker>? Coworkers, String? videoDuration, String? fileSize, String? body}) {
+  Content copyWith({String? name, String? description, String? s3Url, ContentType? type, String? objectId, String? owner, int? duration, List<BundleContent>? bundles, String? photoUrl, String? promoVideoUrl, int? promoVideoDuration, bool? isPublished, bool? isArchived, List<ContentCoworker>? Coworkers, String? videoDuration, String? fileSize, String? body, String? urlSlug, String? metaTitle, String? metaDescription}) {
     return Content._internal(
       id: id,
       name: name ?? this.name,
@@ -241,7 +265,10 @@ class Content extends Model {
       Coworkers: Coworkers ?? this.Coworkers,
       videoDuration: videoDuration ?? this.videoDuration,
       fileSize: fileSize ?? this.fileSize,
-      body: body ?? this.body);
+      body: body ?? this.body,
+      urlSlug: urlSlug ?? this.urlSlug,
+      metaTitle: metaTitle ?? this.metaTitle,
+      metaDescription: metaDescription ?? this.metaDescription);
   }
   
   Content.fromJson(Map<String, dynamic> json)  
@@ -273,15 +300,18 @@ class Content extends Model {
       _videoDuration = json['videoDuration'],
       _fileSize = json['fileSize'],
       _body = json['body'],
+      _urlSlug = json['urlSlug'],
+      _metaTitle = json['metaTitle'],
+      _metaDescription = json['metaDescription'],
       _createdAt = json['createdAt'] != null ? TemporalDateTime.fromString(json['createdAt']) : null,
       _updatedAt = json['updatedAt'] != null ? TemporalDateTime.fromString(json['updatedAt']) : null;
   
   Map<String, dynamic> toJson() => {
-    'id': id, 'name': _name, 'description': _description, 's3Url': _s3Url, 'type': enumToString(_type), 'objectId': _objectId, 'owner': _owner, 'duration': _duration, 'bundles': _bundles?.map((BundleContent? e) => e?.toJson()).toList(), 'photoUrl': _photoUrl, 'promoVideoUrl': _promoVideoUrl, 'promoVideoDuration': _promoVideoDuration, 'isPublished': _isPublished, 'isArchived': _isArchived, 'Coworkers': _Coworkers?.map((ContentCoworker? e) => e?.toJson()).toList(), 'videoDuration': _videoDuration, 'fileSize': _fileSize, 'body': _body, 'createdAt': _createdAt?.format(), 'updatedAt': _updatedAt?.format()
+    'id': id, 'name': _name, 'description': _description, 's3Url': _s3Url, 'type': enumToString(_type), 'objectId': _objectId, 'owner': _owner, 'duration': _duration, 'bundles': _bundles?.map((BundleContent? e) => e?.toJson()).toList(), 'photoUrl': _photoUrl, 'promoVideoUrl': _promoVideoUrl, 'promoVideoDuration': _promoVideoDuration, 'isPublished': _isPublished, 'isArchived': _isArchived, 'Coworkers': _Coworkers?.map((ContentCoworker? e) => e?.toJson()).toList(), 'videoDuration': _videoDuration, 'fileSize': _fileSize, 'body': _body, 'urlSlug': _urlSlug, 'metaTitle': _metaTitle, 'metaDescription': _metaDescription, 'createdAt': _createdAt?.format(), 'updatedAt': _updatedAt?.format()
   };
   
   Map<String, Object?> toMap() => {
-    'id': id, 'name': _name, 'description': _description, 's3Url': _s3Url, 'type': _type, 'objectId': _objectId, 'owner': _owner, 'duration': _duration, 'bundles': _bundles, 'photoUrl': _photoUrl, 'promoVideoUrl': _promoVideoUrl, 'promoVideoDuration': _promoVideoDuration, 'isPublished': _isPublished, 'isArchived': _isArchived, 'Coworkers': _Coworkers, 'videoDuration': _videoDuration, 'fileSize': _fileSize, 'body': _body, 'createdAt': _createdAt, 'updatedAt': _updatedAt
+    'id': id, 'name': _name, 'description': _description, 's3Url': _s3Url, 'type': _type, 'objectId': _objectId, 'owner': _owner, 'duration': _duration, 'bundles': _bundles, 'photoUrl': _photoUrl, 'promoVideoUrl': _promoVideoUrl, 'promoVideoDuration': _promoVideoDuration, 'isPublished': _isPublished, 'isArchived': _isArchived, 'Coworkers': _Coworkers, 'videoDuration': _videoDuration, 'fileSize': _fileSize, 'body': _body, 'urlSlug': _urlSlug, 'metaTitle': _metaTitle, 'metaDescription': _metaDescription, 'createdAt': _createdAt, 'updatedAt': _updatedAt
   };
 
   static final QueryModelIdentifier<ContentModelIdentifier> MODEL_IDENTIFIER = QueryModelIdentifier<ContentModelIdentifier>();
@@ -307,6 +337,9 @@ class Content extends Model {
   static final QueryField VIDEODURATION = QueryField(fieldName: "videoDuration");
   static final QueryField FILESIZE = QueryField(fieldName: "fileSize");
   static final QueryField BODY = QueryField(fieldName: "body");
+  static final QueryField URLSLUG = QueryField(fieldName: "urlSlug");
+  static final QueryField METATITLE = QueryField(fieldName: "metaTitle");
+  static final QueryField METADESCRIPTION = QueryField(fieldName: "metaDescription");
   static var schema = Model.defineSchema(define: (ModelSchemaDefinition modelSchemaDefinition) {
     modelSchemaDefinition.name = "Content";
     modelSchemaDefinition.pluralName = "Contents";
@@ -430,6 +463,24 @@ class Content extends Model {
     
     modelSchemaDefinition.addField(ModelFieldDefinition.field(
       key: Content.BODY,
+      isRequired: false,
+      ofType: ModelFieldType(ModelFieldTypeEnum.string)
+    ));
+    
+    modelSchemaDefinition.addField(ModelFieldDefinition.field(
+      key: Content.URLSLUG,
+      isRequired: false,
+      ofType: ModelFieldType(ModelFieldTypeEnum.string)
+    ));
+    
+    modelSchemaDefinition.addField(ModelFieldDefinition.field(
+      key: Content.METATITLE,
+      isRequired: false,
+      ofType: ModelFieldType(ModelFieldTypeEnum.string)
+    ));
+    
+    modelSchemaDefinition.addField(ModelFieldDefinition.field(
+      key: Content.METADESCRIPTION,
       isRequired: false,
       ofType: ModelFieldType(ModelFieldTypeEnum.string)
     ));

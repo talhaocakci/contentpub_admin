@@ -251,7 +251,11 @@ class EditableContent {
   String? promoVideoUrl;
   String? body;
   int? duration;
+  String? urlSlug;
+  String? metaTitle;
+  String? metaDescription;
   List<ContentCoworker>? coworkerRelations;
+
   bool? isPublished = false;
   bool? isArchived = false;
 
@@ -275,6 +279,9 @@ class EditableContent {
     editable.isArchived = content.isArchived;
     editable.coworkerRelations = content.Coworkers;
     editable.body = content.body;
+    editable.urlSlug = content.urlSlug;
+    editable.metaTitle = content.metaTitle;
+    editable.metaDescription = content.metaDescription;
 
     return editable;
   }
@@ -290,6 +297,9 @@ class EditableContent {
         s3Url: editable.s3Url,
         photoUrl: editable.photoUrl,
         promoVideoUrl: editable.promoVideoUrl,
+        urlSlug: editable.urlSlug,
+        metaTitle: editable.metaTitle,
+        metaDescription: editable.metaDescription,
         isPublished: editable.isPublished,
         Coworkers: editable.coworkerRelations,
         body: editable.body,
