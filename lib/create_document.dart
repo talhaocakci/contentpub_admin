@@ -68,6 +68,8 @@ class _CreateDocumentWidgetState extends State<CreateDocumentWidget> {
 
       mutableDocument = deserializeMarkdownToDocument('Your content here');
 
+      slugController = TextEditingController.fromValue(TextEditingValue(text: editableContent?.urlSlug ?? ''));
+
       _composer = DocumentComposer();
       _composer.selectionNotifier.addListener(_onSelection);
       superEditor = SuperEditor(
