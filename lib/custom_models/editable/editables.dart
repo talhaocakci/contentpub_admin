@@ -148,6 +148,7 @@ class EditableLesson {
 class EditableBundle {
   String id;
   String? name;
+  String? tenantId;
   String? description;
   bool? isFree;
   List<BundleContent>? contents;
@@ -185,6 +186,7 @@ class EditableBundle {
 
     Bundle b = Bundle(
         id: editable.id,
+        tenantID: editable.tenantId ?? '',
         name: editable.name,
         description: editable.description,
         isFree: editable.isFree,
@@ -241,6 +243,8 @@ class EditablePrice {
 
 class EditableContent {
   String id;
+  String? tenantId;
+  String? role;
   String? name;
   String? description;
   String? s3Url;
@@ -289,6 +293,7 @@ class EditableContent {
   static Content fromEditable(EditableContent editable) {
     Content content = Content(
         id: editable.id,
+        tenantID: editable.tenantId ?? '',
         type: editable.type,
         name: editable.name,
         description: editable.description,
@@ -311,6 +316,8 @@ class EditableContent {
 
 class EditableCoworker {
   String id;
+  String? tenantId;
+  Role? role;
   String? email;
   String? displayName;
   String? photoUrl;
@@ -321,7 +328,14 @@ class EditableCoworker {
   EditableCoworker({required this.id, this.email, this.displayName, this.photoUrl, this.description});
 
   static Coworker fromEditable(EditableCoworker editable) {
-    return Coworker(id: editable.id, displayName: editable.displayName, description: editable.description, photoUrl: editable.photoUrl, email: editable.email);
+    return Coworker(
+        id: editable.id,
+        displayName: editable.displayName,
+        tenantID: editable.tenantId ?? '',
+        role: editable.role,
+        description: editable.description,
+        photoUrl: editable.photoUrl,
+        email: editable.email);
   }
 
   static EditableCoworker toEditable(Coworker coworker) {

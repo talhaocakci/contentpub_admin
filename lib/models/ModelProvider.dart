@@ -48,6 +48,7 @@ export 'Price.dart';
 export 'Purchase.dart';
 export 'PurchaseType.dart';
 export 'RecurrenceType.dart';
+export 'Role.dart';
 export 'Section.dart';
 export 'Source.dart';
 export 'Tenant.dart';
@@ -55,7 +56,7 @@ export 'TenantConfiguration.dart';
 
 class ModelProvider implements ModelProviderInterface {
   @override
-  String version = "4c098246ae63d625b40003d95a473b1f";
+  String version = "ad4bcfb890dbf3d18a5f199e9292edfe";
   @override
   List<ModelSchema> modelSchemas = [Bundle.schema, BundleContent.schema, Content.schema, ContentCoworker.schema, Course.schema, Coworker.schema, Customer.schema, Lesson.schema, Price.schema, Purchase.schema, Section.schema, Tenant.schema, TenantConfiguration.schema];
   static final ModelProvider _instance = ModelProvider();

@@ -30,6 +30,7 @@ import 'package:flutter/foundation.dart';
 class Content extends Model {
   static const classType = const _ContentModelType();
   final String id;
+  final String? _tenantID;
   final String? _name;
   final String? _description;
   final String? _s3Url;
@@ -64,6 +65,19 @@ class Content extends Model {
       return ContentModelIdentifier(
         id: id
       );
+  }
+  
+  String get tenantID {
+    try {
+      return _tenantID!;
+    } catch(e) {
+      throw new AmplifyCodeGenModelException(
+          AmplifyExceptionMessages.codeGenRequiredFieldForceCastExceptionMessage,
+          recoverySuggestion:
+            AmplifyExceptionMessages.codeGenRequiredFieldForceCastRecoverySuggestion,
+          underlyingException: e.toString()
+          );
+    }
   }
   
   String? get name {
@@ -154,11 +168,12 @@ class Content extends Model {
     return _updatedAt;
   }
   
-  const Content._internal({required this.id, name, description, s3Url, type, objectId, owner, duration, bundles, photoUrl, promoVideoUrl, promoVideoDuration, isPublished, isArchived, Coworkers, videoDuration, fileSize, body, urlSlug, metaTitle, metaDescription, createdAt, updatedAt}): _name = name, _description = description, _s3Url = s3Url, _type = type, _objectId = objectId, _owner = owner, _duration = duration, _bundles = bundles, _photoUrl = photoUrl, _promoVideoUrl = promoVideoUrl, _promoVideoDuration = promoVideoDuration, _isPublished = isPublished, _isArchived = isArchived, _Coworkers = Coworkers, _videoDuration = videoDuration, _fileSize = fileSize, _body = body, _urlSlug = urlSlug, _metaTitle = metaTitle, _metaDescription = metaDescription, _createdAt = createdAt, _updatedAt = updatedAt;
+  const Content._internal({required this.id, required tenantID, name, description, s3Url, type, objectId, owner, duration, bundles, photoUrl, promoVideoUrl, promoVideoDuration, isPublished, isArchived, Coworkers, videoDuration, fileSize, body, urlSlug, metaTitle, metaDescription, createdAt, updatedAt}): _tenantID = tenantID, _name = name, _description = description, _s3Url = s3Url, _type = type, _objectId = objectId, _owner = owner, _duration = duration, _bundles = bundles, _photoUrl = photoUrl, _promoVideoUrl = promoVideoUrl, _promoVideoDuration = promoVideoDuration, _isPublished = isPublished, _isArchived = isArchived, _Coworkers = Coworkers, _videoDuration = videoDuration, _fileSize = fileSize, _body = body, _urlSlug = urlSlug, _metaTitle = metaTitle, _metaDescription = metaDescription, _createdAt = createdAt, _updatedAt = updatedAt;
   
-  factory Content({String? id, String? name, String? description, String? s3Url, ContentType? type, String? objectId, String? owner, int? duration, List<BundleContent>? bundles, String? photoUrl, String? promoVideoUrl, int? promoVideoDuration, bool? isPublished, bool? isArchived, List<ContentCoworker>? Coworkers, String? videoDuration, String? fileSize, String? body, String? urlSlug, String? metaTitle, String? metaDescription}) {
+  factory Content({String? id, required String tenantID, String? name, String? description, String? s3Url, ContentType? type, String? objectId, String? owner, int? duration, List<BundleContent>? bundles, String? photoUrl, String? promoVideoUrl, int? promoVideoDuration, bool? isPublished, bool? isArchived, List<ContentCoworker>? Coworkers, String? videoDuration, String? fileSize, String? body, String? urlSlug, String? metaTitle, String? metaDescription}) {
     return Content._internal(
       id: id == null ? UUID.getUUID() : id,
+      tenantID: tenantID,
       name: name,
       description: description,
       s3Url: s3Url,
@@ -190,6 +205,7 @@ class Content extends Model {
     if (identical(other, this)) return true;
     return other is Content &&
       id == other.id &&
+      _tenantID == other._tenantID &&
       _name == other._name &&
       _description == other._description &&
       _s3Url == other._s3Url &&
@@ -221,6 +237,7 @@ class Content extends Model {
     
     buffer.write("Content {");
     buffer.write("id=" + "$id" + ", ");
+    buffer.write("tenantID=" + "$_tenantID" + ", ");
     buffer.write("name=" + "$_name" + ", ");
     buffer.write("description=" + "$_description" + ", ");
     buffer.write("s3Url=" + "$_s3Url" + ", ");
@@ -246,9 +263,10 @@ class Content extends Model {
     return buffer.toString();
   }
   
-  Content copyWith({String? name, String? description, String? s3Url, ContentType? type, String? objectId, String? owner, int? duration, List<BundleContent>? bundles, String? photoUrl, String? promoVideoUrl, int? promoVideoDuration, bool? isPublished, bool? isArchived, List<ContentCoworker>? Coworkers, String? videoDuration, String? fileSize, String? body, String? urlSlug, String? metaTitle, String? metaDescription}) {
+  Content copyWith({String? tenantID, String? name, String? description, String? s3Url, ContentType? type, String? objectId, String? owner, int? duration, List<BundleContent>? bundles, String? photoUrl, String? promoVideoUrl, int? promoVideoDuration, bool? isPublished, bool? isArchived, List<ContentCoworker>? Coworkers, String? videoDuration, String? fileSize, String? body, String? urlSlug, String? metaTitle, String? metaDescription}) {
     return Content._internal(
       id: id,
+      tenantID: tenantID ?? this.tenantID,
       name: name ?? this.name,
       description: description ?? this.description,
       s3Url: s3Url ?? this.s3Url,
@@ -273,6 +291,7 @@ class Content extends Model {
   
   Content.fromJson(Map<String, dynamic> json)  
     : id = json['id'],
+      _tenantID = json['tenantID'],
       _name = json['name'],
       _description = json['description'],
       _s3Url = json['s3Url'],
@@ -307,15 +326,16 @@ class Content extends Model {
       _updatedAt = json['updatedAt'] != null ? TemporalDateTime.fromString(json['updatedAt']) : null;
   
   Map<String, dynamic> toJson() => {
-    'id': id, 'name': _name, 'description': _description, 's3Url': _s3Url, 'type': enumToString(_type), 'objectId': _objectId, 'owner': _owner, 'duration': _duration, 'bundles': _bundles?.map((BundleContent? e) => e?.toJson()).toList(), 'photoUrl': _photoUrl, 'promoVideoUrl': _promoVideoUrl, 'promoVideoDuration': _promoVideoDuration, 'isPublished': _isPublished, 'isArchived': _isArchived, 'Coworkers': _Coworkers?.map((ContentCoworker? e) => e?.toJson()).toList(), 'videoDuration': _videoDuration, 'fileSize': _fileSize, 'body': _body, 'urlSlug': _urlSlug, 'metaTitle': _metaTitle, 'metaDescription': _metaDescription, 'createdAt': _createdAt?.format(), 'updatedAt': _updatedAt?.format()
+    'id': id, 'tenantID': _tenantID, 'name': _name, 'description': _description, 's3Url': _s3Url, 'type': enumToString(_type), 'objectId': _objectId, 'owner': _owner, 'duration': _duration, 'bundles': _bundles?.map((BundleContent? e) => e?.toJson()).toList(), 'photoUrl': _photoUrl, 'promoVideoUrl': _promoVideoUrl, 'promoVideoDuration': _promoVideoDuration, 'isPublished': _isPublished, 'isArchived': _isArchived, 'Coworkers': _Coworkers?.map((ContentCoworker? e) => e?.toJson()).toList(), 'videoDuration': _videoDuration, 'fileSize': _fileSize, 'body': _body, 'urlSlug': _urlSlug, 'metaTitle': _metaTitle, 'metaDescription': _metaDescription, 'createdAt': _createdAt?.format(), 'updatedAt': _updatedAt?.format()
   };
   
   Map<String, Object?> toMap() => {
-    'id': id, 'name': _name, 'description': _description, 's3Url': _s3Url, 'type': _type, 'objectId': _objectId, 'owner': _owner, 'duration': _duration, 'bundles': _bundles, 'photoUrl': _photoUrl, 'promoVideoUrl': _promoVideoUrl, 'promoVideoDuration': _promoVideoDuration, 'isPublished': _isPublished, 'isArchived': _isArchived, 'Coworkers': _Coworkers, 'videoDuration': _videoDuration, 'fileSize': _fileSize, 'body': _body, 'urlSlug': _urlSlug, 'metaTitle': _metaTitle, 'metaDescription': _metaDescription, 'createdAt': _createdAt, 'updatedAt': _updatedAt
+    'id': id, 'tenantID': _tenantID, 'name': _name, 'description': _description, 's3Url': _s3Url, 'type': _type, 'objectId': _objectId, 'owner': _owner, 'duration': _duration, 'bundles': _bundles, 'photoUrl': _photoUrl, 'promoVideoUrl': _promoVideoUrl, 'promoVideoDuration': _promoVideoDuration, 'isPublished': _isPublished, 'isArchived': _isArchived, 'Coworkers': _Coworkers, 'videoDuration': _videoDuration, 'fileSize': _fileSize, 'body': _body, 'urlSlug': _urlSlug, 'metaTitle': _metaTitle, 'metaDescription': _metaDescription, 'createdAt': _createdAt, 'updatedAt': _updatedAt
   };
 
   static final QueryModelIdentifier<ContentModelIdentifier> MODEL_IDENTIFIER = QueryModelIdentifier<ContentModelIdentifier>();
   static final QueryField ID = QueryField(fieldName: "id");
+  static final QueryField TENANTID = QueryField(fieldName: "tenantID");
   static final QueryField NAME = QueryField(fieldName: "name");
   static final QueryField DESCRIPTION = QueryField(fieldName: "description");
   static final QueryField S3URL = QueryField(fieldName: "s3Url");
@@ -361,7 +381,17 @@ class Content extends Model {
         ])
     ];
     
+    modelSchemaDefinition.indexes = [
+      ModelIndex(fields: const ["tenantID"], name: "byTenant")
+    ];
+    
     modelSchemaDefinition.addField(ModelFieldDefinition.id());
+    
+    modelSchemaDefinition.addField(ModelFieldDefinition.field(
+      key: Content.TENANTID,
+      isRequired: true,
+      ofType: ModelFieldType(ModelFieldTypeEnum.string)
+    ));
     
     modelSchemaDefinition.addField(ModelFieldDefinition.field(
       key: Content.NAME,

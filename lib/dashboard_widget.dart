@@ -30,6 +30,11 @@ class _DashboardWidgetState extends State<DashboardWidget> {
   }
 
   @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
         key: scaffoldKey,

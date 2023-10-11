@@ -44,6 +44,7 @@ class StateContainerState extends State<StateContainer> {
   String? region;
 
   String? coworkerId;
+  String? tenantId;
 
   bool _isLoading = true;
   late AuthUser authUser;
@@ -178,7 +179,7 @@ class StateContainerState extends State<StateContainer> {
     if (coworkerList.isEmpty) {
       print('Coworker list is empty');
 
-      Coworker coworker = new Coworker(email: email);
+      Coworker coworker = new Coworker(email: email, tenantID: this.tenantId ?? '');
 
       saveCoworkerObject(coworker);
       print('Coworker kaydedildi');
@@ -186,6 +187,9 @@ class StateContainerState extends State<StateContainer> {
       coworker = coworkerList.elementAt(0)!;
 
       this.coworkerId = coworker.id;
+      this.tenantId = coworker.tenantID;
+      print('tenant bulundu: ${this.tenantId}');
+      setState(() {});
     }
   }
 
@@ -212,20 +216,22 @@ class StateContainerState extends State<StateContainer> {
 
   Future<List<Coworker?>> getCoworkerObject(String email) async {
     String graphQLDocument = '''query MyQuery {
-  listCoworkers(filter: {email: {eq: "$email"}}) {
-    items {
-      createdAt
-      description
-      displayName
-      email
-      id
-      photoUrl
-      updatedAt
+      listCoworkers(filter: {email: {eq: "$email"}}) {
+        items {
+          createdAt
+          description
+          displayName
+          email
+          id
+          photoUrl
+          updatedAt
+          tenantID 
+          role
+        }
+      }
     }
-  }
-}
 
-''';
+    ''';
 
     GraphQLRequest request = GraphQLRequest(document: graphQLDocument);
 

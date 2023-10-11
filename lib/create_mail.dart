@@ -57,7 +57,7 @@ class _CreateDocumentWidgetState extends State<CreateDocumentWidget> {
 
   Future<EditableContent> initContent() async {
     if (widget.contentId == '') {
-      content = Content(id: Uuid().v4());
+      content = Content(id: Uuid().v4(), tenantID: StateContainer.of(context).tenantId ?? '');
       editableContent = EditableContent.toEditable(content!);
       editableContent!.newItem = true;
 
@@ -463,7 +463,7 @@ class _CreateDocumentWidgetState extends State<CreateDocumentWidget> {
 
     try {
       var response = await Amplify.API.query(request: request).response;
-      var retrievedContent = response.data ?? Content();
+      var retrievedContent = response.data ?? Content(tenantID: '');
 
       //print('Retrieved course: ${mycourse}');
       return retrievedContent;
@@ -471,7 +471,7 @@ class _CreateDocumentWidgetState extends State<CreateDocumentWidget> {
       print(e);
     }
 
-    return Content();
+    return Content(tenantID: '');
   }
 
   Future<void> getCoworkers() async {
@@ -583,7 +583,8 @@ class _CreateDocumentWidgetState extends State<CreateDocumentWidget> {
 
       content = content?.copyWith(Coworkers: List.empty(growable: true));
 
-      content?.Coworkers?.add(ContentCoworker(content: content ?? Content(), coworker: Coworker(id: StateContainer.of(context).coworkerId)));
+      content?.Coworkers?.add(ContentCoworker(
+          content: content ?? Content(tenantID: ''), coworker: Coworker(id: StateContainer.of(context).coworkerId, tenantID: StateContainer.of(context).tenantId ?? '')));
 
       editableContent = EditableContent.toEditable(content!);
       editableContent!.newItem = false;

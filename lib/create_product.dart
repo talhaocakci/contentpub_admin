@@ -61,21 +61,9 @@ class _CreateProductWidgetState extends State<CreateProductWidget> {
         purchaseType: PurchaseType.ONE_TIME,
         recurrenceInterval: 0,
       );
-      priceOneMonth = EditablePrice(
-          id: '',
-          recurrenceType: RecurrenceType.MONTHLY,
-          recurrenceInterval: 1,
-          purchaseType: PurchaseType.SUBSCRIPTION);
-      priceThreeMonths = EditablePrice(
-          id: '',
-          recurrenceType: RecurrenceType.MONTHLY,
-          recurrenceInterval: 3,
-          purchaseType: PurchaseType.SUBSCRIPTION);
-      priceOneYear = EditablePrice(
-          id: '',
-          recurrenceType: RecurrenceType.ANNUAL,
-          recurrenceInterval: 1,
-          purchaseType: PurchaseType.SUBSCRIPTION);
+      priceOneMonth = EditablePrice(id: '', recurrenceType: RecurrenceType.MONTHLY, recurrenceInterval: 1, purchaseType: PurchaseType.SUBSCRIPTION);
+      priceThreeMonths = EditablePrice(id: '', recurrenceType: RecurrenceType.MONTHLY, recurrenceInterval: 3, purchaseType: PurchaseType.SUBSCRIPTION);
+      priceOneYear = EditablePrice(id: '', recurrenceType: RecurrenceType.ANNUAL, recurrenceInterval: 1, purchaseType: PurchaseType.SUBSCRIPTION);
     }
 
     getAvailableContents();
@@ -117,10 +105,8 @@ class _CreateProductWidgetState extends State<CreateProductWidget> {
                               children: <Widget>[
                                 TextFormField(
                                   decoration: const InputDecoration(
-                                    hintText:
-                                        'eg: All courses bundle, All X courses, My Single X course',
-                                    label: Text(
-                                        'What defines your product the best?'),
+                                    hintText: 'eg: All courses bundle, All X courses, My Single X course',
+                                    label: Text('What defines your product the best?'),
                                   ),
                                   onChanged: (newValue) {
                                     editableBundle!.name = newValue;
@@ -139,10 +125,8 @@ class _CreateProductWidgetState extends State<CreateProductWidget> {
                                     editableBundle!.description = newValue;
                                   },
                                   decoration: const InputDecoration(
-                                    hintText:
-                                        'eg: Contains all video courses and 1 hour session per month',
-                                    label: Text(
-                                        'Describe your product. Shown to the customer before purchasing'),
+                                    hintText: 'eg: Contains all video courses and 1 hour session per month',
+                                    label: Text('Describe your product. Shown to the customer before purchasing'),
                                   ),
 
                                   // The validator receives the text that the user has entered.
@@ -157,9 +141,7 @@ class _CreateProductWidgetState extends State<CreateProductWidget> {
                               ],
                             )),
                         isActive: _currentStep >= 0 && editableBundle != null,
-                        state: _currentStep >= 1 && editableBundle?.name != null
-                            ? StepState.complete
-                            : StepState.disabled,
+                        state: _currentStep >= 1 && editableBundle?.name != null ? StepState.complete : StepState.disabled,
                       ),
                       Step(
                         title: const Text('Prices'),
@@ -175,13 +157,9 @@ class _CreateProductWidgetState extends State<CreateProductWidget> {
                                   child: Column(
                                     children: [
                                       TabBar(
-                                        labelColor: FlutterFlowTheme.of(context)
-                                            .primaryColor,
-                                        labelStyle: FlutterFlowTheme.of(context)
-                                            .bodyText1,
-                                        indicatorColor:
-                                            FlutterFlowTheme.of(context)
-                                                .secondaryColor,
+                                        labelColor: FlutterFlowTheme.of(context).primaryColor,
+                                        labelStyle: FlutterFlowTheme.of(context).bodyText1,
+                                        indicatorColor: FlutterFlowTheme.of(context).secondaryColor,
                                         tabs: const [
                                           Tab(
                                             text: 'One time',
@@ -200,26 +178,10 @@ class _CreateProductWidgetState extends State<CreateProductWidget> {
                                       Expanded(
                                         child: TabBarView(
                                           children: [
-                                            SizedBox(
-                                                width: 100,
-                                                child: CreatePriceWidget(
-                                                    bundleId: widget.bundleId,
-                                                    price: priceOneTime)),
-                                            SizedBox(
-                                                width: 100,
-                                                child: CreatePriceWidget(
-                                                    bundleId: widget.bundleId,
-                                                    price: priceOneMonth)),
-                                            SizedBox(
-                                                width: 100,
-                                                child: CreatePriceWidget(
-                                                    bundleId: widget.bundleId,
-                                                    price: priceThreeMonths)),
-                                            SizedBox(
-                                                width: 100,
-                                                child: CreatePriceWidget(
-                                                    bundleId: widget.bundleId,
-                                                    price: priceOneYear)),
+                                            SizedBox(width: 100, child: CreatePriceWidget(bundleId: widget.bundleId, price: priceOneTime)),
+                                            SizedBox(width: 100, child: CreatePriceWidget(bundleId: widget.bundleId, price: priceOneMonth)),
+                                            SizedBox(width: 100, child: CreatePriceWidget(bundleId: widget.bundleId, price: priceThreeMonths)),
+                                            SizedBox(width: 100, child: CreatePriceWidget(bundleId: widget.bundleId, price: priceOneYear)),
                                           ],
                                         ),
                                       ),
@@ -231,10 +193,7 @@ class _CreateProductWidgetState extends State<CreateProductWidget> {
                           ),
                         ),
                         isActive: _currentStep >= 0 && editableBundle != null,
-                        state:
-                            _currentStep >= 2 && editableBundle?.prices != null
-                                ? StepState.complete
-                                : StepState.disabled,
+                        state: _currentStep >= 2 && editableBundle?.prices != null ? StepState.complete : StepState.disabled,
                       ),
                       Step(
                         title: const Text('Contents'),
@@ -248,12 +207,10 @@ class _CreateProductWidgetState extends State<CreateProductWidget> {
                                   children: [
                                     Text('All courses'),
                                     Checkbox(
-                                        value: editableBundle?.isAllCourses ??
-                                            false,
+                                        value: editableBundle?.isAllCourses ?? false,
                                         onChanged: (newValue) {
                                           setState(() {
-                                            editableBundle?.isAllCourses =
-                                                newValue!;
+                                            editableBundle?.isAllCourses = newValue!;
                                           });
                                         })
                                   ],
@@ -262,12 +219,10 @@ class _CreateProductWidgetState extends State<CreateProductWidget> {
                                   children: [
                                     Text('All files'),
                                     Checkbox(
-                                        value: editableBundle?.isAllDocuments ??
-                                            false,
+                                        value: editableBundle?.isAllDocuments ?? false,
                                         onChanged: (newValue) {
                                           setState(() {
-                                            editableBundle?.isAllDocuments =
-                                                newValue!;
+                                            editableBundle?.isAllDocuments = newValue!;
                                           });
                                         })
                                   ],
@@ -275,17 +230,10 @@ class _CreateProductWidgetState extends State<CreateProductWidget> {
                                 Expanded(
                                     child: MultiSelectCheckList(
                                   //maxSelectableCount: 5,
-                                  textStyles: const MultiSelectTextStyles(
-                                      selectedTextStyle: TextStyle(
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.bold)),
-                                  itemsDecoration: MultiSelectDecorations(
-                                      selectedDecoration: BoxDecoration(
-                                          color:
-                                              Colors.indigo.withOpacity(0.8))),
+                                  textStyles: const MultiSelectTextStyles(selectedTextStyle: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+                                  itemsDecoration: MultiSelectDecorations(selectedDecoration: BoxDecoration(color: Colors.indigo.withOpacity(0.8))),
                                   listViewSettings: ListViewSettings(
-                                      separatorBuilder: (context, index) =>
-                                          const Divider(
+                                      separatorBuilder: (context, index) => const Divider(
                                             height: 0,
                                           )),
                                   controller: _controller,
@@ -293,61 +241,38 @@ class _CreateProductWidgetState extends State<CreateProductWidget> {
                                       availableContents!.length,
                                       (index) => CheckListCard(
                                           value: availableContents![index],
-                                          title: Text(
-                                              availableContents![index]?.name ??
-                                                  'Name unknown'),
-                                          subtitle: Text(
-                                              availableContents![index]
-                                                      ?.type
-                                                      .toString() ??
-                                                  'Unknown type'),
+                                          title: Text(availableContents![index]?.name ?? 'Name unknown'),
+                                          subtitle: Text(availableContents![index]?.type.toString() ?? 'Unknown type'),
                                           selectedColor: Colors.white,
                                           checkColor: Colors.indigo,
                                           //selected: index == 3,
                                           // enabled: !(index == 5),
-                                          checkBoxBorderSide: const BorderSide(
-                                              color: Colors.blue),
-                                          shape: RoundedRectangleBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(5)))),
+                                          checkBoxBorderSide: const BorderSide(color: Colors.blue),
+                                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)))),
                                   onChange: (allSelectedItems, selectedItem) {
                                     editableBundle?.contents = List.empty();
-                                    Bundle tempBundle =
-                                        EditableBundle.fromEditable(
-                                            editableBundle!);
+                                    Bundle tempBundle = EditableBundle.fromEditable(editableBundle!);
 
-                                    editableBundle!.contents = allSelectedItems
-                                        .map((c) => BundleContent(
-                                            content: c as Content,
-                                            bundle: tempBundle))
-                                        .toList();
+                                    editableBundle!.contents = allSelectedItems.map((c) => BundleContent(content: c as Content, bundle: tempBundle)).toList();
 
                                     setState(() {});
                                   },
-                                  onMaximumSelected:
-                                      (allSelectedItems, selectedItem) {},
+                                  onMaximumSelected: (allSelectedItems, selectedItem) {},
                                 )),
                               ],
                             )),
-                        isActive: _currentStep >= 0 &&
-                            editableBundle!.contents != null,
-                        state: _currentStep >= 2 &&
-                                editableBundle?.contents != null
-                            ? StepState.complete
-                            : StepState.disabled,
+                        isActive: _currentStep >= 0 && editableBundle!.contents != null,
+                        state: _currentStep >= 2 && editableBundle?.contents != null ? StepState.complete : StepState.disabled,
                       ),
                       Step(
                         title: const Text('Publish'),
                         content: bundleToPublish != null
                             ? ProductSummary(
-                                bundle: bundleToPublish ?? Bundle(),
+                                bundle: bundleToPublish ?? Bundle(tenantID: ''),
                               )
                             : const Text('Bundle is not ready'),
                         isActive: _currentStep >= 0 && editableBundle != null,
-                        state:
-                            _currentStep >= 2 && editableBundle?.prices != null
-                                ? StepState.complete
-                                : StepState.disabled,
+                        state: _currentStep >= 2 && editableBundle?.prices != null ? StepState.complete : StepState.disabled,
                       )
                     ],
                   ),
@@ -407,11 +332,7 @@ class _CreateProductWidgetState extends State<CreateProductWidget> {
           }
     ''';
 
-    final request = GraphQLRequest(
-        document: graphQLQuery,
-        modelType: Bundle.classType,
-        variables: <String, String>{},
-        decodePath: getBundle);
+    final request = GraphQLRequest(document: graphQLQuery, modelType: Bundle.classType, variables: <String, String>{}, decodePath: getBundle);
 
     try {
       var response = await Amplify.API.query(request: request).response;
@@ -424,13 +345,11 @@ class _CreateProductWidgetState extends State<CreateProductWidget> {
       print(e);
     }
 
-    return Bundle();
+    return Bundle(tenantID: '');
   }
 
   switchStepsType() {
-    setState(() => stepperType == StepperType.vertical
-        ? stepperType = StepperType.horizontal
-        : stepperType = StepperType.vertical);
+    setState(() => stepperType == StepperType.vertical ? stepperType = StepperType.horizontal : stepperType = StepperType.vertical);
   }
 
   tapped(int step) {
@@ -506,11 +425,7 @@ class _CreateProductWidgetState extends State<CreateProductWidget> {
             }
     ''';
 
-    final request = GraphQLRequest(
-        document: graphQLQuery,
-        modelType: const PaginatedModelType(Content.classType),
-        variables: <String, String>{},
-        decodePath: listContents);
+    final request = GraphQLRequest(document: graphQLQuery, modelType: const PaginatedModelType(Content.classType), variables: <String, String>{}, decodePath: listContents);
 
     try {
       var response = await Amplify.API.query(request: request).response;
@@ -537,15 +452,13 @@ class _CreateProductWidgetState extends State<CreateProductWidget> {
         editablePrice.id = uuid.v4();
         price = EditablePrice.fromEditable(editablePrice);
         final priceSaveRequest = ModelMutations.create(price);
-        var response =
-            await Amplify.API.mutate(request: priceSaveRequest).response;
+        var response = await Amplify.API.mutate(request: priceSaveRequest).response;
         print(response.data);
         print(response.errors);
       } else {
         price = EditablePrice.fromEditable(editablePrice);
         final priceSaveRequest = ModelMutations.update(price);
-        var response =
-            await Amplify.API.mutate(request: priceSaveRequest).response;
+        var response = await Amplify.API.mutate(request: priceSaveRequest).response;
         print(response.data);
         print(response.errors);
       }
@@ -593,8 +506,7 @@ class _CreateProductWidgetState extends State<CreateProductWidget> {
           print(response.data);
         } else {
           final saveRequest = ModelMutations.update(contentBundle);
-          var response =
-              await Amplify.API.mutate(request: saveRequest).response;
+          var response = await Amplify.API.mutate(request: saveRequest).response;
           print(response.errors);
           print(response.data);
         }
@@ -620,8 +532,7 @@ class _CreateProductWidgetState extends State<CreateProductWidget> {
   void publishProduct() async {
     print('Product publishing started');
 
-    final initUri = Uri.parse(
-        "${StateContainer.of(context).apigatewayBaseUrl()}/product/publish");
+    final initUri = Uri.parse("${StateContainer.of(context).apigatewayBaseUrl()}/product/publish");
 
     String body = '{"product":${jsonEncode(bundleToPublish)}}';
     //encode Map to JSON
@@ -635,26 +546,19 @@ class _CreateProductWidgetState extends State<CreateProductWidget> {
 
     String rawIdToken = idToken!.raw;
 
-    final headers = <String, String>{
-      'Content-Type': 'application/json',
-      'Authorization': rawIdToken
-    };
+    final headers = <String, String>{'Content-Type': 'application/json', 'Authorization': rawIdToken};
 
-    http.Response initResponse =
-        await http.post(initUri, body: body, headers: headers);
+    http.Response initResponse = await http.post(initUri, body: body, headers: headers);
 
     print('response: ${initResponse.body}');
 
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-          content:
-              Text('Product is published, we wish you a successful product!')),
+      const SnackBar(content: Text('Product is published, we wish you a successful product!')),
     );
   }
 
   Future<AuthSession> getCurrentSession() async {
-    final session = await Amplify.Auth.fetchAuthSession(
-        options: CognitoSessionOptions(getAWSCredentials: false));
+    final session = await Amplify.Auth.fetchAuthSession(options: CognitoSessionOptions(getAWSCredentials: false));
     return session;
   }
 }

@@ -4,6 +4,7 @@ import 'package:contentpub_admin/file_upload.dart';
 import 'package:contentpub_admin/models/Coworker.dart';
 import 'package:contentpub_admin/models/ModelProvider.dart';
 import 'package:contentpub_admin/custom_models//editable/editables.dart';
+import 'package:contentpub_admin/state_container.dart';
 import 'package:flutter/material.dart';
 import 'package:uuid/uuid.dart';
 
@@ -30,7 +31,7 @@ class _CreateAuthorWidgetState extends State<CreateAuthorWidget> {
   @override
   void initState() {
     if (widget.coworkerId == '') {
-      coworker = Coworker(id: Uuid().v4());
+      coworker = Coworker(id: Uuid().v4(), tenantID: StateContainer.of(context).tenantId ?? '');
       editableCoworker = EditableCoworker.toEditable(coworker!);
       editableCoworker!.newItem = true;
     } else {
@@ -291,7 +292,7 @@ class _CreateAuthorWidgetState extends State<CreateAuthorWidget> {
 
     try {
       var response = await Amplify.API.query(request: request).response;
-      var retrievedItem = response.data ?? Coworker();
+      var retrievedItem = response.data ?? Coworker(tenantID: '');
 
       //print('Retrieved coworker: ${mycourse}');
       return retrievedItem;
@@ -299,7 +300,7 @@ class _CreateAuthorWidgetState extends State<CreateAuthorWidget> {
       print(e);
     }
 
-    return Coworker();
+    return Coworker(tenantID: '');
   }
 
   Future<void> saveCoworker() async {
@@ -322,12 +323,12 @@ class _CreateAuthorWidgetState extends State<CreateAuthorWidget> {
     String coworkerId = (coworker!.id != '') ? coworker!.id : uuid.v4();
 
     coworker = Coworker(
-      id: coworkerId,
-      displayName: editableCoworker!.displayName,
-      email: editableCoworker!.email,
-      photoUrl: editableCoworker?.photoUrl,
-      description: editableCoworker!.description,
-    );
+        id: coworkerId,
+        displayName: editableCoworker!.displayName,
+        email: editableCoworker!.email,
+        photoUrl: editableCoworker?.photoUrl,
+        description: editableCoworker!.description,
+        tenantID: StateContainer.of(context).tenantId ?? '');
 
     if (newItem) {
       final courseSaveRequest = ModelMutations.create(coworker!);

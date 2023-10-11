@@ -31,6 +31,8 @@ class Coworker extends Model {
   static const classType = const _CoworkerModelType();
   final String id;
   final String? _email;
+  final String? _tenantID;
+  final Role? _role;
   final String? _displayName;
   final String? _photoUrl;
   final String? _description;
@@ -53,6 +55,23 @@ class Coworker extends Model {
   
   String? get email {
     return _email;
+  }
+  
+  String get tenantID {
+    try {
+      return _tenantID!;
+    } catch(e) {
+      throw new AmplifyCodeGenModelException(
+          AmplifyExceptionMessages.codeGenRequiredFieldForceCastExceptionMessage,
+          recoverySuggestion:
+            AmplifyExceptionMessages.codeGenRequiredFieldForceCastRecoverySuggestion,
+          underlyingException: e.toString()
+          );
+    }
+  }
+  
+  Role? get role {
+    return _role;
   }
   
   String? get displayName {
@@ -79,12 +98,14 @@ class Coworker extends Model {
     return _updatedAt;
   }
   
-  const Coworker._internal({required this.id, email, displayName, photoUrl, description, contents, createdAt, updatedAt}): _email = email, _displayName = displayName, _photoUrl = photoUrl, _description = description, _contents = contents, _createdAt = createdAt, _updatedAt = updatedAt;
+  const Coworker._internal({required this.id, email, required tenantID, role, displayName, photoUrl, description, contents, createdAt, updatedAt}): _email = email, _tenantID = tenantID, _role = role, _displayName = displayName, _photoUrl = photoUrl, _description = description, _contents = contents, _createdAt = createdAt, _updatedAt = updatedAt;
   
-  factory Coworker({String? id, String? email, String? displayName, String? photoUrl, String? description, List<ContentCoworker>? contents}) {
+  factory Coworker({String? id, String? email, required String tenantID, Role? role, String? displayName, String? photoUrl, String? description, List<ContentCoworker>? contents}) {
     return Coworker._internal(
       id: id == null ? UUID.getUUID() : id,
       email: email,
+      tenantID: tenantID,
+      role: role,
       displayName: displayName,
       photoUrl: photoUrl,
       description: description,
@@ -101,6 +122,8 @@ class Coworker extends Model {
     return other is Coworker &&
       id == other.id &&
       _email == other._email &&
+      _tenantID == other._tenantID &&
+      _role == other._role &&
       _displayName == other._displayName &&
       _photoUrl == other._photoUrl &&
       _description == other._description &&
@@ -117,6 +140,8 @@ class Coworker extends Model {
     buffer.write("Coworker {");
     buffer.write("id=" + "$id" + ", ");
     buffer.write("email=" + "$_email" + ", ");
+    buffer.write("tenantID=" + "$_tenantID" + ", ");
+    buffer.write("role=" + (_role != null ? enumToString(_role)! : "null") + ", ");
     buffer.write("displayName=" + "$_displayName" + ", ");
     buffer.write("photoUrl=" + "$_photoUrl" + ", ");
     buffer.write("description=" + "$_description" + ", ");
@@ -127,10 +152,12 @@ class Coworker extends Model {
     return buffer.toString();
   }
   
-  Coworker copyWith({String? email, String? displayName, String? photoUrl, String? description, List<ContentCoworker>? contents}) {
+  Coworker copyWith({String? email, String? tenantID, Role? role, String? displayName, String? photoUrl, String? description, List<ContentCoworker>? contents}) {
     return Coworker._internal(
       id: id,
       email: email ?? this.email,
+      tenantID: tenantID ?? this.tenantID,
+      role: role ?? this.role,
       displayName: displayName ?? this.displayName,
       photoUrl: photoUrl ?? this.photoUrl,
       description: description ?? this.description,
@@ -140,6 +167,8 @@ class Coworker extends Model {
   Coworker.fromJson(Map<String, dynamic> json)  
     : id = json['id'],
       _email = json['email'],
+      _tenantID = json['tenantID'],
+      _role = enumFromString<Role>(json['role'], Role.values),
       _displayName = json['displayName'],
       _photoUrl = json['photoUrl'],
       _description = json['description'],
@@ -153,16 +182,18 @@ class Coworker extends Model {
       _updatedAt = json['updatedAt'] != null ? TemporalDateTime.fromString(json['updatedAt']) : null;
   
   Map<String, dynamic> toJson() => {
-    'id': id, 'email': _email, 'displayName': _displayName, 'photoUrl': _photoUrl, 'description': _description, 'contents': _contents?.map((ContentCoworker? e) => e?.toJson()).toList(), 'createdAt': _createdAt?.format(), 'updatedAt': _updatedAt?.format()
+    'id': id, 'email': _email, 'tenantID': _tenantID, 'role': enumToString(_role), 'displayName': _displayName, 'photoUrl': _photoUrl, 'description': _description, 'contents': _contents?.map((ContentCoworker? e) => e?.toJson()).toList(), 'createdAt': _createdAt?.format(), 'updatedAt': _updatedAt?.format()
   };
   
   Map<String, Object?> toMap() => {
-    'id': id, 'email': _email, 'displayName': _displayName, 'photoUrl': _photoUrl, 'description': _description, 'contents': _contents, 'createdAt': _createdAt, 'updatedAt': _updatedAt
+    'id': id, 'email': _email, 'tenantID': _tenantID, 'role': _role, 'displayName': _displayName, 'photoUrl': _photoUrl, 'description': _description, 'contents': _contents, 'createdAt': _createdAt, 'updatedAt': _updatedAt
   };
 
   static final QueryModelIdentifier<CoworkerModelIdentifier> MODEL_IDENTIFIER = QueryModelIdentifier<CoworkerModelIdentifier>();
   static final QueryField ID = QueryField(fieldName: "id");
   static final QueryField EMAIL = QueryField(fieldName: "email");
+  static final QueryField TENANTID = QueryField(fieldName: "tenantID");
+  static final QueryField ROLE = QueryField(fieldName: "role");
   static final QueryField DISPLAYNAME = QueryField(fieldName: "displayName");
   static final QueryField PHOTOURL = QueryField(fieldName: "photoUrl");
   static final QueryField DESCRIPTION = QueryField(fieldName: "description");
@@ -190,12 +221,28 @@ class Coworker extends Model {
         ])
     ];
     
+    modelSchemaDefinition.indexes = [
+      ModelIndex(fields: const ["tenantID"], name: "byTenant")
+    ];
+    
     modelSchemaDefinition.addField(ModelFieldDefinition.id());
     
     modelSchemaDefinition.addField(ModelFieldDefinition.field(
       key: Coworker.EMAIL,
       isRequired: false,
       ofType: ModelFieldType(ModelFieldTypeEnum.string)
+    ));
+    
+    modelSchemaDefinition.addField(ModelFieldDefinition.field(
+      key: Coworker.TENANTID,
+      isRequired: true,
+      ofType: ModelFieldType(ModelFieldTypeEnum.string)
+    ));
+    
+    modelSchemaDefinition.addField(ModelFieldDefinition.field(
+      key: Coworker.ROLE,
+      isRequired: false,
+      ofType: ModelFieldType(ModelFieldTypeEnum.enumeration)
     ));
     
     modelSchemaDefinition.addField(ModelFieldDefinition.field(

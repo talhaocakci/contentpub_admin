@@ -5,7 +5,7 @@ type Coworker @model @auth(
     ]) {
   id: ID!
   email: String
-  tenant: Tenant @hasOne
+  tenantID: ID! @index(name: "byTenant")
   role: Role
   displayName: String
   photoUrl: String
@@ -76,7 +76,7 @@ type Content @model @auth(
     {allow: public, provider:iam, operations:[read]}
     ]) {
   id: ID!
-  tenant: Tenant @hasOne
+  tenantID: ID! @index(name: "byTenant")
   name: String
   description: String
   s3Url: AWSURL
@@ -105,7 +105,7 @@ type Bundle @model @auth(
     {allow: public, provider:iam, operations:[read]}
     ]) {
   id: ID!
-  tenant: Tenant @hasOne
+  tenantID: ID! @index(name: "byTenant")
   name: String
   description: String
   isFree: Boolean
@@ -132,7 +132,7 @@ enum PurchaseType {
 
 type Customer @model @auth(rules: [{allow: private}]) {
   id: ID!
-  tenant:Tenant @hasOne
+  tenantID: ID! @index(name: "byTenant")
   userName: String
   stripeId: String
   createDate: AWSDate
@@ -172,7 +172,7 @@ type Purchase @model @auth(rules: [{allow: private}]) {
   customerID: ID! @index(name: "byCustomer")
   bundle: Bundle @hasOne
   stripeProductId: String
-  tenant: Tenant @hasOne
+  tenantID: ID! @index(name: "byTenant")
   isActive: Boolean
   cancellationDate: AWSDate
   amount: Float

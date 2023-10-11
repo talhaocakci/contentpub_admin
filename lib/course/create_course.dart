@@ -8,6 +8,7 @@ import 'package:contentpub_admin/models/Course.dart';
 import 'package:contentpub_admin/models/Lesson.dart';
 import 'package:contentpub_admin/models/Section.dart';
 import 'package:contentpub_admin/custom_models/editable/editables.dart';
+import 'package:contentpub_admin/state_container.dart';
 import 'package:flutter/material.dart';
 import 'package:uuid/uuid.dart';
 import 'package:simple_markdown_editor/simple_markdown_editor.dart';
@@ -19,8 +20,7 @@ import '../flutter_flow/flutter_flow_widgets.dart';
 class CreateCourseWidget extends StatefulWidget {
   final String courseId;
 
-  const CreateCourseWidget({Key? key, required this.courseId})
-      : super(key: key);
+  const CreateCourseWidget({Key? key, required this.courseId}) : super(key: key);
 
   @override
   _CreateCourseWidgetState createState() => _CreateCourseWidgetState();
@@ -61,8 +61,7 @@ class _CreateCourseWidgetState extends State<CreateCourseWidget> {
     course = await getCourse(course!.id);
     print('in initCourse: $course');
 
-    editableCourse =
-        course != null ? EditableCourse.toEditable(course!) : EditableCourse();
+    editableCourse = course != null ? EditableCourse.toEditable(course!) : EditableCourse();
 
     print('editable course : ${editableCourse!.title}');
 
@@ -79,7 +78,6 @@ class _CreateCourseWidgetState extends State<CreateCourseWidget> {
   Future<EditableCourse> _initPage() async {
     return editableCourse!;
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -128,11 +126,7 @@ class _CreateCourseWidgetState extends State<CreateCourseWidget> {
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Padding(
-                                  padding: const EdgeInsets.all(50),
-                                  child: Text('Basic Information :',
-                                      style:
-                                          FlutterFlowTheme.of(context).title1)),
+                              Padding(padding: const EdgeInsets.all(50), child: Text('Basic Information :', style: FlutterFlowTheme.of(context).title1)),
                               Row(mainAxisSize: MainAxisSize.max, children: [
                                 Expanded(
                                     child: TextFormField(
@@ -150,8 +144,7 @@ class _CreateCourseWidgetState extends State<CreateCourseWidget> {
                                   },
                                   decoration: InputDecoration(
                                     labelText: 'Title',
-                                    hintStyle:
-                                        FlutterFlowTheme.of(context).bodyText2,
+                                    hintStyle: FlutterFlowTheme.of(context).bodyText2,
                                     enabledBorder: OutlineInputBorder(
                                       borderSide: const BorderSide(
                                         color: Colors.black87,
@@ -161,8 +154,7 @@ class _CreateCourseWidgetState extends State<CreateCourseWidget> {
                                     ),
                                     focusedBorder: OutlineInputBorder(
                                       borderSide: BorderSide(
-                                        color: FlutterFlowTheme.of(context)
-                                            .primaryBackground,
+                                        color: FlutterFlowTheme.of(context).primaryBackground,
                                         width: 2,
                                       ),
                                       borderRadius: BorderRadius.circular(8),
@@ -195,8 +187,7 @@ class _CreateCourseWidgetState extends State<CreateCourseWidget> {
                                   initialValue: editableCourse?.subtitle ?? '',
                                   decoration: InputDecoration(
                                     labelText: 'Subtitle',
-                                    hintStyle:
-                                        FlutterFlowTheme.of(context).bodyText2,
+                                    hintStyle: FlutterFlowTheme.of(context).bodyText2,
                                     enabledBorder: OutlineInputBorder(
                                       borderSide: const BorderSide(
                                         color: Colors.black87,
@@ -206,8 +197,7 @@ class _CreateCourseWidgetState extends State<CreateCourseWidget> {
                                     ),
                                     focusedBorder: OutlineInputBorder(
                                       borderSide: BorderSide(
-                                        color: FlutterFlowTheme.of(context)
-                                            .primaryBackground,
+                                        color: FlutterFlowTheme.of(context).primaryBackground,
                                         width: 2,
                                       ),
                                       borderRadius: BorderRadius.circular(8),
@@ -246,23 +236,16 @@ class _CreateCourseWidgetState extends State<CreateCourseWidget> {
                                 ),
                               ]),
                               Padding(
-                                padding:
-                                    const EdgeInsetsDirectional.fromSTEB(0, 1, 0, 0),
+                                padding: const EdgeInsetsDirectional.fromSTEB(0, 1, 0, 0),
                                 child: Container(
                                   //width: MediaQuery.of(context).size.width / 2,
 
                                   child: Padding(
-                                    padding: const EdgeInsetsDirectional.fromSTEB(
-                                        0, 0, 0, 20),
+                                    padding: const EdgeInsetsDirectional.fromSTEB(0, 0, 0, 20),
                                     child: Column(
                                       mainAxisSize: MainAxisSize.max,
                                       children: [
-                                        Padding(
-                                            padding: const EdgeInsets.all(50),
-                                            child: Text('Cover photo :',
-                                                style:
-                                                    FlutterFlowTheme.of(context)
-                                                        .title1)),
+                                        Padding(padding: const EdgeInsets.all(50), child: Text('Cover photo :', style: FlutterFlowTheme.of(context).title1)),
                                         Row(
                                           mainAxisSize: MainAxisSize.max,
                                           children: [
@@ -271,28 +254,19 @@ class _CreateCourseWidgetState extends State<CreateCourseWidget> {
                                                   remoteDirectory: course!.id,
                                                   remoteFileName: 'cover-photo',
                                                   isPublic: true,
-                                                  remoteUrl: editableCourse
-                                                      ?.coverPhotoUrl,
+                                                  remoteUrl: editableCourse?.coverPhotoUrl,
                                                   fileType: FileType.PICTURE,
                                                   onComplete: (uploadedFile) {
-                                                    editableCourse
-                                                            ?.coverPhotoUrl =
-                                                        uploadedFile.remoteUrl;
+                                                    editableCourse?.coverPhotoUrl = uploadedFile.remoteUrl;
                                                   },
                                                   onVideoDurationKnown: (_) {},
                                                   onClear: () {
-                                                    print(
-                                                        'Clear the object here as well');
+                                                    print('Clear the object here as well');
                                                   }),
                                             ),
                                           ],
                                         ),
-                                        Padding(
-                                            padding: const EdgeInsets.all(50),
-                                            child: Text('Promo video :',
-                                                style:
-                                                    FlutterFlowTheme.of(context)
-                                                        .title1)),
+                                        Padding(padding: const EdgeInsets.all(50), child: Text('Promo video :', style: FlutterFlowTheme.of(context).title1)),
                                         Row(
                                           mainAxisSize: MainAxisSize.max,
                                           children: [
@@ -302,21 +276,15 @@ class _CreateCourseWidgetState extends State<CreateCourseWidget> {
                                                   remoteFileName: 'promo-video',
                                                   isPublic: true,
                                                   fileType: FileType.VIDEO,
-                                                  remoteUrl: editableCourse
-                                                      ?.promoVideoUrl,
+                                                  remoteUrl: editableCourse?.promoVideoUrl,
                                                   onComplete: (uploadedFile) {
-                                                    editableCourse
-                                                            ?.promoVideoUrl =
-                                                        uploadedFile.remoteUrl;
+                                                    editableCourse?.promoVideoUrl = uploadedFile.remoteUrl;
                                                   },
-                                                  onVideoDurationKnown:
-                                                      (duration) {
-                                                    print(
-                                                        'update duration with $duration');
+                                                  onVideoDurationKnown: (duration) {
+                                                    print('update duration with $duration');
                                                   },
                                                   onClear: () {
-                                                    print(
-                                                        'Clear the object here as well');
+                                                    print('Clear the object here as well');
                                                   }),
                                             ),
                                           ],
@@ -324,30 +292,26 @@ class _CreateCourseWidgetState extends State<CreateCourseWidget> {
                                         Row(children: [
                                           if (course!.id != '')
                                             Padding(
-                                              padding: const EdgeInsets.only(
-                                                  right: 10, top: 20),
+                                              padding: const EdgeInsets.only(right: 10, top: 20),
                                               child: FFButtonWidget(
                                                 onPressed: () {
                                                   goToCurriculum(course!.id);
                                                   // save course here
 
-                                                  print(
-                                                      'Button_Secondary pressed ...');
+                                                  print('Button_Secondary pressed ...');
                                                 },
                                                 text: 'Edit Curricilum',
                                               ),
                                             ),
                                           const Spacer(),
                                           Padding(
-                                            padding: const EdgeInsets.only(
-                                                left: 10, top: 20),
+                                            padding: const EdgeInsets.only(left: 10, top: 20),
                                             child: FFButtonWidget(
                                               onPressed: () {
                                                 saveCourse();
                                                 // save course here
 
-                                                print(
-                                                    'Button_Secondary pressed ...');
+                                                print('Button_Secondary pressed ...');
                                               },
                                               text: 'Save Changes',
                                             ),
@@ -371,8 +335,7 @@ class _CreateCourseWidgetState extends State<CreateCourseWidget> {
   Future<Course?> getCourse(String id) async {
     const getCourse = 'getCourse';
 
-    String graphQLQuery =
-        '''query GetCourseDetailsWithLessonSummaries(\$courseId: ID!) {
+    String graphQLQuery = '''query GetCourseDetailsWithLessonSummaries(\$courseId: ID!) {
               $getCourse(id: \$courseId) {
                 title
                 subtitle
@@ -412,9 +375,7 @@ class _CreateCourseWidgetState extends State<CreateCourseWidget> {
       // If the form is valid, display a snackbar. In the real world,
       // you'd often call a server or save the information in a database.
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-            content: Text(
-                'Some information missing, lets complete them for better information for your audience')),
+        const SnackBar(content: Text('Some information missing, lets complete them for better information for your audience')),
       );
       return;
     }
@@ -432,8 +393,7 @@ class _CreateCourseWidgetState extends State<CreateCourseWidget> {
     course = EditableCourse.fromEditable(editableCourse!);
 
     if (isNewCourse) {
-      Section section =
-          Section(id: sectionId, courseID: course!.id, name: 'Section 1');
+      Section section = Section(id: sectionId, courseID: course!.id, name: 'Section 1');
 
       final sectionSaveRequest = ModelMutations.create(section);
 
@@ -441,8 +401,7 @@ class _CreateCourseWidgetState extends State<CreateCourseWidget> {
 
       print('Section id: ${section.id}');
 
-      Lesson lesson =
-          Lesson(id: lessonId, sectionID: sectionId, name: 'Lesson 1');
+      Lesson lesson = Lesson(id: lessonId, sectionID: sectionId, name: 'Lesson 1');
 
       final lessonSaveRequest = ModelMutations.create(lesson);
 
@@ -458,8 +417,7 @@ class _CreateCourseWidgetState extends State<CreateCourseWidget> {
 
       final courseSaveRequest = ModelMutations.create(course!);
 
-      var response =
-          await Amplify.API.mutate(request: courseSaveRequest).response;
+      var response = await Amplify.API.mutate(request: courseSaveRequest).response;
 
       print('Saved course $response');
       print('Saved course errors: ${response.errors}');
@@ -469,6 +427,7 @@ class _CreateCourseWidgetState extends State<CreateCourseWidget> {
       var content = Content(
           id: course!.id, // use the same id with course for simplicity
           type: ContentType.COURSE,
+          tenantID: StateContainer.of(context).tenantId ?? '',
           objectId: course!.id, // this will not be needed
           name: course!.title);
 
@@ -489,9 +448,7 @@ class _CreateCourseWidgetState extends State<CreateCourseWidget> {
 
       ScaffoldMessenger.of(context).clearSnackBars();
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-            content:
-                Text('Course is created, you can go on adding lessons to it.')),
+        const SnackBar(content: Text('Course is created, you can go on adding lessons to it.')),
       );
     } else {
       final courseSaveRequest = ModelMutations.update(course!);
@@ -500,9 +457,7 @@ class _CreateCourseWidgetState extends State<CreateCourseWidget> {
 
       ScaffoldMessenger.of(context).clearSnackBars();
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-            content:
-                Text('Course is updated, you can go on adding lessons to it.')),
+        const SnackBar(content: Text('Course is updated, you can go on adding lessons to it.')),
       );
     }
 

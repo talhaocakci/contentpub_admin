@@ -11,6 +11,9 @@ class BannerWidget extends StatefulWidget {
 }
 
 class _BannerWidgetState extends State<BannerWidget> {
+  String? tenantId;
+  String? coworkerId;
+
   @override
   void initState() {
     // TODO: implement initState
@@ -57,18 +60,23 @@ class _BannerWidgetState extends State<BannerWidget> {
             children: [
               Expanded(
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  padding: const EdgeInsets.symmetric(horizontal: 5),
                   child: Image.network(
                     'https://javawebdevelopmentcom-production-public.s3.eu-central-1.amazonaws.com/logo.png',
                     fit: BoxFit.cover,
                   ),
                 ),
               ),
-              ElevatedButton(
-                  onPressed: () {
-                    Amplify.Auth.signOut();
-                  },
-                  child: const Text('Logout')),
+              Column(
+                children: [
+                  Text('${StateContainer.of(context).tenantId ?? 'unknown tenant'}'),
+                  ElevatedButton(
+                      onPressed: () {
+                        Amplify.Auth.signOut();
+                      },
+                      child: const Text('Logout')),
+                ],
+              )
             ],
           ),
         );

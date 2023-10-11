@@ -30,6 +30,7 @@ import 'package:flutter/foundation.dart';
 class Customer extends Model {
   static const classType = const _CustomerModelType();
   final String id;
+  final String? _tenantID;
   final String? _userName;
   final String? _stripeId;
   final TemporalDate? _createDate;
@@ -49,6 +50,19 @@ class Customer extends Model {
       return CustomerModelIdentifier(
         id: id
       );
+  }
+  
+  String get tenantID {
+    try {
+      return _tenantID!;
+    } catch(e) {
+      throw new AmplifyCodeGenModelException(
+          AmplifyExceptionMessages.codeGenRequiredFieldForceCastExceptionMessage,
+          recoverySuggestion:
+            AmplifyExceptionMessages.codeGenRequiredFieldForceCastRecoverySuggestion,
+          underlyingException: e.toString()
+          );
+    }
   }
   
   String? get userName {
@@ -79,11 +93,12 @@ class Customer extends Model {
     return _updatedAt;
   }
   
-  const Customer._internal({required this.id, userName, stripeId, createDate, purchases, email, createdAt, updatedAt}): _userName = userName, _stripeId = stripeId, _createDate = createDate, _purchases = purchases, _email = email, _createdAt = createdAt, _updatedAt = updatedAt;
+  const Customer._internal({required this.id, required tenantID, userName, stripeId, createDate, purchases, email, createdAt, updatedAt}): _tenantID = tenantID, _userName = userName, _stripeId = stripeId, _createDate = createDate, _purchases = purchases, _email = email, _createdAt = createdAt, _updatedAt = updatedAt;
   
-  factory Customer({String? id, String? userName, String? stripeId, TemporalDate? createDate, List<Purchase>? purchases, String? email}) {
+  factory Customer({String? id, required String tenantID, String? userName, String? stripeId, TemporalDate? createDate, List<Purchase>? purchases, String? email}) {
     return Customer._internal(
       id: id == null ? UUID.getUUID() : id,
+      tenantID: tenantID,
       userName: userName,
       stripeId: stripeId,
       createDate: createDate,
@@ -100,6 +115,7 @@ class Customer extends Model {
     if (identical(other, this)) return true;
     return other is Customer &&
       id == other.id &&
+      _tenantID == other._tenantID &&
       _userName == other._userName &&
       _stripeId == other._stripeId &&
       _createDate == other._createDate &&
@@ -116,6 +132,7 @@ class Customer extends Model {
     
     buffer.write("Customer {");
     buffer.write("id=" + "$id" + ", ");
+    buffer.write("tenantID=" + "$_tenantID" + ", ");
     buffer.write("userName=" + "$_userName" + ", ");
     buffer.write("stripeId=" + "$_stripeId" + ", ");
     buffer.write("createDate=" + (_createDate != null ? _createDate!.format() : "null") + ", ");
@@ -127,9 +144,10 @@ class Customer extends Model {
     return buffer.toString();
   }
   
-  Customer copyWith({String? userName, String? stripeId, TemporalDate? createDate, List<Purchase>? purchases, String? email}) {
+  Customer copyWith({String? tenantID, String? userName, String? stripeId, TemporalDate? createDate, List<Purchase>? purchases, String? email}) {
     return Customer._internal(
       id: id,
+      tenantID: tenantID ?? this.tenantID,
       userName: userName ?? this.userName,
       stripeId: stripeId ?? this.stripeId,
       createDate: createDate ?? this.createDate,
@@ -139,6 +157,7 @@ class Customer extends Model {
   
   Customer.fromJson(Map<String, dynamic> json)  
     : id = json['id'],
+      _tenantID = json['tenantID'],
       _userName = json['userName'],
       _stripeId = json['stripeId'],
       _createDate = json['createDate'] != null ? TemporalDate.fromString(json['createDate']) : null,
@@ -153,15 +172,16 @@ class Customer extends Model {
       _updatedAt = json['updatedAt'] != null ? TemporalDateTime.fromString(json['updatedAt']) : null;
   
   Map<String, dynamic> toJson() => {
-    'id': id, 'userName': _userName, 'stripeId': _stripeId, 'createDate': _createDate?.format(), 'purchases': _purchases?.map((Purchase? e) => e?.toJson()).toList(), 'email': _email, 'createdAt': _createdAt?.format(), 'updatedAt': _updatedAt?.format()
+    'id': id, 'tenantID': _tenantID, 'userName': _userName, 'stripeId': _stripeId, 'createDate': _createDate?.format(), 'purchases': _purchases?.map((Purchase? e) => e?.toJson()).toList(), 'email': _email, 'createdAt': _createdAt?.format(), 'updatedAt': _updatedAt?.format()
   };
   
   Map<String, Object?> toMap() => {
-    'id': id, 'userName': _userName, 'stripeId': _stripeId, 'createDate': _createDate, 'purchases': _purchases, 'email': _email, 'createdAt': _createdAt, 'updatedAt': _updatedAt
+    'id': id, 'tenantID': _tenantID, 'userName': _userName, 'stripeId': _stripeId, 'createDate': _createDate, 'purchases': _purchases, 'email': _email, 'createdAt': _createdAt, 'updatedAt': _updatedAt
   };
 
   static final QueryModelIdentifier<CustomerModelIdentifier> MODEL_IDENTIFIER = QueryModelIdentifier<CustomerModelIdentifier>();
   static final QueryField ID = QueryField(fieldName: "id");
+  static final QueryField TENANTID = QueryField(fieldName: "tenantID");
   static final QueryField USERNAME = QueryField(fieldName: "userName");
   static final QueryField STRIPEID = QueryField(fieldName: "stripeId");
   static final QueryField CREATEDATE = QueryField(fieldName: "createDate");
@@ -184,7 +204,17 @@ class Customer extends Model {
         ])
     ];
     
+    modelSchemaDefinition.indexes = [
+      ModelIndex(fields: const ["tenantID"], name: "byTenant")
+    ];
+    
     modelSchemaDefinition.addField(ModelFieldDefinition.id());
+    
+    modelSchemaDefinition.addField(ModelFieldDefinition.field(
+      key: Customer.TENANTID,
+      isRequired: true,
+      ofType: ModelFieldType(ModelFieldTypeEnum.string)
+    ));
     
     modelSchemaDefinition.addField(ModelFieldDefinition.field(
       key: Customer.USERNAME,
