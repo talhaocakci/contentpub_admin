@@ -427,7 +427,7 @@ class _CreateCourseWidgetState extends State<CreateCourseWidget> {
       var content = Content(
           id: course!.id, // use the same id with course for simplicity
           type: ContentType.COURSE,
-          tenantID: StateContainer.of(context).tenantId ?? '',
+          contentTenantId: StateContainer.of(context).tenantId,
           objectId: course!.id, // this will not be needed
           name: course!.title);
 

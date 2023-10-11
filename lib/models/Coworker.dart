@@ -21,7 +21,6 @@
 
 import 'ModelProvider.dart';
 import 'package:amplify_core/amplify_core.dart';
-import 'package:collection/collection.dart';
 import 'package:flutter/foundation.dart';
 
 
@@ -36,7 +35,6 @@ class Coworker extends Model {
   final String? _displayName;
   final String? _photoUrl;
   final String? _description;
-  final List<ContentCoworker>? _contents;
   final TemporalDateTime? _createdAt;
   final TemporalDateTime? _updatedAt;
 
@@ -86,10 +84,6 @@ class Coworker extends Model {
     return _description;
   }
   
-  List<ContentCoworker>? get contents {
-    return _contents;
-  }
-  
   TemporalDateTime? get createdAt {
     return _createdAt;
   }
@@ -98,9 +92,9 @@ class Coworker extends Model {
     return _updatedAt;
   }
   
-  const Coworker._internal({required this.id, email, required tenantID, role, displayName, photoUrl, description, contents, createdAt, updatedAt}): _email = email, _tenantID = tenantID, _role = role, _displayName = displayName, _photoUrl = photoUrl, _description = description, _contents = contents, _createdAt = createdAt, _updatedAt = updatedAt;
+  const Coworker._internal({required this.id, email, required tenantID, role, displayName, photoUrl, description, createdAt, updatedAt}): _email = email, _tenantID = tenantID, _role = role, _displayName = displayName, _photoUrl = photoUrl, _description = description, _createdAt = createdAt, _updatedAt = updatedAt;
   
-  factory Coworker({String? id, String? email, required String tenantID, Role? role, String? displayName, String? photoUrl, String? description, List<ContentCoworker>? contents}) {
+  factory Coworker({String? id, String? email, required String tenantID, Role? role, String? displayName, String? photoUrl, String? description}) {
     return Coworker._internal(
       id: id == null ? UUID.getUUID() : id,
       email: email,
@@ -108,8 +102,7 @@ class Coworker extends Model {
       role: role,
       displayName: displayName,
       photoUrl: photoUrl,
-      description: description,
-      contents: contents != null ? List<ContentCoworker>.unmodifiable(contents) : contents);
+      description: description);
   }
   
   bool equals(Object other) {
@@ -126,8 +119,7 @@ class Coworker extends Model {
       _role == other._role &&
       _displayName == other._displayName &&
       _photoUrl == other._photoUrl &&
-      _description == other._description &&
-      DeepCollectionEquality().equals(_contents, other._contents);
+      _description == other._description;
   }
   
   @override
@@ -152,7 +144,7 @@ class Coworker extends Model {
     return buffer.toString();
   }
   
-  Coworker copyWith({String? email, String? tenantID, Role? role, String? displayName, String? photoUrl, String? description, List<ContentCoworker>? contents}) {
+  Coworker copyWith({String? email, String? tenantID, Role? role, String? displayName, String? photoUrl, String? description}) {
     return Coworker._internal(
       id: id,
       email: email ?? this.email,
@@ -160,8 +152,7 @@ class Coworker extends Model {
       role: role ?? this.role,
       displayName: displayName ?? this.displayName,
       photoUrl: photoUrl ?? this.photoUrl,
-      description: description ?? this.description,
-      contents: contents ?? this.contents);
+      description: description ?? this.description);
   }
   
   Coworker.fromJson(Map<String, dynamic> json)  
@@ -172,21 +163,15 @@ class Coworker extends Model {
       _displayName = json['displayName'],
       _photoUrl = json['photoUrl'],
       _description = json['description'],
-      _contents = json['contents'] is List
-        ? (json['contents'] as List)
-          .where((e) => e?['serializedData'] != null)
-          .map((e) => ContentCoworker.fromJson(new Map<String, dynamic>.from(e['serializedData'])))
-          .toList()
-        : null,
       _createdAt = json['createdAt'] != null ? TemporalDateTime.fromString(json['createdAt']) : null,
       _updatedAt = json['updatedAt'] != null ? TemporalDateTime.fromString(json['updatedAt']) : null;
   
   Map<String, dynamic> toJson() => {
-    'id': id, 'email': _email, 'tenantID': _tenantID, 'role': enumToString(_role), 'displayName': _displayName, 'photoUrl': _photoUrl, 'description': _description, 'contents': _contents?.map((ContentCoworker? e) => e?.toJson()).toList(), 'createdAt': _createdAt?.format(), 'updatedAt': _updatedAt?.format()
+    'id': id, 'email': _email, 'tenantID': _tenantID, 'role': enumToString(_role), 'displayName': _displayName, 'photoUrl': _photoUrl, 'description': _description, 'createdAt': _createdAt?.format(), 'updatedAt': _updatedAt?.format()
   };
   
   Map<String, Object?> toMap() => {
-    'id': id, 'email': _email, 'tenantID': _tenantID, 'role': _role, 'displayName': _displayName, 'photoUrl': _photoUrl, 'description': _description, 'contents': _contents, 'createdAt': _createdAt, 'updatedAt': _updatedAt
+    'id': id, 'email': _email, 'tenantID': _tenantID, 'role': _role, 'displayName': _displayName, 'photoUrl': _photoUrl, 'description': _description, 'createdAt': _createdAt, 'updatedAt': _updatedAt
   };
 
   static final QueryModelIdentifier<CoworkerModelIdentifier> MODEL_IDENTIFIER = QueryModelIdentifier<CoworkerModelIdentifier>();
@@ -197,9 +182,6 @@ class Coworker extends Model {
   static final QueryField DISPLAYNAME = QueryField(fieldName: "displayName");
   static final QueryField PHOTOURL = QueryField(fieldName: "photoUrl");
   static final QueryField DESCRIPTION = QueryField(fieldName: "description");
-  static final QueryField CONTENTS = QueryField(
-    fieldName: "contents",
-    fieldType: ModelFieldType(ModelFieldTypeEnum.model, ofModelName: 'ContentCoworker'));
   static var schema = Model.defineSchema(define: (ModelSchemaDefinition modelSchemaDefinition) {
     modelSchemaDefinition.name = "Coworker";
     modelSchemaDefinition.pluralName = "Coworkers";
@@ -261,13 +243,6 @@ class Coworker extends Model {
       key: Coworker.DESCRIPTION,
       isRequired: false,
       ofType: ModelFieldType(ModelFieldTypeEnum.string)
-    ));
-    
-    modelSchemaDefinition.addField(ModelFieldDefinition.hasMany(
-      key: Coworker.CONTENTS,
-      isRequired: false,
-      ofModelName: 'ContentCoworker',
-      associatedKey: ContentCoworker.COWORKER
     ));
     
     modelSchemaDefinition.addField(ModelFieldDefinition.nonQueryField(

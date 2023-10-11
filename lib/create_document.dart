@@ -62,7 +62,7 @@ class _CreateDocumentWidgetState extends State<CreateDocumentWidget> {
 
   Future<EditableContent> initContent() async {
     if (widget.contentId == '') {
-      content = Content(id: Utils.generateId(), tenantID: StateContainer.of(context).tenantId ?? '');
+      content = Content(id: Utils.generateId());
       editableContent = EditableContent.toEditable(content!);
       editableContent!.newItem = true;
 
@@ -82,10 +82,10 @@ class _CreateDocumentWidgetState extends State<CreateDocumentWidget> {
       return editableContent!;
     }
 
-    slugController = TextEditingController.fromValue(TextEditingValue(text: editableContent?.urlSlug ?? ''));
-
     content = await getContent(widget.contentId);
     editableContent = EditableContent.toEditable(content!);
+
+    slugController = TextEditingController.fromValue(TextEditingValue(text: editableContent?.urlSlug ?? 'unknown-slug'));
 
     mutableDocument = deserializeMarkdownToDocument(content?.body ?? 'Header');
 
@@ -374,27 +374,6 @@ class _CreateDocumentWidgetState extends State<CreateDocumentWidget> {
                                         ),
                                       ],
                                     ),
-                                    const Text('Authors'),
-                                    Row(
-                                      children: [
-                                        for (var contentCoworker in content!.Coworkers ?? List.empty())
-                                          Expanded(
-                                              child: DropdownButtonFormField<Coworker>(
-                                            value: contentCoworker!.coworker,
-                                            items: [
-                                              DropdownMenuItem(value: contentCoworker!.coworker, child: Text(contentCoworker!.coworker!.displayName ?? 'Unknown author')),
-                                            ],
-                                            onChanged: (value) {
-                                              print('author selection changed $value');
-
-                                              ContentCoworker cc = ContentCoworker(id: '${content!.id}--${value!.id}}', coworker: value, content: content!);
-
-                                              editableContent!.coworkerRelations = List.from([cc]);
-                                              print(value);
-                                            },
-                                          ))
-                                      ],
-                                    ),
                                     if (widget.type == ContentType.ARTICLE)
                                       Row(mainAxisSize: MainAxisSize.max, children: [
                                         Expanded(
@@ -470,18 +449,18 @@ class _CreateDocumentWidgetState extends State<CreateDocumentWidget> {
                 type
                 description
                 body
-                 Coworkers {
-                  items {
-                    contentId
-                    coworkerId
-                    id
-                    coworker {
-                      id
-                      displayName
-                      description
-                    }
-                  }
+                urlSlug
+                coworker {
+                  displayName
+                  id
+                  email
+                  photoUrl
+                  role
                 }
+                tenant {
+                  id
+                  name
+                }    
               }
             }
     ''';
@@ -490,15 +469,14 @@ class _CreateDocumentWidgetState extends State<CreateDocumentWidget> {
 
     try {
       var response = await Amplify.API.query(request: request).response;
-      var retrievedContent = response.data ?? Content(tenantID: '');
+      var retrievedContent = response.data ?? Content();
 
-      //print('Retrieved course: ${mycourse}');
       return retrievedContent;
     } catch (e) {
       print(e);
     }
 
-    return Content(tenantID: '');
+    return Content();
   }
 
   Future<void> getCoworkers() async {
@@ -533,7 +511,7 @@ class _CreateDocumentWidgetState extends State<CreateDocumentWidget> {
     }
   }
 
-  Future<void> deleteExistingCoworkerRelations(Content content) async {
+  /*Future<void> deleteExistingCoworkerRelations(Content content) async {
     for (var coworker in content.Coworkers ?? List.empty()) {
       deleteCoworkerRelation('${content.id}--${coworker.id}');
     }
@@ -586,6 +564,7 @@ class _CreateDocumentWidgetState extends State<CreateDocumentWidget> {
       }
     }
   }
+  */
 
   Future<void> saveContent() async {
     String contentId = editableContent!.id;
@@ -598,29 +577,43 @@ class _CreateDocumentWidgetState extends State<CreateDocumentWidget> {
 
     editableContent?.type = widget.type;
 
+    editableContent?.tenantId = StateContainer.of(context).tenantId;
+
+    // do not change original creator
+    if (editableContent!.coworkerId!.isEmpty) editableContent?.coworkerId = StateContainer.of(context).coworkerId;
+
+    editableContent?.urlSlug = slugController.text;
+
     editableContent?.body = serializeDocumentToMarkdown(mutableDocument ?? MutableDocument());
 
     if (editableContent!.newItem == true) {
       content = EditableContent.fromEditable(editableContent!);
       final contentSaveRequest = ModelMutations.create(content!);
 
+      print(contentSaveRequest);
+
       var response = await Amplify.API.mutate(request: contentSaveRequest).response;
       print(response.data);
       print(response.errors);
 
-      content = content?.copyWith(Coworkers: List.empty(growable: true));
+      // content = content?.copyWith(Coworkers: List.empty(growable: true));
 
-      content?.Coworkers?.add(ContentCoworker(
-          content: content ?? Content(tenantID: ''), coworker: Coworker(id: StateContainer.of(context).coworkerId, tenantID: StateContainer.of(context).tenantId ?? '')));
+      /* content?.Coworkers?.add(ContentCoworker(
+          content: content ?? Content(tenantID: StateContainer.of(context).tenantId ?? ''),
+          coworker: Coworker(id: StateContainer.of(context).coworkerId, tenantID: StateContainer.of(context).tenantId ?? '')));
+
+     
+
+      saveAuthors();*/
 
       editableContent = EditableContent.toEditable(content!);
       editableContent!.newItem = false;
-
-      saveAuthors();
     } else {
       content = EditableContent.fromEditable(editableContent!);
 
       final contentSaveRequest = ModelMutations.update(content!);
+
+      print(contentSaveRequest);
 
       var response = await Amplify.API.mutate(request: contentSaveRequest).response;
 

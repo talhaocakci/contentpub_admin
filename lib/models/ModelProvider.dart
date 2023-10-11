@@ -23,7 +23,6 @@ import 'package:amplify_core/amplify_core.dart';
 import 'Bundle.dart';
 import 'BundleContent.dart';
 import 'Content.dart';
-import 'ContentCoworker.dart';
 import 'Course.dart';
 import 'Coworker.dart';
 import 'Customer.dart';
@@ -37,7 +36,6 @@ import 'TenantConfiguration.dart';
 export 'Bundle.dart';
 export 'BundleContent.dart';
 export 'Content.dart';
-export 'ContentCoworker.dart';
 export 'ContentType.dart';
 export 'Course.dart';
 export 'Coworker.dart';
@@ -56,9 +54,9 @@ export 'TenantConfiguration.dart';
 
 class ModelProvider implements ModelProviderInterface {
   @override
-  String version = "ad4bcfb890dbf3d18a5f199e9292edfe";
+  String version = "33d16d27e1e89c618afacfc70a92eba6";
   @override
-  List<ModelSchema> modelSchemas = [Bundle.schema, BundleContent.schema, Content.schema, ContentCoworker.schema, Course.schema, Coworker.schema, Customer.schema, Lesson.schema, Price.schema, Purchase.schema, Section.schema, Tenant.schema, TenantConfiguration.schema];
+  List<ModelSchema> modelSchemas = [Bundle.schema, BundleContent.schema, Content.schema, Course.schema, Coworker.schema, Customer.schema, Lesson.schema, Price.schema, Purchase.schema, Section.schema, Tenant.schema, TenantConfiguration.schema];
   static final ModelProvider _instance = ModelProvider();
   @override
   List<ModelSchema> customTypeSchemas = [];
@@ -73,8 +71,6 @@ class ModelProvider implements ModelProviderInterface {
         return BundleContent.classType;
       case "Content":
         return Content.classType;
-      case "ContentCoworker":
-        return ContentCoworker.classType;
       case "Course":
         return Course.classType;
       case "Coworker":

@@ -244,6 +244,7 @@ class EditablePrice {
 class EditableContent {
   String id;
   String? tenantId;
+  String? coworkerId;
   String? role;
   String? name;
   String? description;
@@ -258,7 +259,6 @@ class EditableContent {
   String? urlSlug;
   String? metaTitle;
   String? metaDescription;
-  List<ContentCoworker>? coworkerRelations;
 
   bool? isPublished = false;
   bool? isArchived = false;
@@ -281,11 +281,13 @@ class EditableContent {
     editable.duration = content.promoVideoDuration;
     editable.isPublished = content.isPublished;
     editable.isArchived = content.isArchived;
-    editable.coworkerRelations = content.Coworkers;
+    //editable.coworkerRelations = content.Coworkers;
     editable.body = content.body;
     editable.urlSlug = content.urlSlug;
     editable.metaTitle = content.metaTitle;
     editable.metaDescription = content.metaDescription;
+    editable.tenantId = content.contentTenantId;
+    editable.coworkerId = content.contentCoworkerId;
 
     return editable;
   }
@@ -293,7 +295,8 @@ class EditableContent {
   static Content fromEditable(EditableContent editable) {
     Content content = Content(
         id: editable.id,
-        tenantID: editable.tenantId ?? '',
+        contentTenantId: editable.tenantId,
+        contentCoworkerId: editable.coworkerId,
         type: editable.type,
         name: editable.name,
         description: editable.description,
@@ -306,7 +309,6 @@ class EditableContent {
         metaTitle: editable.metaTitle,
         metaDescription: editable.metaDescription,
         isPublished: editable.isPublished,
-        Coworkers: editable.coworkerRelations,
         body: editable.body,
         isArchived: editable.isArchived);
 

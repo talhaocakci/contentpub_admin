@@ -322,7 +322,17 @@ class _ListContentsWidgetState extends State<ListContentsWidget> {
                   updatedAt
                   isPublished
                   isArchived
-                 
+                  coworker {
+                    displayName
+                    id
+                    email
+                    photoUrl
+                    role
+                  }
+                  tenant {
+                    id
+                    name
+                  }   
                 }
               }
             }

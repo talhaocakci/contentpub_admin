@@ -43,8 +43,8 @@ class StateContainerState extends State<StateContainer> {
   String? apigatewayId;
   String? region;
 
-  String? coworkerId;
-  String? tenantId;
+  late String coworkerId;
+  late String tenantId;
 
   bool _isLoading = true;
   late AuthUser authUser;
