@@ -378,6 +378,20 @@ class _CreateDocumentWidgetState extends State<CreateDocumentWidget> {
                                       Row(mainAxisSize: MainAxisSize.max, children: [
                                         Expanded(
                                             child: Column(children: [
+                                          Text('Show on main page'),
+                                          Checkbox(
+                                              value: editableContent?.showOnMainPage ?? true,
+                                              onChanged: (value) {
+                                                editableContent?.showOnMainPage = value;
+                                                setState(() {});
+                                              }),
+                                          Text('Highlight on main page'),
+                                          Checkbox(
+                                              value: editableContent?.highlightOnMainPage ?? false,
+                                              onChanged: (value) {
+                                                editableContent?.highlightOnMainPage = value;
+                                                setState(() {});
+                                              }),
                                           Text('URL slug'),
                                           TextFormField(controller: slugController),
                                           Text('Meta title'),
@@ -450,6 +464,8 @@ class _CreateDocumentWidgetState extends State<CreateDocumentWidget> {
                 description
                 body
                 urlSlug
+                showOnMainPage;
+                highlightOnMainPage;
                 coworker {
                   displayName
                   id
@@ -580,7 +596,7 @@ class _CreateDocumentWidgetState extends State<CreateDocumentWidget> {
     editableContent?.tenantId = StateContainer.of(context).tenantId;
 
     // do not change original creator
-    if (editableContent!.coworkerId!.isEmpty) editableContent?.coworkerId = StateContainer.of(context).coworkerId;
+    // if (editableContent!.coworkerId!.isEmpty) editableContent?.coworkerId = StateContainer.of(context).coworkerId;
 
     editableContent?.urlSlug = slugController.text;
 

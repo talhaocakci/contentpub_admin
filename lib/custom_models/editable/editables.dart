@@ -263,6 +263,9 @@ class EditableContent {
   bool? isPublished = false;
   bool? isArchived = false;
 
+  bool? showOnMainPage = true;
+  bool? highlightOnMainPage = false;
+
   bool dirty = false;
   bool? newItem = false;
 
@@ -289,6 +292,9 @@ class EditableContent {
     editable.tenantId = content.contentTenantId;
     editable.coworkerId = content.contentCoworkerId;
 
+    editable.showOnMainPage = content.showOnMainPage;
+    editable.highlightOnMainPage = content.highlightOnMainPage;
+
     return editable;
   }
 
@@ -310,7 +316,9 @@ class EditableContent {
         metaDescription: editable.metaDescription,
         isPublished: editable.isPublished,
         body: editable.body,
-        isArchived: editable.isArchived);
+        isArchived: editable.isArchived,
+        showOnMainPage: editable.showOnMainPage,
+        highlightOnMainPage: editable.highlightOnMainPage);
 
     return content;
   }

@@ -51,6 +51,8 @@ class Content extends Model {
   final String? _urlSlug;
   final String? _metaTitle;
   final String? _metaDescription;
+  final bool? _showOnMainPage;
+  final bool? _highlightOnMainPage;
   final TemporalDateTime? _createdAt;
   final TemporalDateTime? _updatedAt;
   final String? _contentTenantId;
@@ -153,6 +155,14 @@ class Content extends Model {
     return _metaDescription;
   }
   
+  bool? get showOnMainPage {
+    return _showOnMainPage;
+  }
+  
+  bool? get highlightOnMainPage {
+    return _highlightOnMainPage;
+  }
+  
   TemporalDateTime? get createdAt {
     return _createdAt;
   }
@@ -169,9 +179,9 @@ class Content extends Model {
     return _contentCoworkerId;
   }
   
-  const Content._internal({required this.id, tenant, coworker, name, description, s3Url, type, objectId, owner, duration, bundles, photoUrl, promoVideoUrl, promoVideoDuration, isPublished, isArchived, videoDuration, fileSize, body, urlSlug, metaTitle, metaDescription, createdAt, updatedAt, contentTenantId, contentCoworkerId}): _tenant = tenant, _coworker = coworker, _name = name, _description = description, _s3Url = s3Url, _type = type, _objectId = objectId, _owner = owner, _duration = duration, _bundles = bundles, _photoUrl = photoUrl, _promoVideoUrl = promoVideoUrl, _promoVideoDuration = promoVideoDuration, _isPublished = isPublished, _isArchived = isArchived, _videoDuration = videoDuration, _fileSize = fileSize, _body = body, _urlSlug = urlSlug, _metaTitle = metaTitle, _metaDescription = metaDescription, _createdAt = createdAt, _updatedAt = updatedAt, _contentTenantId = contentTenantId, _contentCoworkerId = contentCoworkerId;
+  const Content._internal({required this.id, tenant, coworker, name, description, s3Url, type, objectId, owner, duration, bundles, photoUrl, promoVideoUrl, promoVideoDuration, isPublished, isArchived, videoDuration, fileSize, body, urlSlug, metaTitle, metaDescription, showOnMainPage, highlightOnMainPage, createdAt, updatedAt, contentTenantId, contentCoworkerId}): _tenant = tenant, _coworker = coworker, _name = name, _description = description, _s3Url = s3Url, _type = type, _objectId = objectId, _owner = owner, _duration = duration, _bundles = bundles, _photoUrl = photoUrl, _promoVideoUrl = promoVideoUrl, _promoVideoDuration = promoVideoDuration, _isPublished = isPublished, _isArchived = isArchived, _videoDuration = videoDuration, _fileSize = fileSize, _body = body, _urlSlug = urlSlug, _metaTitle = metaTitle, _metaDescription = metaDescription, _showOnMainPage = showOnMainPage, _highlightOnMainPage = highlightOnMainPage, _createdAt = createdAt, _updatedAt = updatedAt, _contentTenantId = contentTenantId, _contentCoworkerId = contentCoworkerId;
   
-  factory Content({String? id, Tenant? tenant, Coworker? coworker, String? name, String? description, String? s3Url, ContentType? type, String? objectId, String? owner, int? duration, List<BundleContent>? bundles, String? photoUrl, String? promoVideoUrl, int? promoVideoDuration, bool? isPublished, bool? isArchived, String? videoDuration, String? fileSize, String? body, String? urlSlug, String? metaTitle, String? metaDescription, String? contentTenantId, String? contentCoworkerId}) {
+  factory Content({String? id, Tenant? tenant, Coworker? coworker, String? name, String? description, String? s3Url, ContentType? type, String? objectId, String? owner, int? duration, List<BundleContent>? bundles, String? photoUrl, String? promoVideoUrl, int? promoVideoDuration, bool? isPublished, bool? isArchived, String? videoDuration, String? fileSize, String? body, String? urlSlug, String? metaTitle, String? metaDescription, bool? showOnMainPage, bool? highlightOnMainPage, String? contentTenantId, String? contentCoworkerId}) {
     return Content._internal(
       id: id == null ? UUID.getUUID() : id,
       tenant: tenant,
@@ -195,6 +205,8 @@ class Content extends Model {
       urlSlug: urlSlug,
       metaTitle: metaTitle,
       metaDescription: metaDescription,
+      showOnMainPage: showOnMainPage,
+      highlightOnMainPage: highlightOnMainPage,
       contentTenantId: contentTenantId,
       contentCoworkerId: contentCoworkerId);
   }
@@ -229,6 +241,8 @@ class Content extends Model {
       _urlSlug == other._urlSlug &&
       _metaTitle == other._metaTitle &&
       _metaDescription == other._metaDescription &&
+      _showOnMainPage == other._showOnMainPage &&
+      _highlightOnMainPage == other._highlightOnMainPage &&
       _contentTenantId == other._contentTenantId &&
       _contentCoworkerId == other._contentCoworkerId;
   }
@@ -260,6 +274,8 @@ class Content extends Model {
     buffer.write("urlSlug=" + "$_urlSlug" + ", ");
     buffer.write("metaTitle=" + "$_metaTitle" + ", ");
     buffer.write("metaDescription=" + "$_metaDescription" + ", ");
+    buffer.write("showOnMainPage=" + (_showOnMainPage != null ? _showOnMainPage!.toString() : "null") + ", ");
+    buffer.write("highlightOnMainPage=" + (_highlightOnMainPage != null ? _highlightOnMainPage!.toString() : "null") + ", ");
     buffer.write("createdAt=" + (_createdAt != null ? _createdAt!.format() : "null") + ", ");
     buffer.write("updatedAt=" + (_updatedAt != null ? _updatedAt!.format() : "null") + ", ");
     buffer.write("contentTenantId=" + "$_contentTenantId" + ", ");
@@ -269,7 +285,7 @@ class Content extends Model {
     return buffer.toString();
   }
   
-  Content copyWith({Tenant? tenant, Coworker? coworker, String? name, String? description, String? s3Url, ContentType? type, String? objectId, String? owner, int? duration, List<BundleContent>? bundles, String? photoUrl, String? promoVideoUrl, int? promoVideoDuration, bool? isPublished, bool? isArchived, String? videoDuration, String? fileSize, String? body, String? urlSlug, String? metaTitle, String? metaDescription, String? contentTenantId, String? contentCoworkerId}) {
+  Content copyWith({Tenant? tenant, Coworker? coworker, String? name, String? description, String? s3Url, ContentType? type, String? objectId, String? owner, int? duration, List<BundleContent>? bundles, String? photoUrl, String? promoVideoUrl, int? promoVideoDuration, bool? isPublished, bool? isArchived, String? videoDuration, String? fileSize, String? body, String? urlSlug, String? metaTitle, String? metaDescription, bool? showOnMainPage, bool? highlightOnMainPage, String? contentTenantId, String? contentCoworkerId}) {
     return Content._internal(
       id: id,
       tenant: tenant ?? this.tenant,
@@ -293,6 +309,8 @@ class Content extends Model {
       urlSlug: urlSlug ?? this.urlSlug,
       metaTitle: metaTitle ?? this.metaTitle,
       metaDescription: metaDescription ?? this.metaDescription,
+      showOnMainPage: showOnMainPage ?? this.showOnMainPage,
+      highlightOnMainPage: highlightOnMainPage ?? this.highlightOnMainPage,
       contentTenantId: contentTenantId ?? this.contentTenantId,
       contentCoworkerId: contentCoworkerId ?? this.contentCoworkerId);
   }
@@ -329,17 +347,19 @@ class Content extends Model {
       _urlSlug = json['urlSlug'],
       _metaTitle = json['metaTitle'],
       _metaDescription = json['metaDescription'],
+      _showOnMainPage = json['showOnMainPage'],
+      _highlightOnMainPage = json['highlightOnMainPage'],
       _createdAt = json['createdAt'] != null ? TemporalDateTime.fromString(json['createdAt']) : null,
       _updatedAt = json['updatedAt'] != null ? TemporalDateTime.fromString(json['updatedAt']) : null,
       _contentTenantId = json['contentTenantId'],
       _contentCoworkerId = json['contentCoworkerId'];
   
   Map<String, dynamic> toJson() => {
-    'id': id, 'tenant': _tenant?.toJson(), 'coworker': _coworker?.toJson(), 'name': _name, 'description': _description, 's3Url': _s3Url, 'type': enumToString(_type), 'objectId': _objectId, 'owner': _owner, 'duration': _duration, 'bundles': _bundles?.map((BundleContent? e) => e?.toJson()).toList(), 'photoUrl': _photoUrl, 'promoVideoUrl': _promoVideoUrl, 'promoVideoDuration': _promoVideoDuration, 'isPublished': _isPublished, 'isArchived': _isArchived, 'videoDuration': _videoDuration, 'fileSize': _fileSize, 'body': _body, 'urlSlug': _urlSlug, 'metaTitle': _metaTitle, 'metaDescription': _metaDescription, 'createdAt': _createdAt?.format(), 'updatedAt': _updatedAt?.format(), 'contentTenantId': _contentTenantId, 'contentCoworkerId': _contentCoworkerId
+    'id': id, 'tenant': _tenant?.toJson(), 'coworker': _coworker?.toJson(), 'name': _name, 'description': _description, 's3Url': _s3Url, 'type': enumToString(_type), 'objectId': _objectId, 'owner': _owner, 'duration': _duration, 'bundles': _bundles?.map((BundleContent? e) => e?.toJson()).toList(), 'photoUrl': _photoUrl, 'promoVideoUrl': _promoVideoUrl, 'promoVideoDuration': _promoVideoDuration, 'isPublished': _isPublished, 'isArchived': _isArchived, 'videoDuration': _videoDuration, 'fileSize': _fileSize, 'body': _body, 'urlSlug': _urlSlug, 'metaTitle': _metaTitle, 'metaDescription': _metaDescription, 'showOnMainPage': _showOnMainPage, 'highlightOnMainPage': _highlightOnMainPage, 'createdAt': _createdAt?.format(), 'updatedAt': _updatedAt?.format(), 'contentTenantId': _contentTenantId, 'contentCoworkerId': _contentCoworkerId
   };
   
   Map<String, Object?> toMap() => {
-    'id': id, 'tenant': _tenant, 'coworker': _coworker, 'name': _name, 'description': _description, 's3Url': _s3Url, 'type': _type, 'objectId': _objectId, 'owner': _owner, 'duration': _duration, 'bundles': _bundles, 'photoUrl': _photoUrl, 'promoVideoUrl': _promoVideoUrl, 'promoVideoDuration': _promoVideoDuration, 'isPublished': _isPublished, 'isArchived': _isArchived, 'videoDuration': _videoDuration, 'fileSize': _fileSize, 'body': _body, 'urlSlug': _urlSlug, 'metaTitle': _metaTitle, 'metaDescription': _metaDescription, 'createdAt': _createdAt, 'updatedAt': _updatedAt, 'contentTenantId': _contentTenantId, 'contentCoworkerId': _contentCoworkerId
+    'id': id, 'tenant': _tenant, 'coworker': _coworker, 'name': _name, 'description': _description, 's3Url': _s3Url, 'type': _type, 'objectId': _objectId, 'owner': _owner, 'duration': _duration, 'bundles': _bundles, 'photoUrl': _photoUrl, 'promoVideoUrl': _promoVideoUrl, 'promoVideoDuration': _promoVideoDuration, 'isPublished': _isPublished, 'isArchived': _isArchived, 'videoDuration': _videoDuration, 'fileSize': _fileSize, 'body': _body, 'urlSlug': _urlSlug, 'metaTitle': _metaTitle, 'metaDescription': _metaDescription, 'showOnMainPage': _showOnMainPage, 'highlightOnMainPage': _highlightOnMainPage, 'createdAt': _createdAt, 'updatedAt': _updatedAt, 'contentTenantId': _contentTenantId, 'contentCoworkerId': _contentCoworkerId
   };
 
   static final QueryModelIdentifier<ContentModelIdentifier> MODEL_IDENTIFIER = QueryModelIdentifier<ContentModelIdentifier>();
@@ -371,6 +391,8 @@ class Content extends Model {
   static final QueryField URLSLUG = QueryField(fieldName: "urlSlug");
   static final QueryField METATITLE = QueryField(fieldName: "metaTitle");
   static final QueryField METADESCRIPTION = QueryField(fieldName: "metaDescription");
+  static final QueryField SHOWONMAINPAGE = QueryField(fieldName: "showOnMainPage");
+  static final QueryField HIGHLIGHTONMAINPAGE = QueryField(fieldName: "highlightOnMainPage");
   static final QueryField CONTENTTENANTID = QueryField(fieldName: "contentTenantId");
   static final QueryField CONTENTCOWORKERID = QueryField(fieldName: "contentCoworkerId");
   static var schema = Model.defineSchema(define: (ModelSchemaDefinition modelSchemaDefinition) {
@@ -523,6 +545,18 @@ class Content extends Model {
       key: Content.METADESCRIPTION,
       isRequired: false,
       ofType: ModelFieldType(ModelFieldTypeEnum.string)
+    ));
+    
+    modelSchemaDefinition.addField(ModelFieldDefinition.field(
+      key: Content.SHOWONMAINPAGE,
+      isRequired: false,
+      ofType: ModelFieldType(ModelFieldTypeEnum.bool)
+    ));
+    
+    modelSchemaDefinition.addField(ModelFieldDefinition.field(
+      key: Content.HIGHLIGHTONMAINPAGE,
+      isRequired: false,
+      ofType: ModelFieldType(ModelFieldTypeEnum.bool)
     ));
     
     modelSchemaDefinition.addField(ModelFieldDefinition.nonQueryField(
