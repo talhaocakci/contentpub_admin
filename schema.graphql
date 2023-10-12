@@ -10,7 +10,6 @@ type Coworker @model @auth(
   displayName: String
   photoUrl: String
   description: String
-  contents: [Content] @manyToMany(relationName: "ContentCoworker")
 }
 
 enum Role {
@@ -76,7 +75,8 @@ type Content @model @auth(
     {allow: public, provider:iam, operations:[read]}
     ]) {
   id: ID!
-  tenantID: ID! @index(name: "byTenant")
+  tenant: Tenant @hasOne
+  coworker: Coworker @hasOne
   name: String
   description: String
   s3Url: AWSURL
@@ -90,13 +90,14 @@ type Content @model @auth(
   promoVideoDuration: Int
   isPublished: Boolean
   isArchived: Boolean
-  Coworkers: [Coworker] @manyToMany(relationName: "ContentCoworker")
   videoDuration: String
   fileSize: String
   body: String
   urlSlug: String
   metaTitle: String
   metaDescription: String
+  showOnMainPage: Boolean
+  highlightOnMainPage: Boolean
 }
 
 type Bundle @model @auth(
