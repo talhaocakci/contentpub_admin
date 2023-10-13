@@ -4,6 +4,7 @@ import 'package:contentpub_admin/create_coworker.dart';
 import 'package:contentpub_admin/create_product.dart';
 import 'package:contentpub_admin/create_tenant.dart';
 import 'package:contentpub_admin/list_contents.dart';
+import 'package:contentpub_admin/list_products.dart';
 import 'package:contentpub_admin/state_container.dart';
 
 import '../flutter_flow/flutter_flow_theme.dart';
@@ -73,7 +74,7 @@ class _DashboardWidgetState extends State<DashboardWidget> {
                               clipBehavior: Clip.none,
                               children: [
                                 Container(
-                                  width: 160,
+                                  width: 600,
                                   height: 150,
                                   decoration: BoxDecoration(
                                     color: FlutterFlowTheme.of(context).secondaryColor,
@@ -119,14 +120,13 @@ class _DashboardWidgetState extends State<DashboardWidget> {
                                       )),
                                 ),
                                 Container(
-                                  width: 160,
+                                  width: 600,
                                   height: 150,
                                   decoration: BoxDecoration(
                                     color: FlutterFlowTheme.of(context).primaryColor,
                                     boxShadow: [
                                       const BoxShadow(
                                         blurRadius: 3,
-                                        color: Color(0x33000000),
                                         offset: Offset(0, 1),
                                       )
                                     ],
@@ -161,14 +161,13 @@ class _DashboardWidgetState extends State<DashboardWidget> {
                                   ),
                                 ),
                                 Container(
-                                  width: 160,
+                                  width: 600,
                                   height: 150,
                                   decoration: BoxDecoration(
                                     color: FlutterFlowTheme.of(context).secondaryColor,
                                     boxShadow: [
                                       const BoxShadow(
                                         blurRadius: 3,
-                                        color: Color(0x33000000),
                                         offset: Offset(0, 1),
                                       )
                                     ],
@@ -212,14 +211,13 @@ class _DashboardWidgetState extends State<DashboardWidget> {
                                       )),
                                 ),
                                 Container(
-                                  width: 160,
+                                  width: 600,
                                   height: 150,
                                   decoration: BoxDecoration(
                                     color: FlutterFlowTheme.of(context).secondaryColor,
                                     boxShadow: [
                                       const BoxShadow(
                                         blurRadius: 3,
-                                        color: Color(0x33000000),
                                         offset: Offset(0, 1),
                                       )
                                     ],
@@ -259,14 +257,13 @@ class _DashboardWidgetState extends State<DashboardWidget> {
                                       )),
                                 ),
                                 Container(
-                                  width: 160,
+                                  width: 600,
                                   height: 150,
                                   decoration: BoxDecoration(
                                     color: FlutterFlowTheme.of(context).primaryText,
                                     boxShadow: [
                                       const BoxShadow(
                                         blurRadius: 3,
-                                        color: Color(0x33000000),
                                         offset: Offset(0, 1),
                                       )
                                     ],
@@ -301,14 +298,13 @@ class _DashboardWidgetState extends State<DashboardWidget> {
                                   ),
                                 ),
                                 Container(
-                                  width: 160,
+                                  width: 600,
                                   height: 150,
                                   decoration: BoxDecoration(
                                     color: FlutterFlowTheme.of(context).primaryText,
                                     boxShadow: [
                                       const BoxShadow(
                                         blurRadius: 3,
-                                        color: Color(0x33000000),
                                         offset: Offset(0, 1),
                                       )
                                     ],
@@ -351,6 +347,51 @@ class _DashboardWidgetState extends State<DashboardWidget> {
                                         ),
                                       )),
                                 ),
+                                Container(
+                                  width: 600,
+                                  height: 150,
+                                  decoration: BoxDecoration(
+                                    color: FlutterFlowTheme.of(context).primaryText,
+                                    boxShadow: [
+                                      const BoxShadow(
+                                        blurRadius: 3,
+                                        offset: Offset(0, 1),
+                                      )
+                                    ],
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
+                                  child: InkWell(
+                                      onTap: () {
+                                        Navigator.push(context, MaterialPageRoute(builder: (context) => const ListProductsWidget()));
+                                      },
+                                      child: Padding(
+                                        padding: const EdgeInsetsDirectional.fromSTEB(12, 8, 12, 8),
+                                        child: Column(
+                                          mainAxisSize: MainAxisSize.max,
+                                          mainAxisAlignment: MainAxisAlignment.center,
+                                          crossAxisAlignment: CrossAxisAlignment.center,
+                                          children: [
+                                            Padding(
+                                              padding: const EdgeInsetsDirectional.fromSTEB(0, 0, 0, 12),
+                                              child: Icon(
+                                                Icons.attach_money_rounded,
+                                                color: FlutterFlowTheme.of(context).secondaryBackground,
+                                                size: 44,
+                                              ),
+                                            ),
+                                            Text(
+                                              'List Bundles',
+                                              style: FlutterFlowTheme.of(context).bodyText2.override(
+                                                    fontFamily: 'Brazila',
+                                                    color: FlutterFlowTheme.of(context).secondaryBackground,
+                                                    fontWeight: FontWeight.normal,
+                                                    useGoogleFonts: false,
+                                                  ),
+                                            ),
+                                          ],
+                                        ),
+                                      )),
+                                )
                               ],
                             ),
                           ),

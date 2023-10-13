@@ -20,38 +20,30 @@ class _ProductSummaryState extends State<ProductSummary> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const SizedBox(height: 10),
-        _buildLabelAndTextField(
-            label: 'Product Name', value: widget.bundle.name ?? ''),
+        _buildLabelAndTextField(label: 'Product Name', value: widget.bundle.name ?? ''),
         const SizedBox(height: 10),
-        _buildLabelAndTextField(
-            label: 'Product Description',
-            value: widget.bundle.description ?? ''),
+        _buildLabelAndTextField(label: 'Product Description', value: widget.bundle.description ?? ''),
         const SizedBox(height: 10),
         Text(
           'Contents',
           style: TextStyle(fontSize: 24),
         ),
-        _buildLabelAndTextField(
-            label: 'All Courses',
-            value: (widget.bundle.isAllCourses ?? false) ? 'Yes' : 'No'),
+        _buildLabelAndTextField(label: 'All Courses', value: (widget.bundle.isAllCourses ?? false) ? 'Yes' : 'No'),
         const SizedBox(height: 10),
-        _buildLabelAndTextField(
-            label: 'All Files',
-            value: (widget.bundle.isAllDocuments ?? false) ? 'Yes' : 'No'),
+        _buildLabelAndTextField(label: 'All Files', value: (widget.bundle.isAllDocuments ?? false) ? 'Yes' : 'No'),
         const SizedBox(height: 10),
-        contentsTable(),
+        if (widget.bundle.contents != null) contentsTable(),
         const SizedBox(height: 10),
         Text(
           'Prices',
           style: TextStyle(fontSize: 24),
         ),
-        _pricesTable(),
+        if (widget.bundle.prices != null) _pricesTable(),
       ],
     );
   }
 
-  Widget _buildLabelAndTextField(
-      {required String label, required String value}) {
+  Widget _buildLabelAndTextField({required String label, required String value}) {
     return Row(
       children: [
         Text(
@@ -74,7 +66,7 @@ class _ProductSummaryState extends State<ProductSummary> {
         const DataColumn(label: Text('Type')),
       ],
       rows: [
-        for (var c in widget.bundle.contents ?? [] as List<BundleContent>)
+        for (var c in widget.bundle.contents as List<BundleContent>)
           DataRow(cells: [
             DataCell(Text(c.content.name ?? '')),
             DataCell(Text(c.content.description ?? '')),
@@ -95,8 +87,7 @@ class _ProductSummaryState extends State<ProductSummary> {
       rows: [
         for (var price in widget.bundle.prices ?? [] as List<Price>)
           DataRow(cells: [
-            DataCell(
-                Text('${price.recurrenceInterval} ${price.recurrenceType}')),
+            DataCell(Text('${price.recurrenceInterval} ${price.recurrenceType}')),
             DataCell(Text('${price.amount} ${price.currency}')),
             DataCell(Text('${price.trialPeriod} days')),
           ])
