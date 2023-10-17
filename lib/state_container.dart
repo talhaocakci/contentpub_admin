@@ -254,6 +254,28 @@ class StateContainerState extends State<StateContainer> {
 
     print(coworkerSaveRequest.id);
   }
+
+  Future<String> renderAllPages() async {
+    AuthSession session = await Amplify.Auth.fetchAuthSession();
+
+    var tokens = (session as CognitoAuthSession).userPoolTokens;
+    var idToken = tokens?.idToken;
+
+    String rawIdToken = idToken!.raw;
+
+    //remote directory is implicitly contentId at the moment. Need to change it later on
+    final initUri = Uri.parse("${apiRootUrl ?? ''}/content/render-pages");
+
+    final headers = <String, String>{'Content-Type': 'application/json', 'Authorization': rawIdToken};
+
+    http.Response response = await http.post(initUri, headers: headers);
+
+    if (response.statusCode == 200) {
+      return "";
+    } else {}
+
+    return '';
+  }
 }
 
 class _InheritedStateContainer extends InheritedWidget {

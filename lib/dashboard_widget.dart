@@ -75,7 +75,7 @@ class _DashboardWidgetState extends State<DashboardWidget> {
                               children: [
                                 Container(
                                   width: 600,
-                                  height: 150,
+                                  height: 90,
                                   decoration: BoxDecoration(
                                     color: FlutterFlowTheme.of(context).secondaryColor,
                                     boxShadow: [
@@ -121,7 +121,7 @@ class _DashboardWidgetState extends State<DashboardWidget> {
                                 ),
                                 Container(
                                   width: 600,
-                                  height: 150,
+                                  height: 90,
                                   decoration: BoxDecoration(
                                     color: FlutterFlowTheme.of(context).primaryColor,
                                     boxShadow: [
@@ -162,7 +162,7 @@ class _DashboardWidgetState extends State<DashboardWidget> {
                                 ),
                                 Container(
                                   width: 600,
-                                  height: 150,
+                                  height: 90,
                                   decoration: BoxDecoration(
                                     color: FlutterFlowTheme.of(context).secondaryColor,
                                     boxShadow: [
@@ -212,7 +212,7 @@ class _DashboardWidgetState extends State<DashboardWidget> {
                                 ),
                                 Container(
                                   width: 600,
-                                  height: 150,
+                                  height: 90,
                                   decoration: BoxDecoration(
                                     color: FlutterFlowTheme.of(context).secondaryColor,
                                     boxShadow: [
@@ -258,7 +258,7 @@ class _DashboardWidgetState extends State<DashboardWidget> {
                                 ),
                                 Container(
                                   width: 600,
-                                  height: 150,
+                                  height: 90,
                                   decoration: BoxDecoration(
                                     color: FlutterFlowTheme.of(context).primaryText,
                                     boxShadow: [
@@ -299,7 +299,7 @@ class _DashboardWidgetState extends State<DashboardWidget> {
                                 ),
                                 Container(
                                   width: 600,
-                                  height: 150,
+                                  height: 90,
                                   decoration: BoxDecoration(
                                     color: FlutterFlowTheme.of(context).primaryText,
                                     boxShadow: [
@@ -349,7 +349,7 @@ class _DashboardWidgetState extends State<DashboardWidget> {
                                 ),
                                 Container(
                                   width: 600,
-                                  height: 150,
+                                  height: 90,
                                   decoration: BoxDecoration(
                                     color: FlutterFlowTheme.of(context).primaryText,
                                     boxShadow: [
@@ -381,6 +381,51 @@ class _DashboardWidgetState extends State<DashboardWidget> {
                                             ),
                                             Text(
                                               'List Bundles',
+                                              style: FlutterFlowTheme.of(context).bodyText2.override(
+                                                    fontFamily: 'Brazila',
+                                                    color: FlutterFlowTheme.of(context).secondaryBackground,
+                                                    fontWeight: FontWeight.normal,
+                                                    useGoogleFonts: false,
+                                                  ),
+                                            ),
+                                          ],
+                                        ),
+                                      )),
+                                ),
+                                Container(
+                                  width: 600,
+                                  height: 90,
+                                  decoration: BoxDecoration(
+                                    color: FlutterFlowTheme.of(context).primaryText,
+                                    boxShadow: [
+                                      const BoxShadow(
+                                        blurRadius: 3,
+                                        offset: Offset(0, 1),
+                                      )
+                                    ],
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
+                                  child: InkWell(
+                                      onTap: () {
+                                        StateContainer.of(context).renderAllPages();
+                                      },
+                                      child: Padding(
+                                        padding: const EdgeInsetsDirectional.fromSTEB(12, 8, 12, 8),
+                                        child: Column(
+                                          mainAxisSize: MainAxisSize.max,
+                                          mainAxisAlignment: MainAxisAlignment.center,
+                                          crossAxisAlignment: CrossAxisAlignment.center,
+                                          children: [
+                                            Padding(
+                                              padding: const EdgeInsetsDirectional.fromSTEB(0, 0, 0, 12),
+                                              child: Icon(
+                                                Icons.attach_money_rounded,
+                                                color: FlutterFlowTheme.of(context).secondaryBackground,
+                                                size: 44,
+                                              ),
+                                            ),
+                                            Text(
+                                              'Prerender blog pages',
                                               style: FlutterFlowTheme.of(context).bodyText2.override(
                                                     fontFamily: 'Brazila',
                                                     color: FlutterFlowTheme.of(context).secondaryBackground,
